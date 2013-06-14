@@ -34,6 +34,8 @@ ZSH_THEME="robbyrussell"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 if [[ `uname` == 'Linux' ]]; then
   plugins=(git brew ruby rvm django git-extras pip python svn vundle)
+  export PATH=$PATH:/usr/local/lib/python2.7/dist-packages
+  export PYTHONPATH=/usr/local/lib/python2.7/dist-packages
   # END LINUX SPECIFIC
 elif [[ `uname` == 'Darwin' ]]; then
   # Mac Specific:
@@ -50,12 +52,16 @@ elif [[ `uname` == 'Darwin' ]]; then
   # add mysql stuffs to path
   PATH=$PATH:/Applications/MAMP/Library/bin/
 
-  [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
 fi # END MAC SPECIFIC
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
 
 source $ZSH/oh-my-zsh.sh
 
-alias update_server="git pull && git commit -a && git push origin development  && fab deploy"
 alias gls="git status"
 SVN_EDITOR=vim
+export WORKON_HOME=~/.virtenvs
+source /usr/local/bin/virtualenvwrapper.sh
 
+# PIP CACHE
+export PIP_DOWNLOAD_CACHE=$HOME/.pip_download_cache

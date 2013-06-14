@@ -16,7 +16,7 @@ filetype off                   " required!
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
-let g:jedi#popup_on_dot = 0 
+" let g:jedi#popup_on_dot = 0 
 
 " No autofill on .
 inoremap <C-X><C-O> <C-X><C-O><C-P> 
@@ -41,7 +41,8 @@ Bundle 'tpope/vim-rails.git'
 " non github repos
 Bundle 'git://git.wincent.com/command-t.git'
 
-Bundle 'https://github.com/davidhalter/jedi-vim.git'
+" Some python things, but may be adding spaces wrong? (In all files)
+" Bundle 'https://github.com/davidhalter/jedi-vim.git'
 
 " tab to complete snipit, check installation diretory
 Bundle "snipMate"
