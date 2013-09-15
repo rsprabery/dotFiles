@@ -41,25 +41,40 @@ elif [[ `uname` == 'Darwin' ]]; then
   # Mac Specific:
   plugins=(git brew ruby rvm django git-extras osx pip python svn vundle)
 
-  export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/python
+  export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/usr/local/share/python:`npm root -g`
+
+  export NODE_PATH="`npm root -g`"
 
   export PYTHONPATH=/usr/local/Cellar/python/2.7.3/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages
 
   PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
-  #alias mysql=/Applications/MAMP/Library/bin/mysql
-  #alias mysql_config=/Applications/MAMP/Library/bin/mysql_config
+  # Do some things so we can use MAMP for development
+  alias mysql=/Applications/MAMP/Library/bin/mysql
+  alias mysql_config=/Applications/MAMP/Library/bin/mysql_config
   # add mysql stuffs to path
   PATH=$PATH:/Applications/MAMP/Library/bin/
 
+  # add tex distribution to the path
+  export PATH=/usr/texbin:$PATH
+
+  # define path for GO
+  export GOPATH="/Users/read/gocode"
 fi # END MAC SPECIFIC
 
+# Add custom bin's
+PATH=$PATH:$HOME/bin
+
+# Source RVM 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
 
+# Load oh-my-zsh
 source $ZSH/oh-my-zsh.sh
 
 alias gls="git status"
-SVN_EDITOR=vim
+export SVN_EDITOR=vim
+
+# Set things for python's virtuan env
 export WORKON_HOME=~/.virtenvs
 source /usr/local/bin/virtualenvwrapper.sh
 

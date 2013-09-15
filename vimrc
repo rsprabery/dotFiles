@@ -48,6 +48,7 @@ Bundle 'git://git.wincent.com/command-t.git'
 Bundle "snipMate"
 " ...
 Bundle 'eglimi/vim-rust'
+Bundle 'VisIncr'
 
 filetype plugin indent on     " required!
 "
