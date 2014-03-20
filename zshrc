@@ -59,7 +59,7 @@ elif [[ `uname` == 'Darwin' ]]; then
   export PATH=/usr/texbin:$PATH
 
   # define path for GO
-  export GOPATH="/Users/read/gocode"
+  export GOPATH=$HOME"/gocode"
 fi # END MAC SPECIFIC
 
 # Add custom bin's
