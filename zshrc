@@ -32,14 +32,14 @@ ZSH_THEME="robbyrussell"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
+plugins=(git ruby rvm django git-extras pip python svn vundle)
 if [[ `uname` == 'Linux' ]]; then
-  plugins=(git brew ruby rvm django git-extras pip python svn vundle)
   export PATH=$PATH:/usr/local/lib/python2.7/dist-packages
   export PYTHONPATH=/usr/local/lib/python2.7/dist-packages
   # END LINUX SPECIFIC
 elif [[ `uname` == 'Darwin' ]]; then
   # Mac Specific:
-  plugins=(git brew ruby rvm django git-extras osx pip python svn vundle)
+  plugins=($plugins brew osx)
 
   export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/usr/local/share/python:`npm root -g`
 
