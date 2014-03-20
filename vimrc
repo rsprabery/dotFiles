@@ -13,6 +13,12 @@ imap <Leader>E :FufCoverageFile
 set nocompatible               " be iMproved
 filetype off                   " required!
 
+" build keys
+:map <C-B> :w<CR>:make<CR><CR>
+:map <C-v> :lprev<CR>
+:map <C-n> :lnext<CR>
+:map <C-x> :make run<CR>
+
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
@@ -38,6 +44,8 @@ Bundle 'rstacruz/sparkup' , {'rtp': 'vim/'}
 " CTRL-X CTRL-U for completion
 " :A(alternate) and :R(related) for jumping between files
 Bundle 'tpope/vim-rails.git'
+Bundle 'Blackrush/vim-gocode.git'
+
 " non github repos
 Bundle 'git://git.wincent.com/command-t.git'
 

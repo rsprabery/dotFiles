@@ -36,16 +36,17 @@ plugins=(git ruby rvm django git-extras pip python svn vundle)
 if [[ `uname` == 'Linux' ]]; then
   export PATH=$PATH:/usr/local/lib/python2.7/dist-packages
   export PYTHONPATH=/usr/local/lib/python2.7/dist-packages
+  source /usr/local/bin/virtualenvwrapper.sh
   # END LINUX SPECIFIC
 elif [[ `uname` == 'Darwin' ]]; then
   # Mac Specific:
   plugins=($plugins brew osx)
 
-  export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/usr/local/share/python:`npm root -g`
+  export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:`npm root -g`
 
   export NODE_PATH="`npm root -g`"
 
-  export PYTHONPATH=/usr/local/Cellar/python/2.7.3/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages
+  #export PYTHONPATH=/usr/local/Cellar/python/2.7.3/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages
 
   PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
@@ -53,13 +54,25 @@ elif [[ `uname` == 'Darwin' ]]; then
   alias mysql=/Applications/MAMP/Library/bin/mysql
   alias mysql_config=/Applications/MAMP/Library/bin/mysql_config
   # add mysql stuffs to path
-  PATH=$PATH:/Applications/MAMP/Library/bin/
+  PATH=$PATH:/Applications/MAMP/Library/bin
 
   # add tex distribution to the path
   export PATH=/usr/texbin:$PATH
 
   # define path for GO
   export GOPATH=$HOME"/gocode"
+
+  # java home
+  export JAVA_HOME=$(/usr/libexec/java_home)
+
+  export HADOOP_HOME=~/software/hadoop-0.20.2
+  export PATH=$HADOOP_HOME/bin:$PATH
+  export HADOOP_VERSION=0.20.2
+  export PIG_HOME=~/software/pig-0.12.0
+  export PATH=$PIG_HOME/bin:$PATH
+  
+  source /usr/local/bin/virtualenvwrapper.sh 
+
 fi # END MAC SPECIFIC
 
 # Add custom bin's
@@ -76,7 +89,9 @@ export SVN_EDITOR=vim
 
 # Set things for python's virtuan env
 export WORKON_HOME=~/.virtenvs
-source /usr/local/bin/virtualenvwrapper.sh
 
 # PIP CACHE
 export PIP_DOWNLOAD_CACHE=$HOME/.pip_download_cache
+
+# OPAM configuration
+. /Users/read/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
