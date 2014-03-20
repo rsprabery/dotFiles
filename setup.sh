@@ -17,6 +17,10 @@ done
 git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
 
 # setup git
-git config --global user.email "read.sprabery@gmail.com"
-git config --global user.name "Read Sprabery"
+echo "Enter your email address for git"
+read email
+echo "Enter your full name for git"
+IFS="" read name 
+git config --global --replace-all user.email "$email "
+git config --global --replace-all user.name "$name"
 git config --global core.editor vim
