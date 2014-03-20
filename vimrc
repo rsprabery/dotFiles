@@ -60,5 +60,5 @@ filetype plugin indent on     " required!
 "
 " see :h vundle for more details or wiki for FAQ
 " NOTE: comments after Bundle command are not allowed..
-let @c='xxxxxxxxwi: ldwobreak;kI    case jjbh'
+"let @c='xxxxxxxxwi: ldwobreak;kI    case jjbh'
 let @x='ddlllld$biprogramMemory[1] = 0xA;jdd'
