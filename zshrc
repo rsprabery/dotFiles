@@ -37,6 +37,8 @@ if [[ `uname` == 'Linux' ]]; then
   export PATH=$PATH:/usr/local/lib/python2.7/dist-packages
   export PYTHONPATH=/usr/local/lib/python2.7/dist-packages
   source /usr/local/bin/virtualenvwrapper.sh
+
+  export PATH=$PATH:/home/read/.linuxbrew/bin
   # END LINUX SPECIFIC
 elif [[ `uname` == 'Darwin' ]]; then
   # Mac Specific:
@@ -95,3 +97,11 @@ export PIP_DOWNLOAD_CACHE=$HOME/.pip_download_cache
 
 # OPAM configuration
 . /Users/read/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+
+function gradle {
+  if [[ -a `pwd`/gradlew ]]; then
+    ./gradlew $@
+  else
+    /usr/bin/gradle $*
+  fi
+}
