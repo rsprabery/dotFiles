@@ -95,3 +95,11 @@ export PIP_DOWNLOAD_CACHE=$HOME/.pip_download_cache
 
 # OPAM configuration
 . /Users/read/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+
+export TIMEFMT="'%J   %U  user %S system %P cpu %*E total'
+  'avg shared (code):         %X KB'
+  'avg unshared (data/stack): %D KB'
+  'total (sum):               %K KB'
+  'max memory:                %M MB'
+  'page faults from disk:     %F'
+  'other page faults:         %R'"

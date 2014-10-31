@@ -44,7 +44,6 @@ Bundle 'rstacruz/sparkup' , {'rtp': 'vim/'}
 " CTRL-X CTRL-U for completion
 " :A(alternate) and :R(related) for jumping between files
 Bundle 'tpope/vim-rails.git'
-Bundle 'Blackrush/vim-gocode.git'
 
 " non github repos
 Bundle 'git://git.wincent.com/command-t.git'
@@ -55,7 +54,6 @@ Bundle 'git://git.wincent.com/command-t.git'
 " tab to complete snipit, check installation diretory
 Bundle "snipMate"
 " ...
-Bundle 'eglimi/vim-rust'
 Bundle 'VisIncr'
 
 filetype plugin indent on     " required!
