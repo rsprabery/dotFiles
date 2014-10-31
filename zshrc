@@ -37,6 +37,8 @@ if [[ `uname` == 'Linux' ]]; then
   export PATH=$PATH:/usr/local/lib/python2.7/dist-packages
   export PYTHONPATH=/usr/local/lib/python2.7/dist-packages
   source /usr/local/bin/virtualenvwrapper.sh
+
+  export PATH=$PATH:/home/read/.linuxbrew/bin
   # END LINUX SPECIFIC
 elif [[ `uname` == 'Darwin' ]]; then
   # Mac Specific:
@@ -103,3 +105,11 @@ export TIMEFMT="'%J   %U  user %S system %P cpu %*E total'
   'max memory:                %M MB'
   'page faults from disk:     %F'
   'other page faults:         %R'"
+
+function gradle {
+  if [[ -a `pwd`/gradlew ]]; then
+    ./gradlew $@
+  else
+    /usr/bin/gradle $*
+  fi
+}
