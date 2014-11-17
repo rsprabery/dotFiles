@@ -1,3 +1,3 @@
 #/bin/bash
 
-sudo apt-get --assume-yes install maven2
+sudo apt-get --assume-yes install maven gradle
