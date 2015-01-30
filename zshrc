@@ -113,3 +113,5 @@ function gradle {
     /usr/bin/gradle $*
   fi
 }
+
+alias fg='fgrep --line-number --recursive --color'
