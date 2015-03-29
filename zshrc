@@ -44,7 +44,7 @@ elif [[ `uname` == 'Darwin' ]]; then
   # Mac Specific:
   plugins=($plugins brew osx)
 
-  export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:`npm root -g`
+  export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:`npm root -g`
 
   export NODE_PATH="`npm root -g`"
 
@@ -115,3 +115,5 @@ function gradle {
 }
 
 alias fg='fgrep --line-number --recursive --color'
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting

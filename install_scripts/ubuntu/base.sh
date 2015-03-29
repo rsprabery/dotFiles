@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo apt-get --assume-yes install git curl wget vim tmux zsh build-essential gcc dkms
+sudo apt-get --assume-yes install git curl wget vim tmux zsh build-essential gcc dkms colordiff
