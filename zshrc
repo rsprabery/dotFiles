@@ -46,7 +46,7 @@ elif [[ `uname` == 'Darwin' ]]; then
   # Mac Specific:
   plugins=($plugins brew osx)
 
-  export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:`npm root -g`:$PATH
+  export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:`npm root -g`
 
   export NODE_PATH="`npm root -g`"
 
@@ -116,6 +116,7 @@ function gradle {
   fi
 }
 
+<<<<<<< HEAD
 function ansible {
   if [[ -a `pwd`/inventory ]]; then
     /usr/bin/ansible -i inventory $@
@@ -133,3 +134,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
 
 alias gl='git log --oneline --all -10 --decorate'
+alias fg='grep --line-number --recursive --color'
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
