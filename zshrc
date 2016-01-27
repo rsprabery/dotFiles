@@ -1,4 +1,4 @@
-# Path to your oh-my-zsh configuration.
+# P ath to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load.
@@ -39,12 +39,14 @@ if [[ `uname` == 'Linux' ]]; then
   source /usr/local/bin/virtualenvwrapper.sh
 
   export PATH=$PATH:/home/read/.linuxbrew/bin
+  export NVM_DIR="/home/read/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
   # END LINUX SPECIFIC
 elif [[ `uname` == 'Darwin' ]]; then
   # Mac Specific:
   plugins=($plugins brew osx)
 
-  export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:`npm root -g`
+  export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:`npm root -g`:$PATH
 
   export NODE_PATH="`npm root -g`"
 
@@ -93,7 +95,7 @@ export SVN_EDITOR=vim
 export WORKON_HOME=~/.virtenvs
 
 # PIP CACHE
-export PIP_DOWNLOAD_CACHE=$HOME/.pip_download_cache
+#export PIP_DOWNLOAD_CACHE=$HOME/.pip_download_cache
 
 # OPAM configuration
 . /Users/read/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
@@ -110,8 +112,24 @@ function gradle {
   if [[ -a `pwd`/gradlew ]]; then
     ./gradlew $@
   else
-    /usr/bin/gradle $*
+    $HOME/bin/gradle $*
   fi
 }
 
-alias fg='fgrep --line-number --recursive --color'
+function ansible {
+  if [[ -a `pwd`/inventory ]]; then
+    /usr/bin/ansible -i inventory $@
+  else
+    /usr/bin/ansible $*
+  fi
+}
+
+#alias fg='fgrep --line-number --recursive --color'
+#alias node=nodejs
+
+[[ -s "$HOME/.aws_creds" ]] && . "$HOME/.aws_creds" 
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
+
+alias gl='git log --oneline --all -10 --decorate'

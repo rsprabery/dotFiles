@@ -13,6 +13,9 @@ for file in $files; do
   ln -s $dir/$file ~/.$file
 done
 
+mkdir -p $HOME/.gradle
+ln -s $dir/gradle.properties $HOME/.gradle/gradle.properties
+
 # install vundle for vim
 git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
 

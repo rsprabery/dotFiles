@@ -7,6 +7,7 @@ set autoindent
 set expandtab
 set tabstop=2
 set shiftwidth=2
+set textwidth=80
 set nu
 :let mapleader=","
 imap <Leader>E :FufCoverageFile
@@ -38,7 +39,7 @@ Bundle 'tpope/vim-fugitive'
 " Activate with ,,gE or ,,w
 Bundle 'Lokaltog/vim-easymotion'
 " For html tags : CTRL-E: Look up special syntax
-Bundle 'rstacruz/sparkup' , {'rtp': 'vim/'}
+" Bundle 'rstacruz/sparkup' , {'rtp': 'vim/'}
 " Pretty obvious....
 " Some NoTes:
 " CTRL-X CTRL-U for completion
@@ -66,3 +67,8 @@ filetype plugin indent on     " required!
 "
 " see :h vundle for more details or wiki for FAQ
 " NOTE: comments after Bundle command are not allowed..
+
+colorscheme delek
+
+" Spell checking
+:setlocal spell spelllang=en_us
