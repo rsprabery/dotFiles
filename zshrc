@@ -33,57 +33,36 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=(git ruby rvm django git-extras pip python svn vundle)
+
+# LINUX SPECIFIC CONFIG
 if [[ `uname` == 'Linux' ]]; then
   export PATH=$PATH:/usr/local/lib/python2.7/dist-packages
   export PYTHONPATH=/usr/local/lib/python2.7/dist-packages
   source /usr/local/bin/virtualenvwrapper.sh
 
-  export PATH=$PATH:/home/read/.linuxbrew/bin
-  export NVM_DIR="/home/read/.nvm"
-  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-  # END LINUX SPECIFIC
+  [[ -d "/home/read/.linuxbrew" ]] && export PATH=$PATH:/home/read/.linuxbrew/bin
+
+# OSX SPECIFIC CONFIG
 elif [[ `uname` == 'Darwin' ]]; then
+
+  # Ensure trim is enabled
+  export TRIM=`system_profiler SPSerialATADataType | grep 'TRIM' | awk '{print $3}'`
+
+  if [[ $TRIM != 'Yes' ]]; then
+    echo "Trim isn't enabled!"
+    echo "Run 'sudo trimforce enable' to fix!"
+  fi
+
+  eval "$(rbenv init -)"
+
   # Mac Specific:
   plugins=($plugins brew osx)
-
-  export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:`npm root -g`
-
-  export NODE_PATH="`npm root -g`"
-
-  #export PYTHONPATH=/usr/local/Cellar/python/2.7.3/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages
-
-  PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-
-  # Do some things so we can use MAMP for development
-  alias mysql=/Applications/MAMP/Library/bin/mysql
-  alias mysql_config=/Applications/MAMP/Library/bin/mysql_config
-  # add mysql stuffs to path
-  PATH=$PATH:/Applications/MAMP/Library/bin
-
-  # add tex distribution to the path
-  export PATH=/usr/texbin:$PATH
-
-  # define path for GO
-  export GOPATH=$HOME"/gocode"
-
-  # java home
-  export JAVA_HOME=$(/usr/libexec/java_home)
-
-  export HADOOP_HOME=~/software/hadoop-0.20.2
-  export PATH=$HADOOP_HOME/bin:$PATH
-  export HADOOP_VERSION=0.20.2
-  export PIG_HOME=~/software/pig-0.12.0
-  export PATH=$PIG_HOME/bin:$PATH
-  
   source /usr/local/bin/virtualenvwrapper.sh 
-
+  export PATH="/usr/local/sbin:$PATH"
 fi # END MAC SPECIFIC
 
 # Add custom bin's
-PATH=$PATH:$HOME/bin
-
-# Source RVM 
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
+[[ -d "$HOME/bin" ]] && PATH=$PATH:$HOME/bin
 
 # Load oh-my-zsh
 source $ZSH/oh-my-zsh.sh
@@ -91,14 +70,8 @@ source $ZSH/oh-my-zsh.sh
 alias gls="git status"
 export SVN_EDITOR=vim
 
-# Set things for python's virtuan env
-export WORKON_HOME=~/.virtenvs
-
-# PIP CACHE
-#export PIP_DOWNLOAD_CACHE=$HOME/.pip_download_cache
-
 # OPAM configuration
-. /Users/read/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+#. /Users/read/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
 export TIMEFMT="'%J   %U  user %S system %P cpu %*E total'
   'avg shared (code):         %X KB'
@@ -116,24 +89,69 @@ function gradle {
   fi
 }
 
-<<<<<<< HEAD
+if [[ -z "$ANSIBLE_BIN" ]]; then
+  export ANSIBLE_BIN=`which ansible`
+  export ANSIBLE_PLAYBOOK_BIN=`which ansible-playbook`
+fi
+
 function ansible {
   if [[ -a `pwd`/inventory ]]; then
-    /usr/bin/ansible -i inventory $@
+    $ANSIBLE_BIN -i inventory $@ -f 50  --sudo 
   else
-    /usr/bin/ansible $*
+    $ANSIBLE_BIN $* -f 50 --sudo
+  fi  
+}
+
+function playbook {
+  if [[ -a `pwd`/inventory ]]; then
+    $ANSIBLE_PLAYBOOK_BIN -i inventory $@ -f 50 --sudo
+  else
+    $ANSIBLE_PLAYBOOK_BIN $* -f 50 --sudo
   fi
 }
 
-#alias fg='fgrep --line-number --recursive --color'
-#alias node=nodejs
+function ap {
+  if [[ -d `pwd`/../../roles ]]; then
+    export ANSIBLE_ROLES_PATH=`pwd`/../../roles
+  fi
+  playbook $*
+  unset ANSIBLE_ROLES_PATH
+}
 
 [[ -s "$HOME/.aws_creds" ]] && . "$HOME/.aws_creds" 
 
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
+[[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh" # This loads nvm
 
 alias gl='git log --oneline --all -10 --decorate'
 alias fg='grep --line-number --recursive --color'
 
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
+# Source RVM 
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
+[[ -d "$HOME/.rvm" ]] && PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
+function make_role {
+ mkdir $1
+ mkdir $1/tasks
+ mkdir $1/handlers
+ mkdir $1/vars
+ mkdir $1/defaults
+ mkdir $1/meta
+ echo "---\n" >> $1/tasks/main.yml
+ echo "---\n" >> $1/handlers/main.yml
+ echo "---\n" >> $1/vars/main.yml
+ echo "---\n" >> $1/defaults/main.yml
+ echo "---\n" >> $1/meta/main.yml
+ mkdir $1/templates
+ mkdir $1/files
+ touch $1/templates/.keep
+ touch $1/files/.keep
+}
+
+# Load any machine specific configs
+[[ -s "$HOME/.local_box_profile" ]] && . $HOME/.local_box_profile
+
+export PROMPT='%{$fg[yellow]%}%m%{$reset_color%}:%{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)
+%{$reset_color%} ${ret_status} %{$reset_color%}'
+

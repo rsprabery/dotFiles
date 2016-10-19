@@ -8,6 +8,7 @@ chsh -s /bin/zsh
 
 # Links configs
 dir=`pwd`
+rm ~/.zshrc
 files="zshrc vimrc tmux.conf gemrc"
 for file in $files; do
   ln -s $dir/$file ~/.$file
