@@ -38,7 +38,7 @@ plugins=(git ruby rvm django git-extras pip python svn vundle)
 if [[ `uname` == 'Linux' ]]; then
   export PATH=$PATH:/usr/local/lib/python2.7/dist-packages
   export PYTHONPATH=/usr/local/lib/python2.7/dist-packages
-  source /usr/local/bin/virtualenvwrapper.sh
+  [[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && source /usr/local/bin/virtualenvwrapper.sh
 
   [[ -d "/home/read/.linuxbrew" ]] && export PATH=$PATH:/home/read/.linuxbrew/bin
 
@@ -118,19 +118,6 @@ function ap {
   unset ANSIBLE_ROLES_PATH
 }
 
-[[ -s "$HOME/.aws_creds" ]] && . "$HOME/.aws_creds" 
-
-export NVM_DIR="$HOME/.nvm"
-[[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh" # This loads nvm
-
-alias gl='git log --oneline --all -10 --decorate'
-alias fg='grep --line-number --recursive --color'
-
-
-# Source RVM 
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
-[[ -d "$HOME/.rvm" ]] && PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-
 function make_role {
  mkdir $1
  mkdir $1/tasks
@@ -149,9 +136,55 @@ function make_role {
  touch $1/files/.keep
 }
 
+[[ -s "$HOME/.aws_creds" ]] && . "$HOME/.aws_creds" 
+
+export NVM_DIR="$HOME/.nvm"
+[[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh" # This loads nvm
+
+alias gl='git log --oneline --all -10 --decorate'
+alias fg='grep --line-number --recursive --color'
+
+# Source RVM 
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
+[[ -d "$HOME/.rvm" ]] && PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
 # Load any machine specific configs
 [[ -s "$HOME/.local_box_profile" ]] && . $HOME/.local_box_profile
 
 export PROMPT='%{$fg[yellow]%}%m%{$reset_color%}:%{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)
 %{$reset_color%} ${ret_status} %{$reset_color%}'
 
+bindkey -v 
+export KEYTIMEOUT=0.3
+
+function zle-line-init zle-keymap-select {
+  VIM_PROMPT="%{$fg_bold[yellow]%} [% NORMAL]% %{$reset_color%}"
+  RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/} $EPS1"
+  zle reset-prompt
+}
+
+zle -N zle-line-init
+zle -N zle-keymap-select
+bindkey '^r' history-incremental-search-backward
+alias pbcopy='xclip -selection clipboard'
+alias pbpaste='xclip -selection clipboard -o'
+
+alias beep=''
+[[ -s "/usr/share/sounds/purple/alert.wav" ]]  && export BEEP=/usr/share/sounds/purple/alert.wav && alias beep='paplay $BEEP'
+
+function countdown(){
+   date1=$((`date +%s` + $1)); 
+   while [ "$date1" -ge `date +%s` ]; do 
+     echo -ne "$(date -u --date @$(($date1 - `date +%s`)) +%H:%M:%S)\r";
+     sleep 0.1
+   done
+   beep
+}
+
+function stopwatch(){
+  date1=`date +%s`; 
+   while true; do 
+    echo -ne "$(date -u --date @$((`date +%s` - $date1)) +%H:%M:%S)\r"; 
+    sleep 0.1
+   done
+}

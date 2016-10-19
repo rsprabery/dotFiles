@@ -68,7 +68,9 @@ filetype plugin indent on     " required!
 " see :h vundle for more details or wiki for FAQ
 " NOTE: comments after Bundle command are not allowed..
 
-colorscheme delek
+colorscheme desert
 
 " Spell checking
-:setlocal spell spelllang=en_us
+autocmd FileType plaintex setlocal spell spelllang=en_us
+
+:nnoremap <Leader>T "=strftime("%c")<CR>P
