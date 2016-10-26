@@ -41,6 +41,15 @@ if [[ `uname` == 'Linux' ]]; then
   [[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && source /usr/local/bin/virtualenvwrapper.sh
 
   [[ -d "/home/read/.linuxbrew" ]] && export PATH=$PATH:/home/read/.linuxbrew/bin
+  
+  function open {
+    if [[ -d "${1}" ]]; then 
+      thunar ${1} & 
+      disown %$(jobs | sed 's/\[//g' | sed 's/\]//g'| grep thunar |  awk '{print $1}')
+    else
+      echo "${1} is not a directory!"
+    fi
+  }
 
 # OSX SPECIFIC CONFIG
 elif [[ `uname` == 'Darwin' ]]; then
