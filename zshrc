@@ -44,7 +44,7 @@ if [[ `uname` == 'Linux' ]]; then
   
   function open {
     if [[ -d "${1}" ]]; then 
-      thunar ${1} & 
+      thunar ${1} &> /dev/null & 
       disown %$(jobs | sed 's/\[//g' | sed 's/\]//g'| grep thunar |  awk '{print $1}')
     else
       echo "${1} is not a directory!"
