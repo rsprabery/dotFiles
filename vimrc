@@ -7,8 +7,11 @@ set autoindent
 set expandtab
 set tabstop=2
 set shiftwidth=2
-set textwidth=80
+" set textwidth=80
+highlight ColorColumn ctermbg=gray
+set colorcolumn=81
 set nu
+set paste
 :let mapleader=","
 imap <Leader>E :FufCoverageFile
 set nocompatible               " be iMproved
@@ -56,6 +59,27 @@ Bundle 'git://git.wincent.com/command-t.git'
 Bundle "snipMate"
 " ...
 Bundle 'VisIncr'
+Plugin 'flazz/vim-colorschemes'
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'junegunn/vim-easy-align'
+Plugin 'airblade/vim-gitgutter'
+
+function! Carousel()
+  for theme in split(globpath(&runtimepath, 'colors/*.vim'), '\n')
+    let t = fnamemodify(theme, ':t:r')
+    try
+      execute 'colorscheme '.t
+      echo t
+    catch
+    finally
+    endtry
+    sleep 4
+    redraw
+  endfor
+endfunction
+
+" map <silent> <Leader>tc :call Carousel()<cr>
 
 filetype plugin indent on     " required!
 "
@@ -68,9 +92,39 @@ filetype plugin indent on     " required!
 " see :h vundle for more details or wiki for FAQ
 " NOTE: comments after Bundle command are not allowed..
 
-colorscheme desert
+colorscheme BlackSea
 
 " Spell checking
 autocmd FileType plaintex setlocal spell spelllang=en_us
 
+autocmd FileType ruby nmap <Leader>a :A<CR>
+autocmd FileType ruby nmap <Leader>r :R<CR>
+autocmd FileType ruby nmap <Leader>co :Econtroller<CR>
+autocmd FileType ruby nmap <Leader>mo :Emodel<CR>
+autocmd FileType ruby nmap <Leader>vi :Eview<CR>
+autocmd FileType ruby nmap <Leader>ec :echom system("ctags -R --languages=ruby --exclude=.git --exclude=log . && ctags -R --languages=ruby --exclude=.git --exclude=log . $(bundle list --paths)")<CR>
+
 :nnoremap <Leader>T "=strftime("%c")<CR>P
+
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'majutsushi/tagbar'
+
+nmap <Leader>o :TagbarToggle<CR>
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+Plugin 'vim-syntastic/syntastic'
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+Plugin 'scrooloose/nerdtree'
+map <Leader>n :NERDTreeToggle<CR>

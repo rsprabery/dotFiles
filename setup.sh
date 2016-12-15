@@ -28,3 +28,11 @@ IFS="" read name
 git config --global --replace-all user.email "$email "
 git config --global --replace-all user.name "$name"
 git config --global core.editor vim
+
+vim +BundleInstall +qall
+cd ~/.vim/bundle/command-t/ruby/command-t
+ruby extconf.rb
+make
+
+cd ~/.vim/bundle/YouCompleteMe
+./install.py --clang-completer

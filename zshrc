@@ -68,6 +68,8 @@ elif [[ `uname` == 'Darwin' ]]; then
   plugins=($plugins brew osx)
   source /usr/local/bin/virtualenvwrapper.sh 
   export PATH="/usr/local/sbin:$PATH"
+  alias ctags="`brew --prefix`/bin/ctags"
+  alias vim="mvim"
 fi # END MAC SPECIFIC
 
 # Add custom bin's
@@ -196,4 +198,9 @@ function stopwatch(){
     echo -ne "$(date -u --date @$((`date +%s` - $date1)) +%H:%M:%S)\r"; 
     sleep 0.1
    done
+}
+
+function ctags-ruby() {
+  ctags -R --languages=ruby --exclude=.git --exclude=log . 
+  ctags -R --languages=ruby --exclude=.git --exclude=log . $(bundle list --paths)
 }
