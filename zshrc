@@ -204,3 +204,9 @@ function ctags-ruby() {
   ctags -R --languages=ruby --exclude=.git --exclude=log . 
   ctags -R --languages=ruby --exclude=.git --exclude=log . $(bundle list --paths)
 }
+
+# enable control-s and control-q
+stty start undef
+stty stop undef
+setopt noflowcontrol
+stty -ixon
