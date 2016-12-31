@@ -36,3 +36,5 @@ make
 
 cd ~/.vim/bundle/YouCompleteMe
 ./install.py --clang-completer
+
+echo "Remember to ssh-add (-K on mac) your ~/.ssh/id_rsa!"

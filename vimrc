@@ -127,7 +127,7 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
 Plugin 'scrooloose/nerdtree'
-map <Leader>n :NERDTreeToggle<CR>
+map <Leader>n :NERDTreeToggle<CR><C-W>w
 " autocmd FileType c nnoremap K :Man <cword>
 
 map <C-q> <C-C>:q<CR>
