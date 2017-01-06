@@ -104,7 +104,7 @@ autocmd FileType ruby nmap <Leader>mo :Emodel<CR>
 autocmd FileType ruby nmap <Leader>vi :Eview<CR>
 autocmd FileType ruby nmap <Leader>ec :echom system("ctags -R --languages=ruby --exclude=.git --exclude=log . && ctags -R --languages=ruby --exclude=.git --exclude=log . $(bundle list --paths)")<CR>
 
-:nnoremap <Leader>T "=strftime("%c")<CR>P
+:nnoremap <Leader>T "=strftime("%c")<CR>P<C-f>
 
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
@@ -131,8 +131,23 @@ map <Leader>n :NERDTreeToggle<CR><C-W>w
 " autocmd FileType c nnoremap K :Man <cword>
 
 map <C-q> <C-C>:q<CR>
-map <C-q>q <C-C>:q!<CR>
-noremap <silent> <C-s>          :update<CR>
-vnoremap <silent> <C-s>         <C-C>:update<CR>
-inoremap <silent> <C-s>         <C-O>:update<CR>
+imap <C-q> <C-\><C-N>:q<CR>
+
+map <C-x> <C-C>:q!<CR>
+
+
+
+map  <C-s>             <C-\><C-N>:update<CR>
+imap  <C-s>            <C-\><C-N>:update<CR>
+"noremap  <C-s>         <C-\><C-N>:update<CR>
+"vnoremap <C-s>         <C-\><C-N>:update<CR>
+"inoremap <C-s>         <C-\><C-N><C-O>:update<CR>
 "
+
+map <C-H> <C-C><C-W>h
+imap <C-H> <C-\><C-N><C-C><C-W>h<CR>
+
+map <C-L> <C-C><C-W>l
+imap <C-L> <C-\><C-N><C-C><C-W>l<CR>
+
+
