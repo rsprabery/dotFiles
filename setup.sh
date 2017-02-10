@@ -1,7 +1,11 @@
 #!/bin/bash
 
 # install oh-my-zsh
-curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sh
+if [ -d "$HOME/.oh-my-zsh" ]; then 
+  echo 'zsh alread installed'
+else
+  curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sh
+fi
 
 # Change default shell
 chsh -s /bin/zsh
@@ -18,23 +22,66 @@ mkdir -p $HOME/.gradle
 ln -s $dir/gradle.properties $HOME/.gradle/gradle.properties
 
 # install vundle for vim
-git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+if [ -d $HOME/.vim/bundle/vundle ]; then
+  echo 'vundle already installed!'
+else
+  git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+fi
 
 # setup git
-echo "Enter your email address for git"
-read email
-echo "Enter your full name for git"
-IFS="" read name 
-git config --global --replace-all user.email "$email "
-git config --global --replace-all user.name "$name"
-git config --global core.editor vim
+if [ -f $HOME/.gitconfig ]; then
+  echo 'git already configured!'
+else
+  echo "Enter your email address for git"
+  read email
+  echo "Enter your full name for git"
+  IFS="" read name 
+  git config --global --replace-all user.email "$email "
+  git config --global --replace-all user.name "$name"
+  git config --global core.editor vim
+fi
 
-vim +BundleInstall +qall
-cd ~/.vim/bundle/command-t/ruby/command-t
-ruby extconf.rb
-make
+# neovim
+which nvim >> /dev/null
+if [ $? -eq 1 ]; then 
+  sudo add-apt-repository ppa:neovim-ppa/stable
+  sudo apt-get update
+  sudo apt-get install neovim
+fi
 
+# link vimrc for neovim
+mkdir -p $HOME/.config/nvim/
+ln -s $dir/vimrc $HOME/.config/nvim/init.vim
+
+#anaconda
+if [ -d "$HOME/anaconda3" ]; then
+  echo 'anaconda3 installation found!'
+else
+  echo 'installing anaconda3'
+  wget https://repo.continuum.io/archive/Anaconda3-4.3.0-Linux-x86_64.sh
+  bash Anaconda3-4.3.0-Linux-x86_64.sh
+  rm Anaconda3-4.3.0-Linux-x86_64.sh
+fi
+
+# add anaconda 3 to the path
+PATH=$HOME/anaconda3/bin:$PATH
+
+# install depds for neovim
+pip install neovim
+
+nvim +BundleInstall +qall
+#cd ~/.vim/bundle/command-t/ruby/command-t
+#ruby extconf.rb
+#make
+
+# you complete me dependencies
+sudo apt-get install cmake build-essential python-dev python3-dev
+export PATH=/usr/bin:$PATH
+alias python=/usr/bin/python3
 cd ~/.vim/bundle/YouCompleteMe
-./install.py --clang-completer
+if [ -f "CMakeCache.txt" ]; then
+  rm CMakeCache.txt
+fi
+./install.py --clang-completer --gocode-completer
 
 echo "Remember to ssh-add (-K on mac) your ~/.ssh/id_rsa!"
