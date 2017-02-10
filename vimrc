@@ -150,4 +150,6 @@ imap <C-H> <C-\><C-N><C-C><C-W>h<CR>
 map <C-L> <C-C><C-W>l
 imap <C-L> <C-\><C-N><C-C><C-W>l<CR>
 
-
+" Keep visual selection selected when tabbing and un-tabbing
+vnoremap < <gv
+vnoremap > >gv
