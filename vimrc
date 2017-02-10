@@ -11,7 +11,9 @@ set shiftwidth=2
 highlight ColorColumn ctermbg=gray
 set colorcolumn=81
 set nu
-set paste
+" set paste
+" http://stackoverflow.com/questions/28304137/youcompleteme-works-but-can-not-complete-using-tab
+:set pastetoggle=<F10>
 :let mapleader=","
 imap <Leader>E :FufCoverageFile
 set nocompatible               " be iMproved
@@ -56,7 +58,7 @@ Bundle 'git://git.wincent.com/command-t.git'
 " Bundle 'https://github.com/davidhalter/jedi-vim.git'
 
 " tab to complete snipit, check installation diretory
-Bundle "snipMate"
+" Bundle "snipMate"
 " ...
 Bundle 'VisIncr'
 Plugin 'flazz/vim-colorschemes'
@@ -104,7 +106,7 @@ autocmd FileType ruby nmap <Leader>mo :Emodel<CR>
 autocmd FileType ruby nmap <Leader>vi :Eview<CR>
 autocmd FileType ruby nmap <Leader>ec :echom system("ctags -R --languages=ruby --exclude=.git --exclude=log . && ctags -R --languages=ruby --exclude=.git --exclude=log . $(bundle list --paths)")<CR>
 
-:nnoremap <Leader>T "=strftime("%c")<CR>P<C-f>
+" :nnoremap <Leader>T "=strftime("%c")<CR>P<C-f>
 
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
@@ -114,6 +116,9 @@ nmap ga <Plug>(EasyAlign)
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'majutsushi/tagbar'
+Plugin 'heavenshell/vim-pydocstring'
+nmap <silent> <C-_> <Plug>(pydocstring)
+autocmd FileType python nmap <silent> <C-d> <Plug>(pydocstring)
 
 nmap <Leader>o :TagbarToggle<CR>
 set statusline+=%#warningmsg#
@@ -153,3 +158,9 @@ imap <C-L> <C-\><C-N><C-C><C-W>l<CR>
 " Keep visual selection selected when tabbing and un-tabbing
 vnoremap < <gv
 vnoremap > >gv
+
+" Spacing in python
+autocmd FileType python :set tabstop=8 expandtab shiftwidth=4 softtabstop=4
+
+" Selection of which python bin to use for plugins
+let g:ycm_python_binary_path = '/home/read/anaconda3/bin/python3'
