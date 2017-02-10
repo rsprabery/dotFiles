@@ -210,3 +210,15 @@ stty start undef
 stty stop undef
 setopt noflowcontrol
 stty -ixon
+
+
+# add anaconda 3 to the path if it exists
+if [ -d "${HOME}/anaconda3" ]; then
+  PATH=${HOME}/anaconda3/bin:$PATH
+fi
+
+# make vim -> nvim if neovim is installed 
+which nvim >> /dev/null
+if [ $? -eq 0 ]; then
+  alias vim=nvim
+fi
