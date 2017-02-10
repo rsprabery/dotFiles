@@ -85,3 +85,4 @@ fi
 ./install.py --clang-completer --gocode-completer
 
 echo "Remember to ssh-add (-K on mac) your ~/.ssh/id_rsa!"
+echo "Make sure your terminal is reported as xterm-256color"

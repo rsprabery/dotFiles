@@ -134,6 +134,7 @@ let g:syntastic_check_on_wq = 0
 
 Plugin 'scrooloose/nerdtree'
 map <Leader>n :NERDTreeToggle<CR><C-W>w
+map <Leader>t :CtrlPMixed<CR>
 " autocmd FileType c nnoremap K :Man <cword>
 
 map <C-q> <C-C>:q<CR>
@@ -165,3 +166,5 @@ autocmd FileType python :set tabstop=8 expandtab shiftwidth=4 softtabstop=4
 
 " Selection of which python bin to use for plugins
 let g:ycm_python_binary_path = '/usr/bin/python'
+
+Bundle "rdnetto/YCM-Generator"
