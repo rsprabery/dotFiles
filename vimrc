@@ -52,7 +52,8 @@ Bundle 'Lokaltog/vim-easymotion'
 Bundle 'tpope/vim-rails.git'
 
 " non github repos
-Bundle 'git://git.wincent.com/command-t.git'
+" Bundle 'git://git.wincent.com/command-t.git'
+Bundle 'ctrlpvim/ctrlp.vim'
 
 " Some python things, but may be adding spaces wrong? (In all files)
 " Bundle 'https://github.com/davidhalter/jedi-vim.git'
@@ -163,4 +164,4 @@ vnoremap > >gv
 autocmd FileType python :set tabstop=8 expandtab shiftwidth=4 softtabstop=4
 
 " Selection of which python bin to use for plugins
-let g:ycm_python_binary_path = '/home/read/anaconda3/bin/python3'
+let g:ycm_python_binary_path = '/usr/bin/python'
