@@ -50,6 +50,7 @@ if [[ `uname` == 'Linux' ]]; then
       echo "${1} is not a directory!"
     fi
   }
+  export TERM=xterm-256color
 
 # OSX SPECIFIC CONFIG
 elif [[ `uname` == 'Darwin' ]]; then
