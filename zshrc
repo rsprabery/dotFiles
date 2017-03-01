@@ -51,6 +51,11 @@ if [[ `uname` == 'Linux' ]]; then
     fi
   }
 
+  which clang-3.8 >> /dev/null
+  if [ $? -eq 0 ]; then
+    alias clang=clang-3.8
+  fi
+
 # OSX SPECIFIC CONFIG
 elif [[ `uname` == 'Darwin' ]]; then
 
@@ -210,7 +215,6 @@ stty start undef
 stty stop undef
 setopt noflowcontrol
 stty -ixon
-
 
 # add anaconda 3 to the path if it exists
 if [ -d "${HOME}/anaconda3" ]; then
