@@ -53,7 +53,6 @@ Bundle 'tpope/vim-rails.git'
 
 " non github repos
 " Bundle 'git://git.wincent.com/command-t.git'
-Bundle 'ctrlpvim/ctrlp.vim'
 
 " Some python things, but may be adding spaces wrong? (In all files)
 " Bundle 'https://github.com/davidhalter/jedi-vim.git'
@@ -171,3 +170,11 @@ let g:ycm_python_binary_path = '/usr/bin/python'
 Bundle "rdnetto/YCM-Generator"
 Bundle "joe-skb7/cscope-maps"
 
+" ctrlp config
+Bundle 'ctrlpvim/ctrlp.vim'
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.o     " MacOSX/Linux
+let g:ctrlp_use_caching = 1
+let g:ctrlp_clear_cache_on_exit = 0
+let g:ctrlp_cache_dir = "/dev/shm/cache/ctrlp"
+
+autocmd FileType c nmap <Leader>] "zyiw:exe "cs f t struct <C-r>z {"<CR>
