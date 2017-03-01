@@ -51,8 +51,10 @@ which nvim >> /dev/null
 if [ $? -eq 1 ]; then 
   sudo add-apt-repository ppa:neovim-ppa/stable
   sudo apt-get update
-  sudo apt-get install neovim
+  sudo apt-get install neovim 
 fi
+
+sudo apt-get install python-pip
 
 # link vimrc for neovim
 mkdir -p $HOME/.config/nvim/
@@ -68,16 +70,19 @@ else
   rm Anaconda3-4.3.0-Linux-x86_64.sh
 fi
 
+# install deps for neovim
+# Right now, YCM only works with system python. So neovim needs to be able
+# to talk to /usr/bin/python
+sudo pip install neovim
+
 # add anaconda 3 to the path
 PATH=$HOME/anaconda3/bin:$PATH
 
-# install depds for neovim
+# We'll still install neovim support in anaconda incase we need to change 
+# which python vim talks to.
 pip install neovim
 
 nvim +BundleInstall +qall
-#cd ~/.vim/bundle/command-t/ruby/command-t
-#ruby extconf.rb
-#make
 
 if [ -f "${HOME}/.vim/bundle/YouCompleteMe/third_party/ycmd/ycm_core.so" ]; then
   echo "YCM is already installed!"
