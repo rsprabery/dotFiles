@@ -142,7 +142,8 @@ imap <C-q> <C-\><C-N>:q<CR>
 
 map <C-x> <C-C>:q!<CR>
 
-
+let hlstate=0
+nnoremap <F9> :if (hlstate == 0) \| nohlsearch \| else \| set hlsearch \| endif \| let hlstate=1-hlstate<cr>
 
 map  <C-s>             <C-\><C-N>:update<CR>
 imap  <C-s>            <C-\><C-N>:update<CR>
@@ -168,3 +169,5 @@ autocmd FileType python :set tabstop=8 expandtab shiftwidth=4 softtabstop=4
 let g:ycm_python_binary_path = '/usr/bin/python'
 
 Bundle "rdnetto/YCM-Generator"
+Bundle "joe-skb7/cscope-maps"
+
