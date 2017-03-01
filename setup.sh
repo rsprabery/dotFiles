@@ -38,8 +38,13 @@ else
   IFS="" read name 
   git config --global --replace-all user.email "$email "
   git config --global --replace-all user.name "$name"
-  git config --global core.editor vim
 fi
+git config --global core.editor vim
+git config --global push.default simple
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.ci commit
+git config --global alias.st status
 
 # neovim
 which nvim >> /dev/null
@@ -74,15 +79,21 @@ nvim +BundleInstall +qall
 #ruby extconf.rb
 #make
 
-# you complete me dependencies
-sudo apt-get install cmake build-essential python-dev python3-dev exuberant-ctags
-export PATH=/usr/bin:$PATH
-alias python=/usr/bin/python3
-cd ~/.vim/bundle/YouCompleteMe
-if [ -f "CMakeCache.txt" ]; then
-  rm CMakeCache.txt
+if [ -f "${HOME}/.vim/bundle/YouCompleteMe/third_party/ycmd/ycm_core.so" ]; then
+  echo "YCM is already installed!"
+  echo "To reinstall, run: "
+  echo "rm ${HOME}/.vim/bundle/YouCompleteMe/third_party/ycmd/ycm_core.so"
+else
+  # you complete me dependencies
+  sudo apt-get install cmake build-essential python-dev python3-dev exuberant-ctags
+  export PATH=/usr/bin:$PATH
+  alias python=/usr/bin/python3
+  cd ~/.vim/bundle/YouCompleteMe
+  if [ -f "CMakeCache.txt" ]; then
+    rm CMakeCache.txt
+  fi
+  ./install.py --clang-completer --gocode-completer
 fi
-./install.py --clang-completer --gocode-completer
 
 echo "Remember to ssh-add (-K on mac) your ~/.ssh/id_rsa!"
 echo "Make sure your terminal is reported as xterm-256color"
