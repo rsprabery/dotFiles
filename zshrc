@@ -50,6 +50,7 @@ if [[ `uname` == 'Linux' ]]; then
       echo "${1} is not a directory!"
     fi
   }
+  export TERM=xterm-256color
 
   which clang-3.8 >> /dev/null
   if [ $? -eq 0 ]; then
@@ -225,4 +226,16 @@ fi
 which nvim >> /dev/null
 if [ $? -eq 0 ]; then
   alias vim=nvim
+fi
+
+# color output for wdiff
+# https://www.gnu.org/software/wdiff/manual/html_node/wdiff-Examples.html
+real_wdiff=$(which wdiff)
+if [ $? -eq 0 ]; then
+  function wdiff {
+    ${real_wdiff} -n \
+      -w $'\033[30;41m' -x $'\033[0m' \
+      -y $'\033[30;42m' -z $'\033[0m' \
+      $@ | less -R
+  }
 fi

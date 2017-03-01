@@ -75,7 +75,7 @@ nvim +BundleInstall +qall
 #make
 
 # you complete me dependencies
-sudo apt-get install cmake build-essential python-dev python3-dev
+sudo apt-get install cmake build-essential python-dev python3-dev exuberant-ctags
 export PATH=/usr/bin:$PATH
 alias python=/usr/bin/python3
 cd ~/.vim/bundle/YouCompleteMe
