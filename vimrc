@@ -94,7 +94,6 @@ filetype plugin indent on     " required!
 " see :h vundle for more details or wiki for FAQ
 " NOTE: comments after Bundle command are not allowed..
 
-colorscheme BlackSea
 
 " Spell checking
 autocmd FileType plaintex setlocal spell spelllang=en_us
@@ -106,6 +105,8 @@ autocmd FileType ruby nmap <Leader>mo :Emodel<CR>
 autocmd FileType ruby nmap <Leader>vi :Eview<CR>
 autocmd FileType ruby nmap <Leader>ec :echom system("ctags -R --languages=ruby --exclude=.git --exclude=log . && ctags -R --languages=ruby --exclude=.git --exclude=log . $(bundle list --paths)")<CR>
 
+" auto read changes from disk
+set autoread
 " :nnoremap <Leader>T "=strftime("%c")<CR>P<C-f>
 
 " Start interactive EasyAlign in visual mode (e.g. vipga)
@@ -178,3 +179,45 @@ let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_cache_dir = "/dev/shm/cache/ctrlp"
 
 autocmd FileType c nmap <Leader>] "zyiw:exe "cs f t struct <C-r>z {"<CR>
+
+Bundle 'chriskempson/base16-vim'
+
+" colorscheme BlackSea
+let base16colorspace=256
+colorscheme base16-twilight
+
+" The Silver Searcher
+if executable('ag')
+  " Use ag over grep
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+endif
+
+if executable('matcher')
+	let g:ctrlp_match_func = { 'match': 'GoodMatch' }
+ 
+	function! GoodMatch(items, str, limit, mmode, ispath, crfile, regex)
+ 
+	  " Create a cache file if not yet exists
+	  let cachefile = ctrlp#utils#cachedir().'/matcher.cache'
+	  if !( filereadable(cachefile) && a:items == readfile(cachefile) )
+		call writefile(a:items, cachefile)
+	  endif
+	  if !filereadable(cachefile)
+		return []
+	  endif
+ 
+	  " a:mmode is currently ignored. In the future, we should probably do
+	  " something about that. the matcher behaves like "full-line".
+	  let cmd = 'matcher --limit '.a:limit.' --manifest '.cachefile.' '
+	  if !( exists('g:ctrlp_dotfiles') && g:ctrlp_dotfiles )
+		let cmd = cmd.'--no-dotfiles '
+	  endif
+	  let cmd = cmd.a:str
+ 
+	  return split(system(cmd), "\n")
+
+	endfunction
+end

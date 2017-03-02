@@ -54,7 +54,7 @@ if [ $? -eq 1 ]; then
   sudo apt-get install neovim 
 fi
 
-sudo apt-get install python-pip
+sudo apt-get install python-pip silversearcher-ag
 
 # link vimrc for neovim
 mkdir -p $HOME/.config/nvim/
@@ -73,10 +73,14 @@ fi
 # install deps for neovim
 # Right now, YCM only works with system python. So neovim needs to be able
 # to talk to /usr/bin/python
+# sudo pip install --upgrade pyOpenSSL cryptography idna certifi
 sudo pip install neovim
 
 # add anaconda 3 to the path
 PATH=$HOME/anaconda3/bin:$PATH
+
+# The pip cache may be owned by root, change owner
+sudo chown -R $(whoami):$(whoami) ${HOME}/.cache
 
 # We'll still install neovim support in anaconda incase we need to change 
 # which python vim talks to.
@@ -100,5 +104,20 @@ else
   ./install.py --clang-completer --gocode-completer
 fi
 
+# Matcher for fuzzy matching with ctrlp
+git clone https://github.com/burke/matcher.git
+cd matcher
+make
+mv matcher ${HOME}/bin/matcher
+
+# Color scheme for terminal & vim
+if [ -d "${HOME}/.config/base16-shell" ]; then
+  echo "colors already installed"
+else
+  git clone https://github.com/chriskempson/base16-shell.git ~/.config/base16-shell
+fi
+
 echo "Remember to ssh-add (-K on mac) your ~/.ssh/id_rsa!"
 echo "Make sure your terminal is reported as xterm-256color"
+
+
