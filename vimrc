@@ -176,7 +176,10 @@ Bundle 'ctrlpvim/ctrlp.vim'
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.o     " MacOSX/Linux
 let g:ctrlp_use_caching = 1
 let g:ctrlp_clear_cache_on_exit = 0
-let g:ctrlp_cache_dir = "/dev/shm/cache/ctrlp"
+
+if isdirectory("/dev/shm/")
+  let g:ctrlp_cache_dir = "/dev/shm/cache/ctrlp"
+endif 
 
 autocmd FileType c nmap <Leader>] "zyiw:exe "cs f t struct <C-r>z {"<CR>
 
