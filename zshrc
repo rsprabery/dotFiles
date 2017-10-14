@@ -57,6 +57,9 @@ if [[ `uname` == 'Linux' ]]; then
     alias clang=clang-3.8
   fi
 
+  alias pbcopy='xclip -selection clipboard'
+  alias pbpaste='xclip -selection clipboard -o'
+
 # OSX SPECIFIC CONFIG
 elif [[ `uname` == 'Darwin' ]]; then
 
@@ -98,11 +101,17 @@ export TIMEFMT="'%J   %U  user %S system %P cpu %*E total'
   'page faults from disk:     %F'
   'other page faults:         %R'"
 
+GRADLE_BIN=$(which gradle)
 function gradle {
   if [[ -a `pwd`/gradlew ]]; then
     ./gradlew $@
   else
-    $HOME/bin/gradle $*
+    if [[ -z ${GRADLE_BIN} ]]; then 
+      $HOME/bin/gradle $*
+    else
+      ${GRADLE_BIN} $*
+    fi
+
   fi
 }
 
@@ -183,8 +192,7 @@ function zle-line-init zle-keymap-select {
 zle -N zle-line-init
 zle -N zle-keymap-select
 bindkey '^r' history-incremental-search-backward
-alias pbcopy='xclip -selection clipboard'
-alias pbpaste='xclip -selection clipboard -o'
+
 
 alias beep=''
 [[ -s "/usr/share/sounds/purple/alert.wav" ]]  && export BEEP=/usr/share/sounds/purple/alert.wav && alias beep='paplay $BEEP'
