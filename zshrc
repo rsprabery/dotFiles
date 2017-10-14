@@ -36,8 +36,6 @@ plugins=(git ruby rvm django git-extras pip python svn vundle)
 
 # LINUX SPECIFIC CONFIG
 if [[ `uname` == 'Linux' ]]; then
-  export PATH=$PATH:/usr/local/lib/python2.7/dist-packages
-  export PYTHONPATH=/usr/local/lib/python2.7/dist-packages
   [[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && source /usr/local/bin/virtualenvwrapper.sh
 
   [[ -d "/home/read/.linuxbrew" ]] && export PATH=$PATH:/home/read/.linuxbrew/bin
@@ -56,6 +54,13 @@ if [[ `uname` == 'Linux' ]]; then
   if [ $? -eq 0 ]; then
     alias clang=clang-3.8
   fi
+
+  fucntion  pbcopy() {
+    #sed 's/\n//g' | xclip -selection clipboard
+    awk '{printf "%s",$0} END {print ""}' | xclip -selection clipboard
+  }
+
+  alias pbpaste='xclip -selection clipboard -o'
 
 # OSX SPECIFIC CONFIG
 elif [[ `uname` == 'Darwin' ]]; then
@@ -183,9 +188,6 @@ function zle-line-init zle-keymap-select {
 zle -N zle-line-init
 zle -N zle-keymap-select
 bindkey '^r' history-incremental-search-backward
-alias pbcopy='xclip -selection clipboard'
-alias pbpaste='xclip -selection clipboard -o'
-
 alias beep=''
 [[ -s "/usr/share/sounds/purple/alert.wav" ]]  && export BEEP=/usr/share/sounds/purple/alert.wav && alias beep='paplay $BEEP'
 
