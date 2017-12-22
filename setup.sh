@@ -36,7 +36,8 @@ else
   read email
   echo "Enter your full name for git"
   IFS="" read name 
-  git config --global --replace-all user.email "$email "
+  #git config --global --replace-all user.email "$email "
+  git config --global user.email "rsprabery@users.noreply.github.com"
   git config --global --replace-all user.name "$name"
 fi
 git config --global core.editor vim
@@ -49,12 +50,20 @@ git config --global alias.st status
 # neovim
 which nvim >> /dev/null
 if [ $? -eq 1 ]; then 
-  sudo add-apt-repository ppa:neovim-ppa/stable
-  sudo apt-get update
-  sudo apt-get install neovim 
+  if [[ `uname` == 'Linux' ]]; then
+    sudo add-apt-repository ppa:neovim-ppa/stable
+    sudo apt-get update
+    sudo apt-get install neovim 
+  elif [[ `uname` == 'Darwin' ]]; then
+    brew install neovim
+  fi
 fi
 
-sudo apt-get install python-pip silversearcher-ag
+if [[ `uname` == 'Linux' ]]; then
+  sudo apt-get install python-pip silversearcher-ag
+elif [[ `uname` == 'Darwin' ]]; then
+  brew install ag
+fi
 
 # link vimrc for neovim
 mkdir -p $HOME/.config/nvim/
@@ -65,16 +74,26 @@ if [ -d "$HOME/anaconda3" ]; then
   echo 'anaconda3 installation found!'
 else
   echo 'installing anaconda3'
-  wget https://repo.continuum.io/archive/Anaconda3-4.3.0-Linux-x86_64.sh
-  bash Anaconda3-4.3.0-Linux-x86_64.sh
-  rm Anaconda3-4.3.0-Linux-x86_64.sh
+  if [[ `uname` == 'Linux' ]]; then
+    wget https://repo.continuum.io/archive/Anaconda3-4.3.0-Linux-x86_64.sh
+    bash Anaconda3-4.3.0-Linux-x86_64.sh
+    rm Anaconda3-4.3.0-Linux-x86_64.sh
+  elif [[ `uname` == 'Darwin' ]]; then
+    wget https://repo.continuum.io/archive/Anaconda3-4.3.0-MacOSX-x86_64.sh
+    bash Anaconda3-4.3.0-MacOSX-x86_64.sh
+    rm Anaconda3-4.3.0-MacOSX-x86_64.sh
+  fi
 fi
 
 # install deps for neovim
 # Right now, YCM only works with system python. So neovim needs to be able
 # to talk to /usr/bin/python
 # sudo pip install --upgrade pyOpenSSL cryptography idna certifi
-sudo pip install neovim
+if [[ `uname` == 'Linux' ]]; then
+  sudo pip install neovim
+elif [[ `uname` == 'Darwin' ]]; then
+  pip install neovim
+fi
 
 # add anaconda 3 to the path
 PATH=$HOME/anaconda3/bin:$PATH
@@ -94,7 +113,12 @@ if [ -f "${HOME}/.vim/bundle/YouCompleteMe/third_party/ycmd/ycm_core.so" ]; then
   echo "rm ${HOME}/.vim/bundle/YouCompleteMe/third_party/ycmd/ycm_core.so"
 else
   # you complete me dependencies
-  sudo apt-get install cmake build-essential python-dev python3-dev exuberant-ctags
+  if [[ `uname` == 'Linux' ]]; then
+    sudo apt-get install cmake build-essential python-dev \
+      python3-dev exuberant-ctags cscope
+  elif [[ `uname` == 'Darwin' ]]; then
+    brew install ctags cscope
+  fi
   export PATH=/usr/bin:$PATH
   alias python=/usr/bin/python3
   cd ~/.vim/bundle/YouCompleteMe
@@ -105,10 +129,14 @@ else
 fi
 
 # Matcher for fuzzy matching with ctrlp
-git clone https://github.com/burke/matcher.git
-cd matcher
-make
-mv matcher ${HOME}/bin/matcher
+if [ -f "${HOME}/bin/matcher" ]; then
+  echo "matcher installed"
+else
+  git clone https://github.com/burke/matcher.git
+  cd matcher
+  make
+  mv matcher ${HOME}/bin/matcher
+fi
 
 # Color scheme for terminal & vim
 if [ -d "${HOME}/.config/base16-shell" ]; then
@@ -119,5 +147,4 @@ fi
 
 echo "Remember to ssh-add (-K on mac) your ~/.ssh/id_rsa!"
 echo "Make sure your terminal is reported as xterm-256color"
-
 
