@@ -193,11 +193,6 @@ function zle-line-init zle-keymap-select {
 zle -N zle-line-init
 zle -N zle-keymap-select
 bindkey '^r' history-incremental-search-backward
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 84d59b574f6b48757d4c6a3f2fafb93b32797443
 alias beep=''
 [[ -s "/usr/share/sounds/purple/alert.wav" ]]  && export BEEP=/usr/share/sounds/purple/alert.wav && alias beep='paplay $BEEP'
 
