@@ -186,7 +186,7 @@ autocmd FileType c nmap <Leader>] "zyiw:exe "cs f t struct <C-r>z {"<CR>
 Bundle 'chriskempson/base16-vim'
 
 " colorscheme BlackSea
-let base16colorspace=256
+" let base16colorspace=256
 colorscheme base16-twilight
 
 " The Silver Searcher
