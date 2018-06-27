@@ -4,22 +4,11 @@
 if [ -d "$HOME/.oh-my-zsh" ]; then 
   echo 'zsh alread installed'
 else
-  curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sh
+  git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git $HOME/.oh-my-zsh
 fi
 
 # Change default shell
 chsh -s /bin/zsh
-
-# Links configs
-dir=`pwd`
-rm ~/.zshrc
-files="zshrc vimrc tmux.conf gemrc"
-for file in $files; do
-  ln -s $dir/$file ~/.$file
-done
-
-mkdir -p $HOME/.gradle
-ln -s $dir/gradle.properties $HOME/.gradle/gradle.properties
 
 # install vundle for vim
 if [ -d $HOME/.vim/bundle/vundle ]; then
@@ -36,10 +25,11 @@ else
   read email
   echo "Enter your full name for git"
   IFS="" read name 
-  #git config --global --replace-all user.email "$email "
-  git config --global user.email "rsprabery@users.noreply.github.com"
+  git config --global --replace-all user.email "$email "
+  # git config --global user.email "rsprabery@users.noreply.github.com"
   git config --global --replace-all user.name "$name"
 fi
+
 git config --global core.editor vim
 git config --global push.default simple
 git config --global alias.co checkout
@@ -63,27 +53,24 @@ if [[ `uname` == 'Linux' ]]; then
   sudo apt-get install python-pip silversearcher-ag
 elif [[ `uname` == 'Darwin' ]]; then
   brew install ag
+  sudo easy_install pip
 fi
-
-# link vimrc for neovim
-mkdir -p $HOME/.config/nvim/
-ln -s $dir/vimrc $HOME/.config/nvim/init.vim
 
 #anaconda
-if [ -d "$HOME/anaconda3" ]; then
-  echo 'anaconda3 installation found!'
-else
-  echo 'installing anaconda3'
-  if [[ `uname` == 'Linux' ]]; then
-    wget https://repo.continuum.io/archive/Anaconda3-4.3.0-Linux-x86_64.sh
-    bash Anaconda3-4.3.0-Linux-x86_64.sh
-    rm Anaconda3-4.3.0-Linux-x86_64.sh
-  elif [[ `uname` == 'Darwin' ]]; then
-    wget https://repo.continuum.io/archive/Anaconda3-4.3.0-MacOSX-x86_64.sh
-    bash Anaconda3-4.3.0-MacOSX-x86_64.sh
-    rm Anaconda3-4.3.0-MacOSX-x86_64.sh
-  fi
-fi
+# if [ -d "$HOME/anaconda3" ]; then
+#  echo 'anaconda3 installation found!'
+# else
+#   echo 'installing anaconda3'
+#   if [[ `uname` == 'Linux' ]]; then
+#     wget https://repo.continuum.io/archive/Anaconda3-4.3.0-Linux-x86_64.sh
+#     bash Anaconda3-4.3.0-Linux-x86_64.sh
+#     rm Anaconda3-4.3.0-Linux-x86_64.sh
+#   elif [[ `uname` == 'Darwin' ]]; then
+#     wget https://repo.continuum.io/archive/Anaconda3-4.3.0-MacOSX-x86_64.sh
+#     bash Anaconda3-4.3.0-MacOSX-x86_64.sh
+#     rm Anaconda3-4.3.0-MacOSX-x86_64.sh
+#   fi
+# fi
 
 # install deps for neovim
 # Right now, YCM only works with system python. So neovim needs to be able
@@ -95,15 +82,8 @@ elif [[ `uname` == 'Darwin' ]]; then
   pip install neovim
 fi
 
-# add anaconda 3 to the path
-PATH=$HOME/anaconda3/bin:$PATH
-
 # The pip cache may be owned by root, change owner
-sudo chown -R $(whoami):$(whoami) ${HOME}/.cache
-
-# We'll still install neovim support in anaconda incase we need to change 
-# which python vim talks to.
-pip install neovim
+sudo chown -R $(whoami):$(id -g -n) ${HOME}/.cache
 
 nvim +BundleInstall +qall
 
@@ -120,12 +100,11 @@ else
     brew install ctags cscope
   fi
   export PATH=/usr/bin:$PATH
-  alias python=/usr/bin/python3
   cd ~/.vim/bundle/YouCompleteMe
   if [ -f "CMakeCache.txt" ]; then
     rm CMakeCache.txt
   fi
-  ./install.py --clang-completer --gocode-completer
+  ./install.py --clang-completer # --gocode-completer
 fi
 
 # Matcher for fuzzy matching with ctrlp

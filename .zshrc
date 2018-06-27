@@ -29,14 +29,25 @@ ZSH_THEME="robbyrussell"
 # Uncomment following line if you want red dots to be displayed while waiting for completion
 # COMPLETION_WAITING_DOTS="true"
 
+# Disable google analytic reporting in homebrew
+HOMEBREW_NO_ANALYTICS=1
+
+# Load any machine specific configs
+[[ -s "$HOME/.local_box_profile" ]] && . $HOME/.local_box_profile
+
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git ruby rvm django git-extras pip python svn vundle)
+plugins=(git ruby git-extras pip python svn vundle)
+
+# enable control-s and control-q
+stty start undef
+stty stop undef
+setopt noflowcontrol
+stty -ixon
 
 # LINUX SPECIFIC CONFIG
 if [[ `uname` == 'Linux' ]]; then
-  [[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && source /usr/local/bin/virtualenvwrapper.sh
 
   [[ -d "/home/read/.linuxbrew" ]] && export PATH=$PATH:/home/read/.linuxbrew/bin
   
@@ -61,26 +72,31 @@ if [[ `uname` == 'Linux' ]]; then
   }
   alias pbpaste='xclip -selection clipboard -o'
 
+
 # OSX SPECIFIC CONFIG
 elif [[ `uname` == 'Darwin' ]]; then
 
   # Ensure trim is enabled
   export TRIM=`system_profiler SPSerialATADataType | grep 'TRIM' | awk '{print $3}'`
 
-  if [[ $TRIM != 'Yes' ]]; then
-    echo "Trim isn't enabled!"
-    echo "Run 'sudo trimforce enable' to fix!"
-  fi
+  # if [[ $TRIM != 'Yes' ]]; then
+  #   echo "Trim isn't enabled!"
+  #   echo "Run 'sudo trimforce enable' to fix!"
+  # fi
 
-  eval "$(rbenv init -)"
-
-  # Mac Specific:
-  plugins=($plugins brew osx)
-  source /usr/local/bin/virtualenvwrapper.sh 
-  export PATH="/usr/local/sbin:$PATH"
+  plugins=($plugins osx)
   alias ctags="`brew --prefix`/bin/ctags"
-  alias vim="mvim"
+
+  # zsh completions for brew
+  fpath=($(brew --prefix)/share/zsh/site-functions ${fpath})
 fi # END MAC SPECIFIC
+
+[[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && source /usr/local/bin/virtualenvwrapper.sh
+
+which rbenv >> /dev/null
+if [ $? -eq 0 ]; then
+  eval "$(rbenv init -)"
+fi
 
 # Add custom bin's
 [[ -d "$HOME/bin" ]] && PATH=$PATH:$HOME/bin
@@ -90,17 +106,6 @@ source $ZSH/oh-my-zsh.sh
 
 alias gls="git status"
 export SVN_EDITOR=vim
-
-# OPAM configuration
-#. /Users/read/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
-
-export TIMEFMT="'%J   %U  user %S system %P cpu %*E total'
-  'avg shared (code):         %X KB'
-  'avg unshared (data/stack): %D KB'
-  'total (sum):               %K KB'
-  'max memory:                %M MB'
-  'page faults from disk:     %F'
-  'other page faults:         %R'"
 
 GRADLE_BIN=$(which gradle)
 function gradle {
@@ -112,7 +117,6 @@ function gradle {
     else
       ${GRADLE_BIN} $*
     fi
-
   fi
 }
 
@@ -171,12 +175,6 @@ export NVM_DIR="$HOME/.nvm"
 alias gl='git log --oneline --all -10 --decorate'
 alias fg='grep --line-number --recursive --color'
 
-# Source RVM 
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
-[[ -d "$HOME/.rvm" ]] && PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-
-# Load any machine specific configs
-[[ -s "$HOME/.local_box_profile" ]] && . $HOME/.local_box_profile
 
 export PROMPT='%{$fg[yellow]%}%m%{$reset_color%}:%{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)
 %{$reset_color%} ${ret_status} %{$reset_color%}'
@@ -218,12 +216,6 @@ function ctags-ruby() {
   ctags -R --languages=ruby --exclude=.git --exclude=log . $(bundle list --paths)
 }
 
-# enable control-s and control-q
-stty start undef
-stty stop undef
-setopt noflowcontrol
-stty -ixon
-
 # add anaconda 3 to the path if it exists
 if [ -d "${HOME}/anaconda3" ]; then
   PATH=${HOME}/anaconda3/bin:$PATH
@@ -250,3 +242,7 @@ fi
 BASE16_SHELL=$HOME/.config/base16-shell/
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
 base16_twilight
+
+# Git repo for config files
+export DOTFILES_DIR="$HOME/dotFiles"
+alias config='/usr/bin/git --git-dir=$DOTFILES_DIR --work-tree=$HOME'
