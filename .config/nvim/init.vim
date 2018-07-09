@@ -5,8 +5,55 @@ set cindent
 set smartindent
 set autoindent
 set expandtab
-set tabstop=2
 set shiftwidth=2
+
+" Spacing in python
+autocmd FileType python :set tabstop=8 expandtab shiftwidth=4 softtabstop=4
+
+function FirstPreProcLine()
+  " let firstNonComment=index(getbufline(bufname("%"), 1, 250), 'v:val =~ "^\#"')
+  execute "normal! gg/^#\<cr>"
+  let firstNonComment=line(".")
+  execute "normal! gg"
+  return firstNonComment
+endfunction
+
+" Determine if tabs should be used instead of spaces for current file.
+" https://unix.stackexchange.com/questions/63196/in-vim-how-can-i-automatically-determine-whether-to-use-spaces-or-tabs-for-inde
+function TabsOrSpaces()
+    " Determines whether to use spaces or tabs on the current buffer.
+    if getfsize(bufname("%")) > 256000
+        " File is very large, just use the default.
+        return
+    endif
+    let startLine=1
+    if &filetype ==# "cpp"
+      let startLine = FirstPreProcLine()
+    endif
+
+    if &filetype ==# "c"
+      let startLine = FirstPreProcLine()
+    endif
+
+    let numTabs=len(filter(getbufline(bufname("%"), startLine, 250), 'v:val =~ "^\\t"'))
+    let numSpaces=len(filter(getbufline(bufname("%"), startLine, 250), 'v:val =~ "^ "'))
+
+    if numTabs > numSpaces
+        setlocal noexpandtab
+    endif
+endfunction
+
+" Call the function after opening a buffer
+autocmd BufReadPost * call TabsOrSpaces()
+
+" Inspect white space
+" https://stackoverflow.com/questions/1675688/make-vim-show-all-white-spaces-as-a-character
+set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
+set listchars+=space:␣
+noremap <F5> :set list!<CR>
+inoremap <F5> <C-o>:set list!<CR>
+cnoremap <F5> <C-c>:set list!<CR>
+
 " set textwidth=80
 highlight ColorColumn ctermbg=gray
 set colorcolumn=81
@@ -123,10 +170,10 @@ autocmd FileType python nmap <silent> <C-d> <Plug>(pydocstring)
 
 nmap <Leader>o :TagbarToggle<CR>
 set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
-Plugin 'vim-syntastic/syntastic'
+" Plugin 'vim-syntastic/syntastic'
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
@@ -162,9 +209,6 @@ imap <C-L> <C-\><C-N><C-C><C-W>l<CR>
 vnoremap < <gv
 vnoremap > >gv
 
-" Spacing in python
-autocmd FileType python :set tabstop=8 expandtab shiftwidth=4 softtabstop=4
-
 " Selection of which python bin to use for plugins
 let g:ycm_python_binary_path = '/usr/bin/python'
 
@@ -187,7 +231,8 @@ Bundle 'chriskempson/base16-vim'
 
 " colorscheme BlackSea
 " let base16colorspace=256
-colorscheme base16-twilight
+" colorscheme base16-twilight
+colorscheme 256-jungle
 
 " The Silver Searcher
 if executable('ag')
