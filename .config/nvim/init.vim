@@ -55,9 +55,35 @@ inoremap <F5> <C-o>:set list!<CR>
 cnoremap <F5> <C-c>:set list!<CR>
 
 " set textwidth=80
-highlight ColorColumn ctermbg=gray
-set colorcolumn=81
+function ToggleColorColumn() 
+  if &colorcolumn ==# 81
+    :set colorcolumn=0
+  else
+    :set colorcolumn=81
+  endif
+endfunction
+
+call ToggleColorColumn()
+
+noremap <F4> :call ToggleColorColumn()<CR> 
+inoremap <F4> :call ToggleColorColumn()<CR> 
+cnoremap <F4> :call ToggleColorColumn()<CR> 
+
+" Enabled line numbers
 set nu
+
+" Copy/Paste from system clipboard
+vnoremap  <leader>y  "+y
+nnoremap  <leader>Y  "+yg_
+nnoremap  <leader>y  "+y
+nnoremap  <leader>yy  "+yy
+
+" " Paste from clipboard
+nnoremap <leader>p "+p
+nnoremap <leader>P "+P
+vnoremap <leader>p "+p
+vnoremap <leader>P "+P
+
 " set paste
 " http://stackoverflow.com/questions/28304137/youcompleteme-works-but-can-not-complete-using-tab
 :set pastetoggle=<F10>
@@ -67,10 +93,10 @@ set nocompatible               " be iMproved
 filetype off                   " required!
 
 " build keys
-:map <C-B> :w<CR>:make<CR><CR>
+:map <C-B> :w<CR>:make<CR>:bot :copen<CR><CR>
 :map <C-v> :lprev<CR>
 :map <C-n> :lnext<CR>
-:map <C-x> :make run<CR>
+:map <Leader>r :make run<CR>
 
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
@@ -130,7 +156,6 @@ endfunction
 
 " map <silent> <Leader>tc :call Carousel()<cr>
 
-filetype plugin indent on     " required!
 "
 " Brief help
 " :BundleList          - list configured bundles
@@ -163,6 +188,9 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
+let g:airline_theme='light'
+let b:airline_whitespace_checks=[]
+let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 Plugin 'majutsushi/tagbar'
 Plugin 'heavenshell/vim-pydocstring'
 nmap <silent> <C-_> <Plug>(pydocstring)
@@ -184,26 +212,38 @@ map <Leader>n :NERDTreeToggle<CR><C-W>w
 map <Leader>t :CtrlPMixed<CR>
 " autocmd FileType c nnoremap K :Man <cword>
 
-map <C-q> <C-C>:q<CR>
-imap <C-q> <C-\><C-N>:q<CR>
-
-map <C-x> <C-C>:q!<CR>
-
+" ************* START Hilight Management *********************
+" Toggle highlight state with F9
 let hlstate=0
 nnoremap <F9> :if (hlstate == 0) \| nohlsearch \| else \| set hlsearch \| endif \| let hlstate=1-hlstate<cr>
+" ************* END Hilight Management ***********************
 
+
+" ************* START CTRL-XYZ Editor Behavior ***************
+" CTRL-S for saving
 map  <C-s>             <C-\><C-N>:update<CR>
 imap  <C-s>            <C-\><C-N>:update<CR>
-"noremap  <C-s>         <C-\><C-N>:update<CR>
-"vnoremap <C-s>         <C-\><C-N>:update<CR>
-"inoremap <C-s>         <C-\><C-N><C-O>:update<CR>
-"
+" CTLR-q for quiting
+map <C-q> <C-C>:q<CR>
+imap <C-q> <C-\><C-N>:q<CR>
+" CTRL-x for force quit (without saving)
+map <C-x> <C-C>:q!<CR>
+" ************* END CTRL-XYZ Editor Behavior *****************
 
+" ************ START - Window-Management *********************
+" Changing Windows with jkhl (Ctrl-(J/K/H/L)
 map <C-H> <C-C><C-W>h
 imap <C-H> <C-\><C-N><C-C><C-W>h<CR>
 
 map <C-L> <C-C><C-W>l
 imap <C-L> <C-\><C-N><C-C><C-W>l<CR>
+
+map <C-J> <C-C><C-W>j
+imap <C-J> <C-\><C-N><C-C><C-W>j<CR>
+
+map <C-K> <C-C><C-W>k
+imap <C-K> <C-\><C-N><C-C><C-W>k<CR>
+" ************ END - Window-Management ***********************
 
 " Keep visual selection selected when tabbing and un-tabbing
 vnoremap < <gv
@@ -211,38 +251,40 @@ vnoremap > >gv
 
 " Selection of which python bin to use for plugins
 let g:ycm_python_binary_path = '/usr/bin/python'
+let g:python_host_prog='/usr/bin/python'
 
-Bundle "rdnetto/YCM-Generator"
-Bundle "joe-skb7/cscope-maps"
-
-" ctrlp config
+" *************** ctrlp-config ********************************
 Bundle 'ctrlpvim/ctrlp.vim'
+" Ignore temp files, object files, archives and vim swap files
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.o     " MacOSX/Linux
+" Store search items in a cache
 let g:ctrlp_use_caching = 1
 let g:ctrlp_clear_cache_on_exit = 0
 
+" Store the cache in ramdsik on Linux
 if isdirectory("/dev/shm/")
   let g:ctrlp_cache_dir = "/dev/shm/cache/ctrlp"
 endif 
 
-autocmd FileType c nmap <Leader>] "zyiw:exe "cs f t struct <C-r>z {"<CR>
-
-Bundle 'chriskempson/base16-vim'
-
-" colorscheme BlackSea
-" let base16colorspace=256
-" colorscheme base16-twilight
-colorscheme 256-jungle
-
-" The Silver Searcher
+" Use the Silver Searcher (if installed)
 if executable('ag')
   " Use ag over grep
   set grepprg=ag\ --nogroup\ --nocolor
 
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
   let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+  " bind K to grep word under cursor (opens in quickfix)
+  nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:bot :cw <CR><CR>:call ToggleColorColumn()<CR>
+  " Open quick fix selections in new tab (or use existint if already open)
+  set switchbuf+=newtab
+
+  " Easily open QuickSearch window with ,-F after grep!
+  nmap <Leader>F :bot :cw<CR><CR>:call ToggleColorColumn()<CR>
 endif
 
+" Use matcher for ctrl-p if present on system.
+" This handles fuzzy search. Still limited, but much better than ag.
 if executable('matcher')
 	let g:ctrlp_match_func = { 'match': 'GoodMatch' }
  
@@ -267,5 +309,44 @@ if executable('matcher')
  
 	  return split(system(cmd), "\n")
 
-	endfunction
+  endfunction
 end
+" *************** END ctrlp-config ****************************
+
+" ******* START Keys Bindings for Finding C/C++ Items *********
+autocmd FileType c nmap <Leader>] "zyiw:exe "cs f t struct <C-r>z {"<CR>
+Bundle "rdnetto/YCM-Generator"
+Bundle "joe-skb7/cscope-maps"
+" ******* END Keys Bindings for Finding C/C++ Items *********
+
+" ****************** Color Config *****************************
+Bundle 'chriskempson/base16-vim'
+" colorscheme 256-jungle
+colorscheme  LightTan
+" ****************** END Color Config *************************
+
+" ******************** Tab Config *****************************
+noremap <C-t> :tabedit<CR>
+inoremap <C-t> <C-o>:tabedit<CR>
+cnoremap <C-t> <C-c>:tabedit<CR>
+
+nmap <Leader>1 :tabnext 1<CR>
+nmap <Leader>2 :tabnext 2<CR>
+nmap <Leader>3 :tabnext 3<CR>
+nmap <Leader>4 :tabnext 4<CR>
+nmap <Leader>5 :tabnext 5<CR>
+nmap <Leader>6 :tabnext 6<CR>
+nmap <Leader>7 :tabnext 7<CR>
+nmap <Leader>8 :tabnext 8<CR>
+nmap <Leader>9 :tabnext 9<CR>
+" **************** END Tab Config *****************************
+
+Plugin 'keith/xcconfig.vim'
+filetype plugin indent on     " required!
+
+" *************** Custom Colors *******************************
+" **** These must come after setting the theme above.
+" *************************************************************
+highlight ColorColumn ctermbg=LightYellow
+hi Search cterm=NONE ctermfg=Cyan ctermbg=LightRed
+highlight Visual ctermbg=LightMagenta
