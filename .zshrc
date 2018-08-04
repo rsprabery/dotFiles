@@ -246,3 +246,6 @@ base16_twilight
 # Git repo for config files
 export DOTFILES_DIR="$HOME/dotFiles"
 alias config='/usr/bin/git --git-dir=$DOTFILES_DIR --work-tree=$HOME'
+
+# Silver searcher with no highlights
+alias agc='ag --color-match=#0'
