@@ -77,9 +77,9 @@ fi
 # to talk to /usr/bin/python
 # sudo pip install --upgrade pyOpenSSL cryptography idna certifi
 if [[ `uname` == 'Linux' ]]; then
-  sudo pip install neovim
+  pip install --user neovim
 elif [[ `uname` == 'Darwin' ]]; then
-  pip install neovim
+  pip install --user neovim
 fi
 
 # The pip cache may be owned by root, change owner
