@@ -138,6 +138,10 @@ Plugin 'flazz/vim-colorschemes'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'junegunn/vim-easy-align'
+
+" Git Gutter
+" [c -> prev hunk
+" ]c -> next hunk
 Plugin 'airblade/vim-gitgutter'
 
 function! Carousel()
@@ -258,8 +262,12 @@ Bundle 'ctrlpvim/ctrlp.vim'
 " Ignore temp files, object files, archives and vim swap files
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.o     " MacOSX/Linux
 " Store search items in a cache
-let g:ctrlp_use_caching = 1
+let g:ctrlp_use_caching = 0 
 let g:ctrlp_clear_cache_on_exit = 0
+
+let g:ctrlp_max_files = 0
+let g:ctrlp_max_depth = 0
+let g:ctrlp_mruf_max = 250
 
 " Store the cache in ramdsik on Linux
 if isdirectory("/dev/shm/")
@@ -287,6 +295,7 @@ endif
 " This handles fuzzy search. Still limited, but much better than ag.
 if executable('matcher')
 	let g:ctrlp_match_func = { 'match': 'GoodMatch' }
+  let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:750000'
  
 	function! GoodMatch(items, str, limit, mmode, ispath, crfile, regex)
  
