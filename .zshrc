@@ -173,8 +173,6 @@ export NVM_DIR="$HOME/.nvm"
 [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh" # This loads nvm
 
 alias gl='git log --oneline --all -10 --decorate'
-alias fg='grep --line-number --recursive --color'
-
 
 export PROMPT='%{$fg[yellow]%}%m%{$reset_color%}:%{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)
 %{$reset_color%} ${ret_status} %{$reset_color%}'
