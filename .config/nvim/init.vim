@@ -350,8 +350,16 @@ nmap <Leader>8 :tabnext 8<CR>
 nmap <Leader>9 :tabnext 9<CR>
 " **************** END Tab Config *****************************
 
+" **************** Commenting *********************************
+" Bundle 'tpope/vim-commentary' 
+" xnoremap <leader>c Commentary
+" **************** END Commenting *****************************
+
 Plugin 'keith/xcconfig.vim'
 filetype plugin indent on     " required!
+
+" Enable mouse support
+:set mouse=a
 
 " *************** Custom Colors *******************************
 " **** These must come after setting the theme above.
