@@ -247,3 +247,11 @@ alias config='/usr/bin/git --git-dir=$DOTFILES_DIR --work-tree=$HOME'
 
 # Silver searcher with no highlights
 alias agc='ag --color-match=#0'
+
+
+export FZF_DEFAULT_COMMAND='ag -g ""'
+# To apply the command to CTRL-T as well
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+
