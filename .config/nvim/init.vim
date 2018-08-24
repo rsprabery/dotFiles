@@ -35,8 +35,8 @@ function TabsOrSpaces()
       let startLine = FirstPreProcLine()
     endif
 
-    let numTabs=len(filter(getbufline(bufname("%"), startLine, 250), 'v:val =~ "^\\t"'))
-    let numSpaces=len(filter(getbufline(bufname("%"), startLine, 250), 'v:val =~ "^ "'))
+    let numTabs=len(filter(getbufline(bufname("%"), startLine, 1000), 'v:val =~ "^\\t"'))
+    let numSpaces=len(filter(getbufline(bufname("%"), startLine, 1000), 'v:val =~ "^ "'))
 
     if numTabs > numSpaces
         setlocal noexpandtab
@@ -136,13 +136,45 @@ Bundle 'tpope/vim-rails.git'
 Bundle 'VisIncr'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'vim-ruby/vim-ruby'
-Plugin 'Valloric/YouCompleteMe'
+
+" Plugin 'w0rp/ale'
+" let g:ale_set_balloons=1
+" let g:lae_c_build_dir_names=['build', 'bin', './']
+" Plugin 'vim-syntastic/syntastic'
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
+
+" Selection of which python bin to use for plugins
+let g:ycm_python_binary_path = '/usr/bin/python'
+let g:python_host_prog='/usr/bin/python'
+" Plugin 'Valloric/YouCompleteMe'
+Plugin 'oblitum/YouCompleteMe'
+" You Complete Me has trouble with cross translation unit goto definition.
+" Using ctags (invoked with ctags -R to build tag db) for that
+" g option here forces ctags to go to definition instead of forward
+" declaration
+inoremap C-] <g C-]>
+nnoremap C-] <g C-]>
+vnoremap C-] <g C-]>
+
+inoremap <leader>] :YcmCompleter GoTo<CR>
+nnoremap <leader>] :YcmCompleter GoTo<CR>
+vnoremap <leader>] :YcmCompleter GoTo<CR>
+
+" <leader>f will apply clang suggested fix.
+inoremap <leader>f :YcmCompleter FixIt<CR>
+vnoremap <leader>f :YcmCompleter FixIt<CR>
+nnoremap <leader>f :YcmCompleter FixIt<CR>
+
 Plugin 'junegunn/vim-easy-align'
 
 " Git Gutter
 " [c -> prev hunk
 " ]c -> next hunk
 Plugin 'airblade/vim-gitgutter'
+set signcolumn="yes"
 
 function! Carousel()
   for theme in split(globpath(&runtimepath, 'colors/*.vim'), '\n')
@@ -205,15 +237,13 @@ set statusline+=%#warningmsg#
 " set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
-" Plugin 'vim-syntastic/syntastic'
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+
 
 Plugin 'scrooloose/nerdtree'
 map <Leader>n :NERDTreeToggle<CR><C-W>w
-map <Leader>t :CtrlPMixed<CR>
+" map <Leader>t :CtrlPMixed<CR>
+map <Leader>t :Files<CR>
+map <Leader>w :Windows<CR>
 " autocmd FileType c nnoremap K :Man <cword>
 
 " ************* START Hilight Management *********************
@@ -253,10 +283,6 @@ imap <C-K> <C-\><C-N><C-C><C-W>k<CR>
 vnoremap < <gv
 vnoremap > >gv
 
-" Selection of which python bin to use for plugins
-let g:ycm_python_binary_path = '/usr/bin/python'
-let g:python_host_prog='/usr/bin/python'
-
 " *************** ctrlp-config ********************************
 Bundle 'ctrlpvim/ctrlp.vim'
 " Ignore temp files, object files, archives and vim swap files
@@ -275,6 +301,8 @@ if isdirectory("/dev/shm/")
 endif 
 
 " Use the Silver Searcher (if installed)
+Plugin 'junegunn/fzf.vim'
+set rtp+=/Users/read/brew/opt/fzf
 if executable('ag')
   " Use ag over grep
   set grepprg=ag\ --nogroup\ --nocolor
@@ -323,9 +351,9 @@ end
 " *************** END ctrlp-config ****************************
 
 " ******* START Keys Bindings for Finding C/C++ Items *********
-autocmd FileType c nmap <Leader>] "zyiw:exe "cs f t struct <C-r>z {"<CR>
-Bundle "rdnetto/YCM-Generator"
-Bundle "joe-skb7/cscope-maps"
+" autocmd FileType c nmap <Leader>] "zyiw:exe "cs f t struct <C-r>z {"<CR>
+" Bundle "rdnetto/YCM-Generator"
+" Bundle "joe-skb7/cscope-maps"
 " ******* END Keys Bindings for Finding C/C++ Items *********
 
 " ****************** Color Config *****************************
@@ -360,6 +388,14 @@ filetype plugin indent on     " required!
 
 " Enable mouse support
 :set mouse=a
+
+
+" Load all plugins now.
+" " Plugins need to be added to runtimepath before helptags can be generated.
+packloadall
+" " Load all of the helptags now, after plugins have been loaded.
+" " All messages and errors will be ignored.
+silent! helptags ALL
 
 " *************** Custom Colors *******************************
 " **** These must come after setting the theme above.
