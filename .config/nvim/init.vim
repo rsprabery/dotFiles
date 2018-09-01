@@ -1,5 +1,13 @@
 " Personal (Read Sprabery) Customizations
-:syntax on
+
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+" let Vundle manage Vundle
+" required! 
+Plugin 'gmarik/vundle'
+
+" :syntax on
+:syntax enable 
 :set tabstop=2
 set cindent
 set smartindent
@@ -46,6 +54,10 @@ endfunction
 " Call the function after opening a buffer
 autocmd BufReadPost * call TabsOrSpaces()
 
+" Smart Tabs (tabs for indentation, spaces for alignment
+let g:ctab_filetype_maps=1
+Plugin 'vim-scripts/Smart-Tabs'
+
 " Inspect white space
 " https://stackoverflow.com/questions/1675688/make-vim-show-all-white-spaces-as-a-character
 set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
@@ -73,10 +85,11 @@ cnoremap <F4> :call ToggleColorColumn()<CR>
 set nu
 
 " Copy/Paste from system clipboard
-vnoremap  <leader>y  "+y
-nnoremap  <leader>Y  "+yg_
-nnoremap  <leader>y  "+y
-nnoremap  <leader>yy  "+yy
+" vnoremap  <leader>y  "+y
+vnoremap  C-y  <"+y>
+" nnoremap  <leader>Y  "+yg_
+" inoremap  <leader>y  "+y
+" nnoremap  <leader>yy  "+yy
 
 " " Paste from clipboard
 nnoremap <leader>p "+p
@@ -98,16 +111,10 @@ filetype off                   " required!
 :map <C-n> :lnext<CR>
 :map <Leader>r :make run<CR>
 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-
 " let g:jedi#popup_on_dot = 0 
 
 " No autofill on .
 inoremap <C-X><C-O> <C-X><C-O><C-P> 
-" let Vundle manage Vundle
-" required! 
-Bundle 'gmarik/vundle'
 
 " My Bundles here:
 "
@@ -237,12 +244,11 @@ set statusline+=%#warningmsg#
 " set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
-
-
 Plugin 'scrooloose/nerdtree'
 map <Leader>n :NERDTreeToggle<CR><C-W>w
 " map <Leader>t :CtrlPMixed<CR>
 map <Leader>t :Files<CR>
+map <Leader>h :History<CR>
 map <Leader>w :Windows<CR>
 " autocmd FileType c nnoremap K :Man <cword>
 
@@ -389,6 +395,8 @@ filetype plugin indent on     " required!
 " Enable mouse support
 :set mouse=a
 
+" Enable syntax  - this allows spell check to run only on the comments
+:se spell
 
 " Load all plugins now.
 " " Plugins need to be added to runtimepath before helptags can be generated.
