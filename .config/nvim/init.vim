@@ -1,5 +1,7 @@
 " Personal (Read Sprabery) Customizations
-
+"
+" Bug identification :
+" https://vi.stackexchange.com/questions/7252/gvim-cursor-jumps-all-over-the-place
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 " let Vundle manage Vundle
@@ -7,7 +9,7 @@ call vundle#rc()
 Plugin 'gmarik/vundle'
 
 " :syntax on
-:syntax enable 
+:syntax enable
 :set tabstop=2
 set cindent
 set smartindent
@@ -56,7 +58,8 @@ autocmd BufReadPost * call TabsOrSpaces()
 
 " Smart Tabs (tabs for indentation, spaces for alignment
 let g:ctab_filetype_maps=1
-Plugin 'vim-scripts/Smart-Tabs'
+" Not only is Smart Tabs not working, but it breaks javascript editing....
+" Plugin 'vim-scripts/Smart-Tabs'
 
 " Inspect white space
 " https://stackoverflow.com/questions/1675688/make-vim-show-all-white-spaces-as-a-character
@@ -111,7 +114,7 @@ filetype off                   " required!
 :map <C-n> :lnext<CR>
 :map <Leader>r :make run<CR>
 
-" let g:jedi#popup_on_dot = 0 
+" let g:jedi#popup_on_dot = 0
 
 " No autofill on .
 inoremap <C-X><C-O> <C-X><C-O><C-P> 
@@ -232,7 +235,12 @@ nmap ga <Plug>(EasyAlign)
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 let g:airline_theme='light'
-let b:airline_whitespace_checks=[]
+let g:airline#extensions#branch#enabled = 0
+let g:airline#extensions#hunks#enabled = 0
+" let b:airline_whitespace_checks=[]
+" let g:airline_section_warning = ["ycm_warning_count", "syntastic-warn"]
+let g:airline#extensions#whitespace#enabled = 0
+" let g:airline#extensions#whitespace#mixed_indent_algo = 2
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 Plugin 'majutsushi/tagbar'
 Plugin 'heavenshell/vim-pydocstring'
@@ -294,7 +302,7 @@ Bundle 'ctrlpvim/ctrlp.vim'
 " Ignore temp files, object files, archives and vim swap files
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.o     " MacOSX/Linux
 " Store search items in a cache
-let g:ctrlp_use_caching = 0 
+let g:ctrlp_use_caching = 0
 let g:ctrlp_clear_cache_on_exit = 0
 
 let g:ctrlp_max_files = 0
@@ -304,7 +312,7 @@ let g:ctrlp_mruf_max = 250
 " Store the cache in ramdsik on Linux
 if isdirectory("/dev/shm/")
   let g:ctrlp_cache_dir = "/dev/shm/cache/ctrlp"
-endif 
+endif
 
 " Use the Silver Searcher (if installed)
 Plugin 'junegunn/fzf.vim'
