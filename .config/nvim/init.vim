@@ -5,8 +5,16 @@
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 " let Vundle manage Vundle
-" required! 
+" required!
 Plugin 'gmarik/vundle'
+
+" Inspect white space
+" https://stackoverflow.com/questions/1675688/make-vim-show-all-white-spaces-as-a-character
+set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
+set listchars+=space:␣
+noremap <F5> :set list!<CR>
+inoremap <F5> <C-o>:set list!<CR>
+cnoremap <F5> <C-c>:set list!<CR>
 
 " :syntax on
 :syntax enable
@@ -56,21 +64,10 @@ endfunction
 " Call the function after opening a buffer
 autocmd BufReadPost * call TabsOrSpaces()
 
-" Smart Tabs (tabs for indentation, spaces for alignment
-let g:ctab_filetype_maps=1
-" Not only is Smart Tabs not working, but it breaks javascript editing....
-" Plugin 'vim-scripts/Smart-Tabs'
 
-" Inspect white space
-" https://stackoverflow.com/questions/1675688/make-vim-show-all-white-spaces-as-a-character
-set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
-set listchars+=space:␣
-noremap <F5> :set list!<CR>
-inoremap <F5> <C-o>:set list!<CR>
-cnoremap <F5> <C-c>:set list!<CR>
 
 " set textwidth=80
-function ToggleColorColumn() 
+function ToggleColorColumn()
   if &colorcolumn ==# 81
     :set colorcolumn=0
   else
@@ -80,28 +77,35 @@ endfunction
 
 call ToggleColorColumn()
 
-noremap <F4> :call ToggleColorColumn()<CR> 
-inoremap <F4> :call ToggleColorColumn()<CR> 
-cnoremap <F4> :call ToggleColorColumn()<CR> 
+noremap <F4> :call ToggleColorColumn()<CR>
+inoremap <F4> :call ToggleColorColumn()<CR>
+cnoremap <F4> :call ToggleColorColumn()<CR>
 
 " Enabled line numbers
 set nu
 
 " Copy/Paste from system clipboard
+" Makes all yank and put operations default to clipboard register
+set clipboard+=unnamedplus
+
+" These commands don't work. Need to figure out register access
+" from keybindings.
 " vnoremap  <leader>y  "+y
-vnoremap  C-y  <"+y>
+" vnoremap  <C-y>  "+y
 " nnoremap  <leader>Y  "+yg_
 " inoremap  <leader>y  "+y
 " nnoremap  <leader>yy  "+yy
 
 " " Paste from clipboard
-nnoremap <leader>p "+p
-nnoremap <leader>P "+P
-vnoremap <leader>p "+p
-vnoremap <leader>P "+P
+" nnoremap <leader>p "+p
+" nnoremap <leader>P "+P
+" vnoremap <leader>p "+p
+" vnoremap <leader>P "+P
 
 " set paste
 " http://stackoverflow.com/questions/28304137/youcompleteme-works-but-can-not-complete-using-tab
+" This seems to be less necessary with nvim, which toggles paste for you
+" automatically.
 :set pastetoggle=<F10>
 :let mapleader=","
 imap <Leader>E :FufCoverageFile
@@ -117,7 +121,7 @@ filetype off                   " required!
 " let g:jedi#popup_on_dot = 0
 
 " No autofill on .
-inoremap <C-X><C-O> <C-X><C-O><C-P> 
+inoremap <C-X><C-O> <C-X><C-O><C-P>
 
 " My Bundles here:
 "
@@ -157,8 +161,10 @@ Plugin 'vim-ruby/vim-ruby'
 " let g:syntastic_check_on_wq = 0
 
 " Selection of which python bin to use for plugins
-let g:ycm_python_binary_path = '/usr/bin/python'
-let g:python_host_prog='/usr/bin/python'
+" let g:ycm_python_binary_path = '/usr/bin/python'
+let g:ycm_python_binary_path = ' /Users/read/.virtualenvs/nvim/bin/python'
+" let g:python_host_prog='/usr/bin/python'
+let g:python_host_prog='/Users/read/.virtualenvs/nvim/bin/python'
 " Plugin 'Valloric/YouCompleteMe'
 Plugin 'oblitum/YouCompleteMe'
 " You Complete Me has trouble with cross translation unit goto definition.
@@ -178,7 +184,7 @@ inoremap <leader>f :YcmCompleter FixIt<CR>
 vnoremap <leader>f :YcmCompleter FixIt<CR>
 nnoremap <leader>f :YcmCompleter FixIt<CR>
 
-Plugin 'junegunn/vim-easy-align'
+" Plugin 'junegunn/vim-easy-align'
 
 " Git Gutter
 " [c -> prev hunk
@@ -245,8 +251,16 @@ let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 Plugin 'majutsushi/tagbar'
 Plugin 'heavenshell/vim-pydocstring'
 nmap <silent> <C-_> <Plug>(pydocstring)
-autocmd FileType python nmap <silent> <C-d> <Plug>(pydocstring)
+autocmd FileType python nmap <silent> <leader>c <Plug>(pydocstring)
 
+" Remove unwanted whitespace at the end of lines when saving a file
+function FixWhitespace()
+  let save_pos = getpos(".")
+  %s/\s\+$//e
+  call setpos('.', save_pos)
+endfunction
+
+autocmd FileType c,cpp,java,php,xcconfig,make,python,vim,tex,markdown,sh,zsh,bash autocmd BufWritePre <buffer> :call FixWhitespace()
 nmap <Leader>o :TagbarToggle<CR>
 set statusline+=%#warningmsg#
 " set statusline+=%{SyntasticStatuslineFlag()}
@@ -338,9 +352,9 @@ endif
 if executable('matcher')
 	let g:ctrlp_match_func = { 'match': 'GoodMatch' }
   let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:750000'
- 
+
 	function! GoodMatch(items, str, limit, mmode, ispath, crfile, regex)
- 
+
 	  " Create a cache file if not yet exists
 	  let cachefile = ctrlp#utils#cachedir().'/matcher.cache'
 	  if !( filereadable(cachefile) && a:items == readfile(cachefile) )
@@ -349,7 +363,7 @@ if executable('matcher')
 	  if !filereadable(cachefile)
 		return []
 	  endif
- 
+
 	  " a:mmode is currently ignored. In the future, we should probably do
 	  " something about that. the matcher behaves like "full-line".
 	  let cmd = 'matcher --limit '.a:limit.' --manifest '.cachefile.' '
@@ -357,7 +371,7 @@ if executable('matcher')
 		let cmd = cmd.'--no-dotfiles '
 	  endif
 	  let cmd = cmd.a:str
- 
+
 	  return split(system(cmd), "\n")
 
   endfunction
@@ -393,18 +407,18 @@ nmap <Leader>9 :tabnext 9<CR>
 " **************** END Tab Config *****************************
 
 " **************** Commenting *********************************
-" Bundle 'tpope/vim-commentary' 
+" Bundle 'tpope/vim-commentary'
 " xnoremap <leader>c Commentary
 " **************** END Commenting *****************************
 
-Plugin 'keith/xcconfig.vim'
+ Plugin 'keith/xcconfig.vim'
 filetype plugin indent on     " required!
 
 " Enable mouse support
 :set mouse=a
 
 " Enable syntax  - this allows spell check to run only on the comments
-:se spell
+" :se spell
 
 " Load all plugins now.
 " " Plugins need to be added to runtimepath before helptags can be generated.
@@ -419,3 +433,5 @@ silent! helptags ALL
 highlight ColorColumn ctermbg=LightYellow
 hi Search cterm=NONE ctermfg=Cyan ctermbg=LightRed
 highlight Visual ctermbg=LightMagenta
+
+source ~/.config/nvim/local.vim
