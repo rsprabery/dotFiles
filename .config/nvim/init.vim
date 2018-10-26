@@ -260,7 +260,7 @@ function FixWhitespace()
   call setpos('.', save_pos)
 endfunction
 
-autocmd FileType c,cpp,java,php,xcconfig,make,python,vim,tex,markdown,sh,zsh,bash autocmd BufWritePre <buffer> :call FixWhitespace()
+autocmd FileType c,cpp,java,php,xcconfig,make,python,vim,tex,markdown,sh,zsh,bash,txt autocmd BufWritePre <buffer> :call FixWhitespace()
 nmap <Leader>o :TagbarToggle<CR>
 set statusline+=%#warningmsg#
 " set statusline+=%{SyntasticStatuslineFlag()}
@@ -407,8 +407,8 @@ nmap <Leader>9 :tabnext 9<CR>
 " **************** END Tab Config *****************************
 
 " **************** Commenting *********************************
-" Bundle 'tpope/vim-commentary'
-" xnoremap <leader>c Commentary
+Bundle 'tpope/vim-commentary'
+xnoremap <leader>c Commentary
 " **************** END Commenting *****************************
 
  Plugin 'keith/xcconfig.vim'
@@ -418,7 +418,7 @@ filetype plugin indent on     " required!
 :set mouse=a
 
 " Enable syntax  - this allows spell check to run only on the comments
-" :se spell
+:se spell
 
 " Load all plugins now.
 " " Plugins need to be added to runtimepath before helptags can be generated.
