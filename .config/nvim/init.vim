@@ -115,7 +115,9 @@ filetype off                   " required!
 " build keys
 :map <C-B> :w<CR>:make<CR>:bot :copen<CR><CR>
 :map <C-v> :lprev<CR>
+:map [ :cprev<CR>
 :map <C-n> :lnext<CR>
+:map ] :cnext<CR>
 :map <Leader>r :make run<CR>
 
 " let g:jedi#popup_on_dot = 0
@@ -159,6 +161,8 @@ Plugin 'vim-ruby/vim-ruby'
 " let g:syntastic_auto_loc_list = 1
 " let g:syntastic_check_on_open = 1
 " let g:syntastic_check_on_wq = 0
+
+" make
 
 " Selection of which python bin to use for plugins
 " let g:ycm_python_binary_path = '/usr/bin/python'
