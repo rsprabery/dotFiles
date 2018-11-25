@@ -50,10 +50,10 @@ stty -ixon
 if [[ `uname` == 'Linux' ]]; then
 
   [[ -d "/home/read/.linuxbrew" ]] && export PATH=$PATH:/home/read/.linuxbrew/bin
-  
+
   function open {
-    if [[ -d "${1}" ]]; then 
-      thunar ${1} &> /dev/null & 
+    if [[ -d "${1}" ]]; then
+      thunar ${1} &> /dev/null &
       disown %$(jobs | sed 's/\[//g' | sed 's/\]//g'| grep thunar |  awk '{print $1}')
     else
       echo "${1} is not a directory!"
@@ -75,6 +75,7 @@ if [[ `uname` == 'Linux' ]]; then
 
 # OSX SPECIFIC CONFIG
 elif [[ `uname` == 'Darwin' ]]; then
+  [[ -d "${HOME}/brew" ]] && export PATH=$PATH:${HOME}/brew/bin
 
   # Ensure trim is enabled
   export TRIM=`system_profiler SPSerialATADataType | grep 'TRIM' | awk '{print $3}'`
@@ -89,9 +90,14 @@ elif [[ `uname` == 'Darwin' ]]; then
 
   # zsh completions for brew
   fpath=($(brew --prefix)/share/zsh/site-functions ${fpath})
+
+  # path for programs installed with pip install --user
+  PATH=${PATH}:${HOME}/Library/Python/2.7/bin
 fi # END MAC SPECIFIC
 
+export WORKON_HOME=${HOME}/workspace/virtenvs
 [[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && source /usr/local/bin/virtualenvwrapper.sh
+[[ -s "${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh" ]] &&  source ${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh
 
 which rbenv >> /dev/null
 if [ $? -eq 0 ]; then
@@ -112,7 +118,7 @@ function gradle {
   if [[ -a `pwd`/gradlew ]]; then
     ./gradlew $@
   else
-    if [[ -z ${GRADLE_BIN} ]]; then 
+    if [[ -z ${GRADLE_BIN} ]]; then
       $HOME/bin/gradle $*
     else
       ${GRADLE_BIN} $*
@@ -127,10 +133,10 @@ fi
 
 function ansible {
   if [[ -a `pwd`/inventory ]]; then
-    $ANSIBLE_BIN -i inventory $@ -f 50  --sudo 
+    $ANSIBLE_BIN -i inventory $@ -f 50  --sudo
   else
     $ANSIBLE_BIN $* -f 50 --sudo
-  fi  
+  fi
 }
 
 function playbook {
@@ -167,7 +173,7 @@ function make_role {
  touch $1/files/.keep
 }
 
-[[ -s "$HOME/.aws_creds" ]] && . "$HOME/.aws_creds" 
+[[ -s "$HOME/.aws_creds" ]] && . "$HOME/.aws_creds"
 
 export NVM_DIR="$HOME/.nvm"
 [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh" # This loads nvm
@@ -177,7 +183,7 @@ alias gl='git log --oneline --all -10 --decorate'
 export PROMPT='%{$fg[yellow]%}%m%{$reset_color%}:%{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)
 %{$reset_color%} ${ret_status} %{$reset_color%}'
 
-bindkey -v 
+bindkey -v
 export KEYTIMEOUT=0.3
 
 function zle-line-init zle-keymap-select {
@@ -193,8 +199,8 @@ alias beep=''
 [[ -s "/usr/share/sounds/purple/alert.wav" ]]  && export BEEP=/usr/share/sounds/purple/alert.wav && alias beep='paplay $BEEP'
 
 function countdown(){
-   date1=$((`date +%s` + $1)); 
-   while [ "$date1" -ge `date +%s` ]; do 
+   date1=$((`date +%s` + $1));
+   while [ "$date1" -ge `date +%s` ]; do
      echo -ne "$(date -u --date @$(($date1 - `date +%s`)) +%H:%M:%S)\r";
      sleep 0.1
    done
@@ -202,15 +208,15 @@ function countdown(){
 }
 
 function stopwatch(){
-  date1=`date +%s`; 
-   while true; do 
-    echo -ne "$(date -u --date @$((`date +%s` - $date1)) +%H:%M:%S)\r"; 
+  date1=`date +%s`;
+   while true; do
+    echo -ne "$(date -u --date @$((`date +%s` - $date1)) +%H:%M:%S)\r";
     sleep 0.1
    done
 }
 
 function ctags-ruby() {
-  ctags -R --languages=ruby --exclude=.git --exclude=log . 
+  ctags -R --languages=ruby --exclude=.git --exclude=log .
   ctags -R --languages=ruby --exclude=.git --exclude=log . $(bundle list --paths)
 }
 
@@ -219,7 +225,7 @@ if [ -d "${HOME}/anaconda3" ]; then
   PATH=${HOME}/anaconda3/bin:$PATH
 fi
 
-# make vim -> nvim if neovim is installed 
+# make vim -> nvim if neovim is installed
 which nvim >> /dev/null
 if [ $? -eq 0 ]; then
   alias vim=nvim
@@ -242,7 +248,8 @@ BASE16_SHELL=$HOME/.config/base16-shell/
 base16_twilight
 
 # Git repo for config files
-export DOTFILES_DIR="$HOME/dotFiles"
+[[ -d ${HOME}/dotFiles ]] && export DOTFILES_DIR="${HOME}/dotFiles"
+[[ -d ${HOME}/workspace/dotFiles.git ]] && export DOTFILES_DIR="${HOME}/workspace/dotFiles.git"
 alias config='/usr/bin/git --git-dir=$DOTFILES_DIR --work-tree=$HOME'
 
 # Silver searcher with no highlights

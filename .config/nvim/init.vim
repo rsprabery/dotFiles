@@ -114,7 +114,8 @@ filetype off                   " required!
 
 " build keys
 :map <C-B> :w<CR>:make<CR>:bot :copen<CR><CR>
-:map <C-v> :lprev<CR>
+" :map <C-v> :lprev<CR> " this is the default binding to put vim into column
+" mode
 :map [ :cprev<CR>
 :map <C-n> :lnext<CR>
 :map ] :cnext<CR>
@@ -165,10 +166,14 @@ Plugin 'vim-ruby/vim-ruby'
 " make
 
 " Selection of which python bin to use for plugins
-" let g:ycm_python_binary_path = '/usr/bin/python'
-let g:ycm_python_binary_path = ' /Users/read/.virtualenvs/nvim/bin/python'
-" let g:python_host_prog='/usr/bin/python'
-let g:python_host_prog='/Users/read/.virtualenvs/nvim/bin/python'
+let g:ycm_python_binary_path = '/usr/bin/python'
+if filereadable("~/.virtualenvs/nvim/bin/python")
+  let g:ycm_python_binary_path = '~/.virtualenvs/nvim/bin/python'
+endif
+if filereadable("~/workspace/virtenvs/neovim/bin/python")
+  let g:python_host_prog='~/workspace/virtenvs/neovim/bin/python'
+endif
+
 " Plugin 'Valloric/YouCompleteMe'
 Plugin 'oblitum/YouCompleteMe'
 " You Complete Me has trouble with cross translation unit goto definition.
@@ -438,4 +443,6 @@ highlight ColorColumn ctermbg=LightYellow
 hi Search cterm=NONE ctermfg=Cyan ctermbg=LightRed
 highlight Visual ctermbg=LightMagenta
 
-source ~/.config/nvim/local.vim
+if filereadable("~/.config/nvim/local.vim")
+  source ~/.config/nvim/local.vim
+endif
