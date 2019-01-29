@@ -72,7 +72,7 @@ if [[ `uname` == 'Linux' ]]; then
     sudo apt-get update
     sudo apt-get install neovim python-pip silversearcher-ag fzf wdiff htop
 elif [[ `uname` == 'Darwin' ]]; then
-    brew install ag fzf wdiff htop neovim gnu-tar Markdown
+    brew install ag fzf wdiff htop neovim gnu-tar Markdown ctags cscope
     sudo easy_install pip
 fi
 
