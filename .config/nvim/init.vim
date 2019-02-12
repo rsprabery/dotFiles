@@ -226,6 +226,22 @@ if executable('cquery')
       \ })
 endif
 
+if executable('/Users/read/workspace/virtenvs/pylsp/bin/pyls')
+    au User lsp_setup call lsp#register_server({
+      \ 'name': 'pyls',
+      \ 'cmd': {server_info->['/Users/read/workspace/virtenvs/pylsp/bin/pyls']},
+      \ 'whitelist': ['python'],
+      \ })
+endif
+
+if executable('/Users/read/brew/bin/bash-language-server')
+  au User lsp_setup call lsp#register_server({
+        \ 'name': 'bash-language-server',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, '/Users/read/brew/bin/bash-language-server start']},
+        \ 'whitelist': ['sh'],
+        \ })
+endif
+
 let g:lsp_signs_enabled = 1         " enable signs
 let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
 let g:lsp_signs_error = {'text': '✗'}
