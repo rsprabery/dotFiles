@@ -59,7 +59,7 @@ if [[ `uname` == 'Linux' ]]; then
       echo "${1} is not a directory!"
     fi
   }
-  export TERM=xterm-256color
+  # export TERM=xterm-256color
 
   which clang-3.8 >> /dev/null
   if [ $? -eq 0 ]; then
@@ -198,6 +198,7 @@ alias gl='git log --oneline --all -10 --decorate'
 export PROMPT='%{$fg[yellow]%}%m%{$reset_color%}:%{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)
 %{$reset_color%} ${ret_status} %{$reset_color%}'
 
+# vi mode for zsh
 bindkey -v
 export KEYTIMEOUT=0.3
 
@@ -260,7 +261,7 @@ fi
 
 BASE16_SHELL=$HOME/.config/base16-shell/
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
-base16_twilight
+base16_solarized-light
 
 # Git repo for config files
 [[ -d ${HOME}/dotFiles ]] && export DOTFILES_DIR="${HOME}/dotFiles"
