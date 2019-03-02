@@ -95,14 +95,32 @@ elif [[ `uname` == 'Darwin' ]]; then
   PATH=${PATH}:${HOME}/Library/Python/2.7/bin
 fi # END MAC SPECIFIC
 
+# Python Setup
 export WORKON_HOME=${HOME}/workspace/virtenvs
 [[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && source /usr/local/bin/virtualenvwrapper.sh
 [[ -s "${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh" ]] &&  source ${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh
 
+# Ruby Lang setup
 which rbenv >> /dev/null
 if [ $? -eq 0 ]; then
   eval "$(rbenv init -)"
 fi
+
+# Install ruby gem in HOME directory instead of system wide
+export GEM_HOME=$HOME/gems
+export PATH=$HOME/gems/bin:$PATH
+
+# Crystal Lang Env Vars
+which crystal >> /dev/null
+if [ $? -eq 0 ]; then
+  export CRYSTAL_CACHE_DIR="/tmp/crystal/.cache/"
+  mkdir -p ${CRYSTAL_CACHE_DIR}
+  export CRYSTAL_PATH="/Users/read/brew/Cellar/crystal/0.27.0/src:lib"
+fi
+
+# NodeJS Setup
+export NVM_DIR="$HOME/.nvm"
+[[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh" # This loads nvm
 
 # Add custom bin's
 [[ -d "$HOME/bin" ]] && PATH=$PATH:$HOME/bin
@@ -174,9 +192,6 @@ function make_role {
 }
 
 [[ -s "$HOME/.aws_creds" ]] && . "$HOME/.aws_creds"
-
-export NVM_DIR="$HOME/.nvm"
-[[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh" # This loads nvm
 
 alias gl='git log --oneline --all -10 --decorate'
 
@@ -255,10 +270,7 @@ alias config='/usr/bin/git --git-dir=$DOTFILES_DIR --work-tree=$HOME'
 # Silver searcher with no highlights
 alias agc='ag --color-match=#0'
 
-
 export FZF_DEFAULT_COMMAND='ag -g ""'
 # To apply the command to CTRL-T as well
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-

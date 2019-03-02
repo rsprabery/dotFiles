@@ -420,6 +420,12 @@ Bundle 'tpope/vim-commentary'
 xnoremap <leader>c Commentary
 " **************** END Commenting *****************************
 
+" ****************** Crystal Lang *****************************
+Bundle 'rhysd/vim-crystal'
+" Run crystal format when saving the file
+let g:crystal_auto_format = 1
+" ****************** END Crystal Lang *************************
+
  Plugin 'keith/xcconfig.vim'
 filetype plugin indent on     " required!
 
