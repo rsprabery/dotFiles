@@ -138,9 +138,6 @@ filetype off                   " required!
 :map <C-]> :lnext<CR>
 :map <Leader>r :make run<CR>
 
-" No autofill on .
-" inoremap <C-X><C-O> <C-X><C-O><C-P>
-
 " My Bundles here:
 "
 " original repos on github
@@ -160,41 +157,9 @@ Plugin 'flazz/vim-colorschemes'
 Plugin 'vim-ruby/vim-ruby'
 
 " Selection of which python bin to use for plugins
-" let g:ycm_python_binary_path = '/usr/bin/python'
-" if filereadable("~/.virtualenvs/nvim/bin/python")
-"   let g:ycm_python_binary_path = '~/.virtualenvs/nvim/bin/python'
-" endif
 if filereadable("~/workspace/virtenvs/neovim/bin/python")
   let g:python_host_prog='~/workspace/virtenvs/neovim/bin/python'
 endif
-
-" Plugin 'autozimu/LanguageClient-neovim'
-" set runtimepath+=~/.vim-plugins/LanguageClient-neovim
-
-" let g:LanguageClient_serverCommands = {
-" \ 'cpp': ['/Users/read/brew/bin/cquery',
-" \ '--log-file=/tmp/cq.log',
-" \ '--init={"cacheDirectory":"/tmp/cquery/cache/"}'],
-" \ 'c': ['/Users/read/brew/bin/cquery',
-" \ '--log-file=/tmp/cq.log',
-" \ '--init={"cacheDirectory":"/tmp/cquery/cache/"}'],
-" \ 'h': ['/Users/read/brew/bin/cquery',
-" \ '--log-file=/tmp/cq.log',
-" \ '--init={"cacheDirectory":"/tmp/cquery/cache/"}'],
-" \ }
-
-" nnoremap { :keepjumps :call LanguageClient#textDocument_implementation()<CR>
-" vnoremap { :keepjumps :call LanguageClient#textDocument_implementation()<CR>
-" nnoremap } :keepjumps :call LanguageClient#textDocument_definition()<CR>
-" vnoremap } :keepjump :call LanguageClient#textDocument_definition()<CR>
-" nnoremap F :call LanguageClient#textDocument_references()<CR>
-" inoremap <leader>f :call LanguageClient#textDocument_codeAction()<CR>
-" vnoremap <leader>f :call LanguageClient#textDocument_codeAction()<CR>
-" nnoremap <leader>f :call LanguageClient#textDocument_codeAction()<CR>
-" " set hidden
-" let g:LanguageClient_selectionUI="location-list"
-" set signcolumn=yes
-
 
 set signcolumn=yes
 set omnifunc=
@@ -324,10 +289,7 @@ Plugin 'vim-airline/vim-airline-themes'
 let g:airline_theme='light'
 let g:airline#extensions#branch#enabled = 0
 let g:airline#extensions#hunks#enabled = 0
-" let b:airline_whitespace_checks=[]
-" let g:airline_section_warning = ["ycm_warning_count", "syntastic-warn"]
 let g:airline#extensions#whitespace#enabled = 0
-" let g:airline#extensions#whitespace#mixed_indent_algo = 2
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 Plugin 'majutsushi/tagbar'
 Plugin 'heavenshell/vim-pydocstring'
@@ -349,11 +311,10 @@ set statusline+=%*
 
 Plugin 'scrooloose/nerdtree'
 map <Leader>n :NERDTreeToggle<CR><C-W>w
-" map <Leader>t :CtrlPMixed<CR>
+
 map <Leader>t :Files<CR>
 map <Leader>h :History<CR>
 map <Leader>w :Windows<CR>
-" autocmd FileType c nnoremap K :Man <cword>
 
 " ************* START Hilight Management *********************
 " Toggle highlight state with F9
@@ -392,32 +353,12 @@ imap <C-K> <C-\><C-N><C-C><C-W>k<CR>
 vnoremap < <gv
 vnoremap > >gv
 
-" *************** ctrlp-config ********************************
-" Bundle 'ctrlpvim/ctrlp.vim'
-" Ignore temp files, object files, archives and vim swap files
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.o     " MacOSX/Linux
-" Store search items in a cache
-" let g:ctrlp_use_caching = 0
-" let g:ctrlp_clear_cache_on_exit = 0
-
-" let g:ctrlp_max_files = 0
-" let g:ctrlp_max_depth = 0
-" let g:ctrlp_mruf_max = 250
-
-" Store the cache in ramdsik on Linux
-" if isdirectory("/dev/shm/")
-  " let g:ctrlp_cache_dir = "/dev/shm/cache/ctrlp"
-" endif
-
 " Use the Silver Searcher (if installed)
 Plugin 'junegunn/fzf.vim'
 set rtp+=/Users/read/brew/opt/fzf
 if executable('ag')
   " Use ag over grep
   set grepprg=ag\ --nogroup\ --nocolor
-
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 
   " bind K to grep word under cursor (opens in quickfix)
   nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:bot :cw <CR><CR>:set colorcolumn=0 nospell<CR>
@@ -429,46 +370,26 @@ if executable('ag')
   nmap <Leader>F :bot :cw<CR><CR>:set colorcolumn=0 nospell<CR>
 endif
 
-" Use matcher for ctrl-p if present on system.
-" This handles fuzzy search. Still limited, but much better than ag.
-" if executable('matcher')
-" 	let g:ctrlp_match_func = { 'match': 'GoodMatch' }
-"   let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:750000'
-
-" 	function! GoodMatch(items, str, limit, mmode, ispath, crfile, regex)
-
-" 	  " Create a cache file if not yet exists
-" 	  let cachefile = ctrlp#utils#cachedir().'/matcher.cache'
-" 	  if !( filereadable(cachefile) && a:items == readfile(cachefile) )
-" 		call writefile(a:items, cachefile)
-" 	  endif
-" 	  if !filereadable(cachefile)
-" 		return []
-" 	  endif
-
-" 	  " a:mmode is currently ignored. In the future, we should probably do
-" 	  " something about that. the matcher behaves like "full-line".
-" 	  let cmd = 'matcher --limit '.a:limit.' --manifest '.cachefile.' '
-" 	  if !( exists('g:ctrlp_dotfiles') && g:ctrlp_dotfiles )
-" 		let cmd = cmd.'--no-dotfiles '
-" 	  endif
-" 	  let cmd = cmd.a:str
-
-" 	  return split(system(cmd), "\n")
-
-"   endfunction
-" end
-" *************** END ctrlp-config ****************************
-
 " ******* START Keys Bindings for Finding C/C++ Items *********
-" autocmd FileType c nmap <Leader>] "zyiw:exe "cs f t struct <C-r>z {"<CR>
-" Bundle "rdnetto/YCM-Generator"
-" Bundle "joe-skb7/cscope-maps"
+let lspStatus=-1
+function EnableCtags(serverName)
+    echo "things"
+    sleep 500m
+    " Match end will return -1 if no match is found.
+    " This function always returns "running" at the end if there is a LSP
+    " server running and "not running" if there isn't.
+    let lspStatus=matchend(lsp#get_server_status(),"&a:serverName not running")
+    if lspStatus > 0
+        autocmd FileType c,cpp nmap <Leader>] "zyiw:exe "cs f t struct <C-r>z {"<CR>
+        " Bundle "joe-skb7/cscope-maps"
+    end
+    echo lspStatus
+endfunction
+" autocmd FileType c,cpp :call EnableCtags('ccls')
 " ******* END Keys Bindings for Finding C/C++ Items *********
 
 " ****************** Color Config *****************************
 Bundle 'chriskempson/base16-vim'
-" colorscheme 256-jungle
 colorscheme  LightTan
 " ****************** END Color Config *************************
 
@@ -509,10 +430,6 @@ cnoremap <leader>v :vsp<CR><C-W>l<CR>
 noremap <leader>s :sp<CR><C-W>j<CR>
 cnoremap <leader>s :sp<CR><C-W>j<CR>
 " **************** Keys for Splits *********************************
-
-" **************** Livepreview for Markdown *********************************
-" Plugin 'JamshedVesuna/vim-markdown-preview'
-
 
 " *************************** Snippets **************************************
 " Track the engine.
