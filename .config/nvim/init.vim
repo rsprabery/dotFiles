@@ -226,6 +226,15 @@ if executable('cquery')
       \ })
 endif
 
+if executable('solargraph')
+    au User lsp_setup call lsp#register_server({
+          \ 'name': 'solargraph',
+          \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
+          \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'Gemfile'))},
+          \ 'whitelist': ['ruby', 'eruby'],
+          \ })
+endif
+
 if executable('/Users/read/workspace/virtenvs/pylsp/bin/pyls')
     au User lsp_setup call lsp#register_server({
       \ 'name': 'pyls',

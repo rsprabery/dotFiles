@@ -73,9 +73,19 @@ if [[ `uname` == 'Linux' ]]; then
     sudo apt-get install -y neovim python-pip silversearcher-ag wdiff htop \
         xclip git
 elif [[ `uname` == 'Darwin' ]]; then
-    brew install ag fzf wdiff htop neovim gnu-tar Markdown ctags cscope
+    brew install ag fzf wdiff htop neovim gnu-tar Markdown \
+        ctags \
+        cscope \
+        rbenv \
+        rbenv-gemset \
+        nvm \
+        direnv \
+        jemalloc
     sudo easy_install pip
 fi
+
+mkdir -p ${HOME}/bin
+ln -s $(brew --prefix)/bin/ctags ${HOME}/bin/ctags
 
 # install deps for neovim
 # Right now, YCM only works with system python. So neovim needs to be able
@@ -93,6 +103,14 @@ elif [[ `uname` == 'Darwin' ]]; then
   source ${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh
   PATH=${PATH}:${HOME}/Library/Python/2.7/bin
 fi
+
+
+mkdir ~/.nvm
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "/Users/read/brew/opt/nvm/nvm.sh" ] && . "/Users/read/brew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/Users/read/brew/opt/nvm/etc/bash_completion" ] && . "/Users/read/brew/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
+
 mkvirtualenv neovim
 pip install neovim
 

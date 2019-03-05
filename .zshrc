@@ -1,4 +1,4 @@
-# P ath to your oh-my-zsh configuration.
+# Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load.
@@ -95,10 +95,18 @@ elif [[ `uname` == 'Darwin' ]]; then
   PATH=${PATH}:${HOME}/Library/Python/2.7/bin
 fi # END MAC SPECIFIC
 
+# Per project env vars
+which direnv >> /dev/null
+if [ $? -eq 0 ]; then
+  eval "$(direnv hook zsh)"
+fi
+
 # Python Setup
 export WORKON_HOME=${HOME}/workspace/virtenvs
-[[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && source /usr/local/bin/virtualenvwrapper.sh
-[[ -s "${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh" ]] &&  source ${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh
+[[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && \
+    source /usr/local/bin/virtualenvwrapper.sh
+[[ -s "${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh" ]] &&  \
+    source ${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh
 
 # Ruby Lang setup
 which rbenv >> /dev/null
@@ -107,8 +115,8 @@ if [ $? -eq 0 ]; then
 fi
 
 # Install ruby gem in HOME directory instead of system wide
-export GEM_HOME=$HOME/gems
-export PATH=$HOME/gems/bin:$PATH
+export GEM_HOME=$HOME/.gems
+export PATH=$HOME/.gems/bin:$PATH
 
 # Crystal Lang Env Vars
 which crystal >> /dev/null
@@ -120,16 +128,22 @@ fi
 
 # NodeJS Setup
 export NVM_DIR="$HOME/.nvm"
+# Support installs of NVM directly
 [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh" # This loads nvm
+# Support brew install nvm
+[ -s "${HOME}/brew/opt/nvm/nvm.sh" ] && . "${HOME}/brew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "${HOME}/brew/opt/nvm/etc/bash_completion" ] && . "${HOME}/brew/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
 
 # Add custom bin's
-[[ -d "$HOME/bin" ]] && PATH=$PATH:$HOME/bin
+[[ -d "$HOME/bin" ]] && PATH=$HOME/bin:${PATH}
 
 # Load oh-my-zsh
 source $ZSH/oh-my-zsh.sh
 
 alias gls="git status"
 export SVN_EDITOR=vim
+export HOMEBREW_EDITOR=vim
+export EDITOR=vim
 
 GRADLE_BIN=$(which gradle)
 function gradle {
