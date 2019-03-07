@@ -38,7 +38,7 @@ HOMEBREW_NO_ANALYTICS=1
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git ruby git-extras pip python svn vundle)
+plugins=(git ruby git-extras pip python svn vundle rvm)
 
 # enable control-s and control-q
 stty start undef
@@ -109,14 +109,23 @@ export WORKON_HOME=${HOME}/workspace/virtenvs
     source ${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh
 
 # Ruby Lang setup
-which rbenv >> /dev/null
-if [ $? -eq 0 ]; then
-  eval "$(rbenv init -)"
-fi
+# which rbenv >> /dev/null
+# if [ $? -eq 0 ]; then
+#   eval "$(rbenv init -)"
+# fi
 
 # Install ruby gem in HOME directory instead of system wide
-export GEM_HOME=$HOME/.gems
-export PATH=$HOME/.gems/bin:$PATH
+# export GEM_HOME=$HOME/.gems
+# export PATH=$HOME/.gems/bin:$PATH
+
+function ctags-ruby() {
+  ctags -R --languages=ruby --exclude=.git --exclude=log .
+  ctags -R --languages=ruby --exclude=.git --exclude=log . $(bundle list --paths)
+}
+
+# Load RVM into a shell session *as a function*
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
+export PATH="$PATH:$HOME/.rvm/bin"
 
 # Crystal Lang Env Vars
 which crystal >> /dev/null
@@ -245,10 +254,6 @@ function stopwatch(){
    done
 }
 
-function ctags-ruby() {
-  ctags -R --languages=ruby --exclude=.git --exclude=log .
-  ctags -R --languages=ruby --exclude=.git --exclude=log . $(bundle list --paths)
-}
 
 # add anaconda 3 to the path if it exists
 if [ -d "${HOME}/anaconda3" ]; then
