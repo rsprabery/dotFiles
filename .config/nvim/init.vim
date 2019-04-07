@@ -40,9 +40,6 @@ autocmd TermOpen * nnoremap <leader>k :set scrollback=0<CR> :set scrollback=1000
 
 autocmd TermOpen * xnoremap <ESC> <C-\><C-N>
 
-" Put a line under the active cursor line
-:set cursorline
-
 function FirstPreProcLine()
   " let firstNonComment=index(getbufline(bufname("%"), 1, 250), 'v:val =~ "^\#"')
   execute "normal! gg/^#\<cr>"
@@ -153,7 +150,6 @@ Bundle 'Lokaltog/vim-easymotion'
 Bundle 'tpope/vim-rails.git'
 
 Bundle 'VisIncr'
-Plugin 'flazz/vim-colorschemes'
 Plugin 'vim-ruby/vim-ruby'
 
 " Selection of which python bin to use for plugins
@@ -239,21 +235,6 @@ let g:gitgutter_map_keys = 0
 " nmap ]c <Plug>GitGutterNextHunk
 " nmap [c <Plug>GitGutterPrevHunk
 
-function! Carousel()
-  for theme in split(globpath(&runtimepath, 'colors/*.vim'), '\n')
-    let t = fnamemodify(theme, ':t:r')
-    try
-      execute 'colorscheme '.t
-      echo t
-    catch
-    finally
-    endtry
-    sleep 4
-    redraw
-  endfor
-endfunction
-
-" map <silent> <Leader>tc :call Carousel()<cr>
 
 "
 " Brief help
@@ -285,7 +266,6 @@ autocmd FileType ruby nmap <Leader>ec :echom system("ctags -R --languages=ruby -
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
 Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
 let g:airline_theme='light'
 let g:airline#extensions#branch#enabled = 0
 let g:airline#extensions#hunks#enabled = 0
@@ -388,11 +368,6 @@ endfunction
 " autocmd FileType c,cpp :call EnableCtags('ccls')
 " ******* END Keys Bindings for Finding C/C++ Items *********
 
-" ****************** Color Config *****************************
-Bundle 'chriskempson/base16-vim'
-colorscheme  LightTan
-" ****************** END Color Config *************************
-
 " ******************** Tab Config *****************************
 noremap <C-t> :tabedit<CR>
 inoremap <C-t> <C-o>:tabedit<CR>
@@ -433,10 +408,10 @@ cnoremap <leader>s :sp<CR><C-W>j<CR>
 
 " *************************** Snippets **************************************
 " Track the engine.
-" Bundle 'SirVer/ultisnips'
-" let g:UltiSnipsExpandTrigger="<tab>"
-" let g:UltiSnipsJumpForwardTrigger="<S-b>"
-" let g:UltiSnipsJumpBackwardTrigger="<S-z>"
+Bundle 'SirVer/ultisnips'
+let g:UltiSnipsExpandTrigger="<c-e>"
+let g:UltiSnipsJumpForwardTrigger="<S-b>"
+let g:UltiSnipsJumpBackwardTrigger="<S-z>"
 
 " ************************** End Snippets ***********************************
 
@@ -456,10 +431,56 @@ silent! helptags ALL
 " *************** Custom Colors *******************************
 " **** These must come after setting the theme above.
 " *************************************************************
-highlight ColorColumn ctermbg=LightYellow
-hi Search cterm=NONE ctermfg=Cyan ctermbg=LightRed
-highlight Visual ctermbg=LightMagenta
-:hi CursorLine ctermbg=13 cterm=NONE
+
+" Put a line under the active cursor line
+set cursorline
+" Enable real colors
+set termguicolors
+
+Bundle 'morhetz/gruvbox'
+function! Carousel()
+  for theme in split(globpath(&runtimepath, 'colors/*.vim'), '\n')
+    let t = fnamemodify(theme, ':t:r')
+    try
+      execute 'colorscheme '.t
+      redraw!
+      echo t
+    catch
+    finally
+    endtry
+    sleep 1
+    redraw!
+  endfor
+endfunction
+
+Bundle 'vim-airline/vim-airline-themes'
+
+" map <silent> <Leader>tc :call Carousel()<cr>
+
+let g:gruvbox_italic=1
+let g:gruvbox_undercurl=1
+let g:gruvbox_contrast_light='hard'
+let g:gruvbox_number_column='bg1'
+let g:gruvbox_color_column='bg1'
+let g:gruvbox_guisp_fallback='bg4'
+colorscheme gruvbox
+
+" highlight CursorLine guibg=223 gui=NONE
+" Change the default background, but keep airline the same.
+" TODO: Make airline text stay white when making the background lighter.
+set background=light
+" highlight Normal guibg=230
+let g:airline_theme='gruvbox'
+
+" Change tab bar colors
+"    TabLineFill is the middle (so the fg doesn't have anything to display)
+highlight TabLineFill guifg=#665c54 guibg=#bdae93
+highlight TabLineSel guifg=#282828 guibg=#d5c4a1
+" guibg=#b57614 "yellow"
+highlight TabLine guifg=#7c6f64 guibg=#d5c4a1
+" guibg=#b57614 "yellow"
+
+" ****************** END Color Config *************************
 
 if filereadable("/Users/read/.config/nvim/local.vim")
   source ~/.config/nvim/local.vim

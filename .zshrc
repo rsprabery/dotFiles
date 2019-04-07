@@ -256,8 +256,8 @@ function stopwatch(){
 
 
 # add anaconda 3 to the path if it exists
-if [ -d "${HOME}/anaconda3" ]; then
-  PATH=${HOME}/anaconda3/bin:$PATH
+if [ -d "${HOME}/.anaconda3" ]; then
+  PATH=${HOME}/.anaconda3/bin:$PATH
 fi
 
 # make vim -> nvim if neovim is installed
