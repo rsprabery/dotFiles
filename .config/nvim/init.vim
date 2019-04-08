@@ -216,13 +216,15 @@ inoremap <leader>f :LspCodeAction<CR>
 vnoremap <leader>f :LspCodeAction<CR>
 nnoremap <leader>f :LspCodeAction<CR>
 
-if executable('cquery')
+let g:lsp_diagnostics_echo_cursor = 1
+
+if executable('ccls')
    au User lsp_setup call lsp#register_server({
-      \ 'name': 'cquery',
-      \ 'cmd': {server_info->['cquery']},
+      \ 'name': 'ccls',
+      \ 'cmd': {server_info->['ccls']},
       \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-      \ 'initialization_options': { 'cacheDirectory': '/tmp/cquery/cache', 'filterAndSort': 'false', 'enableSnippets': 'false'},
-      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc', 'h' ],
+      \ 'initialization_options': { 'cacheDirectory': '/tmp/ccls/cache' },
+      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
       \ })
 endif
 
@@ -245,10 +247,6 @@ endif
 let g:lsp_signs_enabled = 1         " enable signs
 let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
 let g:lsp_signs_error = {'text': '✗'}
-
-let g:asyncomplete_log_file="/tmp/async_vim.log"
-let g:lsp_log_verbose = 1
-let g:lsp_log_file = expand('/tmp/vim-lsp.log')
 
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
