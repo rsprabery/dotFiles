@@ -149,12 +149,19 @@ Bundle 'Lokaltog/vim-easymotion'
 " :A(alternate) and :R(related) for jumping between files
 Bundle 'tpope/vim-rails.git'
 
+Bundle 'indentpython.vim'
+
 Bundle 'VisIncr'
 Plugin 'vim-ruby/vim-ruby'
 
 " Selection of which python bin to use for plugins
-if filereadable("~/workspace/virtenvs/neovim/bin/python")
-  let g:python_host_prog='~/workspace/virtenvs/neovim/bin/python'
+if filereadable("/Users/read/workspace/virtenvs/neovim/bin/python")
+  let g:python_host_prog='/Users/read/workspace/virtenvs/neovim/bin/python'
+endif
+
+" Prefer python 3 if available
+if filereadable("/Users/read/workspace/virtenvs/p3neovim/bin/python")
+  let g:python_host_prog='/Users/read/workspace/virtenvs/p3neovim/bin/python'
 endif
 
 set signcolumn=yes
@@ -196,12 +203,20 @@ if executable('solargraph')
           \ })
 endif
 
-if executable('/Users/read/workspace/virtenvs/pylsp/bin/pyls')
+if executable('/Users/read/workspace/virtenvs/p3neovim/bin/pyls')
     au User lsp_setup call lsp#register_server({
-      \ 'name': 'pyls',
-      \ 'cmd': {server_info->['/Users/read/workspace/virtenvs/pylsp/bin/pyls']},
-      \ 'whitelist': ['python'],
-      \ })
+          \ 'name': 'pyls',
+          \ 'cmd': {server_info->['/Users/read/workspace/virtenvs/p3neovim/bin/pyls']},
+          \ 'whitelist': ['python'],
+          \ })
+else
+    if executable('/Users/read/workspace/virtenvs/pylsp/bin/pyls')
+        au User lsp_setup call lsp#register_server({
+          \ 'name': 'pyls',
+          \ 'cmd': {server_info->['/Users/read/workspace/virtenvs/pylsp/bin/pyls']},
+          \ 'whitelist': ['python'],
+          \ })
+    endif
 endif
 
 if executable('/Users/read/brew/bin/bash-language-server')
