@@ -230,6 +230,7 @@ fi
 which nvim >> /dev/null
 if [ $? -eq 0 ]; then
   alias vim=nvim
+  alias view='nvim -R'
 fi
 
 # color output for wdiff

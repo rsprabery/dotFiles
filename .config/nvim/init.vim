@@ -27,6 +27,8 @@ set shiftwidth=4
 
 " Spacing in python
 autocmd FileType python :set tabstop=8 expandtab shiftwidth=4 softtabstop=4
+Bundle 'vim-python/python-syntax'
+let g:python_highlight_all = 1
 
 " Spacing for makefiles
 autocmd FileType make :set tabstop=8 expandtab shiftwidth=4 softtabstop=4
@@ -160,10 +162,6 @@ Plugin 'flazz/vim-colorschemes'
 Plugin 'vim-ruby/vim-ruby'
 
 " Selection of which python bin to use for plugins
-" let g:ycm_python_binary_path = '/usr/bin/python'
-" if filereadable("~/.virtualenvs/nvim/bin/python")
-"   let g:ycm_python_binary_path = '~/.virtualenvs/nvim/bin/python'
-" endif
 if filereadable("~/workspace/virtenvs/neovim/bin/python")
   let g:python_host_prog='~/workspace/virtenvs/neovim/bin/python'
 endif
@@ -242,13 +240,13 @@ if executable('/Users/read/brew/bin/bash-language-server')
         \ })
 endif
 
+let g:lsp_diagnostics_enabled = 1
 let g:lsp_signs_enabled = 1         " enable signs
 let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
 let g:lsp_signs_error = {'text': '✗'}
-
-let g:asyncomplete_log_file="/tmp/async_vim.log"
-let g:lsp_log_verbose = 1
-let g:lsp_log_file = expand('/tmp/vim-lsp.log')
+let g:lsp_signs_warning = {'text': '!!'}
+let g:lsp_signs_hint = {'text': 'H'}
+let g:lsp_virtual_text_enabled = 0
 
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
@@ -456,6 +454,9 @@ endif
 " Bundle "rdnetto/YCM-Generator"
 " Bundle "joe-skb7/cscope-maps"
 " ******* END Keys Bindings for Finding C/C++ Items *********
+
+" Better highlighting for C++
+Bundle 'octol/vim-cpp-enhanced-highlight'
 
 " ****************** Color Config *****************************
 Bundle 'chriskempson/base16-vim'
