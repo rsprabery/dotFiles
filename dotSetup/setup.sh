@@ -113,6 +113,10 @@ mkvirtualenv neovim
 pip install neovim
 deactivate
 
+mkvirtualenv pylsp
+pip install 'python-language-server[all]'
+deactivate
+
 # The pip cache may be owned by root, change owner
 sudo chown -R $(whoami):$(id -g -n) ${HOME}/.cache
 
