@@ -1,4 +1,4 @@
-# P ath to your oh-my-zsh configuration.
+# Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load.
@@ -38,7 +38,7 @@ HOMEBREW_NO_ANALYTICS=1
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git ruby git-extras pip python svn vundle)
+plugins=(git ruby git-extras pip python svn vundle rvm)
 
 # enable control-s and control-q
 stty start undef
@@ -95,23 +95,64 @@ elif [[ `uname` == 'Darwin' ]]; then
   PATH=${PATH}:${HOME}/Library/Python/2.7/bin
 fi # END MAC SPECIFIC
 
-export WORKON_HOME=${HOME}/workspace/virtenvs
-[[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && source /usr/local/bin/virtualenvwrapper.sh
-[[ -s "${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh" ]] &&  source ${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh
-
-which rbenv >> /dev/null
+# Per project env vars
+which direnv >> /dev/null
 if [ $? -eq 0 ]; then
-  eval "$(rbenv init -)"
+  eval "$(direnv hook zsh)"
 fi
 
+# Python Setup
+export WORKON_HOME=${HOME}/workspace/virtenvs
+[[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && \
+    source /usr/local/bin/virtualenvwrapper.sh
+[[ -s "${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh" ]] &&  \
+    source ${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh
+
+# Ruby Lang setup
+# which rbenv >> /dev/null
+# if [ $? -eq 0 ]; then
+#   eval "$(rbenv init -)"
+# fi
+
+# Install ruby gem in HOME directory instead of system wide
+# export GEM_HOME=$HOME/.gems
+# export PATH=$HOME/.gems/bin:$PATH
+
+function ctags-ruby() {
+  ctags -R --languages=ruby --exclude=.git --exclude=log .
+  ctags -R --languages=ruby --exclude=.git --exclude=log . $(bundle list --paths)
+}
+
+# Load RVM into a shell session *as a function*
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
+export PATH="$PATH:$HOME/.rvm/bin"
+
+# Crystal Lang Env Vars
+which crystal >> /dev/null
+if [ $? -eq 0 ]; then
+  export CRYSTAL_CACHE_DIR="/tmp/crystal/.cache/"
+  mkdir -p ${CRYSTAL_CACHE_DIR}
+  export CRYSTAL_PATH="/Users/read/brew/Cellar/crystal/0.27.0/src:lib"
+fi
+
+# NodeJS Setup
+export NVM_DIR="$HOME/.nvm"
+# Support installs of NVM directly
+[[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh" # This loads nvm
+# Support brew install nvm
+[ -s "${HOME}/brew/opt/nvm/nvm.sh" ] && . "${HOME}/brew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "${HOME}/brew/opt/nvm/etc/bash_completion" ] && . "${HOME}/brew/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
+
 # Add custom bin's
-[[ -d "$HOME/bin" ]] && PATH=$PATH:$HOME/bin
+[[ -d "$HOME/bin" ]] && PATH=$HOME/bin:${PATH}
 
 # Load oh-my-zsh
 source $ZSH/oh-my-zsh.sh
 
 alias gls="git status"
 export SVN_EDITOR=vim
+export HOMEBREW_EDITOR=vim
+export EDITOR=vim
 
 GRADLE_BIN=$(which gradle)
 function gradle {
@@ -175,9 +216,6 @@ function make_role {
 
 [[ -s "$HOME/.aws_creds" ]] && . "$HOME/.aws_creds"
 
-export NVM_DIR="$HOME/.nvm"
-[[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh" # This loads nvm
-
 alias gl='git log --oneline --all -10 --decorate'
 
 export PROMPT='%{$fg[yellow]%}%m%{$reset_color%}:%{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)
@@ -216,15 +254,11 @@ function stopwatch(){
    done
 }
 
-function ctags-ruby() {
-  ctags -R --languages=ruby --exclude=.git --exclude=log .
-  ctags -R --languages=ruby --exclude=.git --exclude=log . $(bundle list --paths)
-}
 
 # add anaconda 3 to the path if it exists
-if [ -d "${HOME}/anaconda3" ]; then
-  PATH=${HOME}/anaconda3/bin:$PATH
-fi
+# if [ -d "${HOME}/.anaconda3" ]; then
+#   PATH=${HOME}/.anaconda3/bin:$PATH
+# fi
 
 # make vim -> nvim if neovim is installed
 which nvim >> /dev/null
@@ -247,7 +281,7 @@ fi
 
 BASE16_SHELL=$HOME/.config/base16-shell/
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
-base16_twilight
+base16_solarized-light
 
 # Git repo for config files
 [[ -d ${HOME}/dotFiles ]] && export DOTFILES_DIR="${HOME}/dotFiles"
@@ -257,10 +291,7 @@ alias config='/usr/bin/git --git-dir=$DOTFILES_DIR --work-tree=$HOME'
 # Silver searcher with no highlights
 alias agc='ag --color-match=#0'
 
-
 export FZF_DEFAULT_COMMAND='ag -g ""'
 # To apply the command to CTRL-T as well
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# export TERM="screen-256color"

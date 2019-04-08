@@ -42,9 +42,6 @@ autocmd TermOpen * nnoremap <leader>k :set scrollback=0<CR> :set scrollback=1000
 
 autocmd TermOpen * xnoremap <ESC> <C-\><C-N>
 
-" Put a line under the active cursor line
-:set cursorline
-
 function FirstPreProcLine()
   " let firstNonComment=index(getbufline(bufname("%"), 1, 250), 'v:val =~ "^\#"')
   execute "normal! gg/^#\<cr>"
@@ -140,9 +137,6 @@ filetype off                   " required!
 :map <C-]> :lnext<CR>
 :map <Leader>r :make run<CR>
 
-" No autofill on .
-" inoremap <C-X><C-O> <C-X><C-O><C-P>
-
 " My Bundles here:
 "
 " original repos on github
@@ -157,42 +151,20 @@ Bundle 'Lokaltog/vim-easymotion'
 " :A(alternate) and :R(related) for jumping between files
 Bundle 'tpope/vim-rails.git'
 
+Bundle 'indentpython.vim'
+
 Bundle 'VisIncr'
-Plugin 'flazz/vim-colorschemes'
 Plugin 'vim-ruby/vim-ruby'
 
 " Selection of which python bin to use for plugins
-if filereadable("~/workspace/virtenvs/neovim/bin/python")
-  let g:python_host_prog='~/workspace/virtenvs/neovim/bin/python'
+if filereadable("/Users/read/workspace/virtenvs/neovim/bin/python")
+  let g:python_host_prog='/Users/read/workspace/virtenvs/neovim/bin/python'
 endif
 
-" Plugin 'autozimu/LanguageClient-neovim'
-" set runtimepath+=~/.vim-plugins/LanguageClient-neovim
-
-" let g:LanguageClient_serverCommands = {
-" \ 'cpp': ['/Users/read/brew/bin/cquery',
-" \ '--log-file=/tmp/cq.log',
-" \ '--init={"cacheDirectory":"/tmp/cquery/cache/"}'],
-" \ 'c': ['/Users/read/brew/bin/cquery',
-" \ '--log-file=/tmp/cq.log',
-" \ '--init={"cacheDirectory":"/tmp/cquery/cache/"}'],
-" \ 'h': ['/Users/read/brew/bin/cquery',
-" \ '--log-file=/tmp/cq.log',
-" \ '--init={"cacheDirectory":"/tmp/cquery/cache/"}'],
-" \ }
-
-" nnoremap { :keepjumps :call LanguageClient#textDocument_implementation()<CR>
-" vnoremap { :keepjumps :call LanguageClient#textDocument_implementation()<CR>
-" nnoremap } :keepjumps :call LanguageClient#textDocument_definition()<CR>
-" vnoremap } :keepjump :call LanguageClient#textDocument_definition()<CR>
-" nnoremap F :call LanguageClient#textDocument_references()<CR>
-" inoremap <leader>f :call LanguageClient#textDocument_codeAction()<CR>
-" vnoremap <leader>f :call LanguageClient#textDocument_codeAction()<CR>
-" nnoremap <leader>f :call LanguageClient#textDocument_codeAction()<CR>
-" " set hidden
-" let g:LanguageClient_selectionUI="location-list"
-" set signcolumn=yes
-
+" Prefer python 3 if available
+if filereadable("/Users/read/workspace/virtenvs/p3neovim/bin/python")
+  let g:python_host_prog='/Users/read/workspace/virtenvs/p3neovim/bin/python'
+endif
 
 set signcolumn=yes
 set omnifunc=
@@ -214,22 +186,41 @@ inoremap <leader>f :LspCodeAction<CR>
 vnoremap <leader>f :LspCodeAction<CR>
 nnoremap <leader>f :LspCodeAction<CR>
 
-if executable('cquery')
+let g:lsp_diagnostics_echo_cursor = 1
+
+if executable('ccls')
    au User lsp_setup call lsp#register_server({
-      \ 'name': 'cquery',
-      \ 'cmd': {server_info->['cquery']},
+      \ 'name': 'ccls',
+      \ 'cmd': {server_info->['ccls']},
       \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-      \ 'initialization_options': { 'cacheDirectory': '/tmp/cquery/cache', 'filterAndSort': 'false', 'enableSnippets': 'false'},
-      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc', 'h' ],
+      \ 'initialization_options': { 'cacheDirectory': '/tmp/ccls/cache' },
+      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
       \ })
 endif
 
-if executable('/Users/read/workspace/virtenvs/pylsp/bin/pyls')
+if executable('solargraph')
     au User lsp_setup call lsp#register_server({
-      \ 'name': 'pyls',
-      \ 'cmd': {server_info->['/Users/read/workspace/virtenvs/pylsp/bin/pyls']},
-      \ 'whitelist': ['python'],
-      \ })
+          \ 'name': 'solargraph',
+          \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
+          \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'Gemfile'))},
+          \ 'whitelist': ['ruby', 'eruby'],
+          \ })
+endif
+
+if executable('/Users/read/workspace/virtenvs/p3neovim/bin/pyls')
+    au User lsp_setup call lsp#register_server({
+          \ 'name': 'pyls',
+          \ 'cmd': {server_info->['/Users/read/workspace/virtenvs/p3neovim/bin/pyls']},
+          \ 'whitelist': ['python'],
+          \ })
+else
+    if executable('/Users/read/workspace/virtenvs/pylsp/bin/pyls')
+        au User lsp_setup call lsp#register_server({
+          \ 'name': 'pyls',
+          \ 'cmd': {server_info->['/Users/read/workspace/virtenvs/pylsp/bin/pyls']},
+          \ 'whitelist': ['python'],
+          \ })
+    endif
 endif
 
 if executable('/Users/read/brew/bin/bash-language-server')
@@ -263,21 +254,6 @@ let g:gitgutter_map_keys = 0
 " nmap ]c <Plug>GitGutterNextHunk
 " nmap [c <Plug>GitGutterPrevHunk
 
-function! Carousel()
-  for theme in split(globpath(&runtimepath, 'colors/*.vim'), '\n')
-    let t = fnamemodify(theme, ':t:r')
-    try
-      execute 'colorscheme '.t
-      echo t
-    catch
-    finally
-    endtry
-    sleep 4
-    redraw
-  endfor
-endfunction
-
-" map <silent> <Leader>tc :call Carousel()<cr>
 
 "
 " Brief help
@@ -309,14 +285,10 @@ autocmd FileType ruby nmap <Leader>ec :echom system("ctags -R --languages=ruby -
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
 Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
 let g:airline_theme='light'
 let g:airline#extensions#branch#enabled = 0
 let g:airline#extensions#hunks#enabled = 0
-" let b:airline_whitespace_checks=[]
-" let g:airline_section_warning = ["ycm_warning_count", "syntastic-warn"]
 let g:airline#extensions#whitespace#enabled = 0
-" let g:airline#extensions#whitespace#mixed_indent_algo = 2
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 Plugin 'majutsushi/tagbar'
 Plugin 'heavenshell/vim-pydocstring'
@@ -338,11 +310,10 @@ set statusline+=%*
 
 Plugin 'scrooloose/nerdtree'
 map <Leader>n :NERDTreeToggle<CR><C-W>w
-" map <Leader>t :CtrlPMixed<CR>
+
 map <Leader>t :Files<CR>
 map <Leader>h :History<CR>
 map <Leader>w :Windows<CR>
-" autocmd FileType c nnoremap K :Man <cword>
 
 " ************* START Hilight Management *********************
 " Toggle highlight state with F9
@@ -381,32 +352,12 @@ imap <C-K> <C-\><C-N><C-C><C-W>k<CR>
 vnoremap < <gv
 vnoremap > >gv
 
-" *************** ctrlp-config ********************************
-" Bundle 'ctrlpvim/ctrlp.vim'
-" Ignore temp files, object files, archives and vim swap files
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.o     " MacOSX/Linux
-" Store search items in a cache
-" let g:ctrlp_use_caching = 0
-" let g:ctrlp_clear_cache_on_exit = 0
-
-" let g:ctrlp_max_files = 0
-" let g:ctrlp_max_depth = 0
-" let g:ctrlp_mruf_max = 250
-
-" Store the cache in ramdsik on Linux
-" if isdirectory("/dev/shm/")
-  " let g:ctrlp_cache_dir = "/dev/shm/cache/ctrlp"
-" endif
-
 " Use the Silver Searcher (if installed)
 Plugin 'junegunn/fzf.vim'
 set rtp+=/Users/read/brew/opt/fzf
 if executable('ag')
   " Use ag over grep
   set grepprg=ag\ --nogroup\ --nocolor
-
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 
   " bind K to grep word under cursor (opens in quickfix)
   nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:bot :cw <CR><CR>:set colorcolumn=0 nospell<CR>
@@ -418,51 +369,27 @@ if executable('ag')
   nmap <Leader>F :bot :cw<CR><CR>:set colorcolumn=0 nospell<CR>
 endif
 
-" Use matcher for ctrl-p if present on system.
-" This handles fuzzy search. Still limited, but much better than ag.
-" if executable('matcher')
-" 	let g:ctrlp_match_func = { 'match': 'GoodMatch' }
-"   let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:750000'
-
-" 	function! GoodMatch(items, str, limit, mmode, ispath, crfile, regex)
-
-" 	  " Create a cache file if not yet exists
-" 	  let cachefile = ctrlp#utils#cachedir().'/matcher.cache'
-" 	  if !( filereadable(cachefile) && a:items == readfile(cachefile) )
-" 		call writefile(a:items, cachefile)
-" 	  endif
-" 	  if !filereadable(cachefile)
-" 		return []
-" 	  endif
-
-" 	  " a:mmode is currently ignored. In the future, we should probably do
-" 	  " something about that. the matcher behaves like "full-line".
-" 	  let cmd = 'matcher --limit '.a:limit.' --manifest '.cachefile.' '
-" 	  if !( exists('g:ctrlp_dotfiles') && g:ctrlp_dotfiles )
-" 		let cmd = cmd.'--no-dotfiles '
-" 	  endif
-" 	  let cmd = cmd.a:str
-
-" 	  return split(system(cmd), "\n")
-
-"   endfunction
-" end
-" *************** END ctrlp-config ****************************
-
 " ******* START Keys Bindings for Finding C/C++ Items *********
-" autocmd FileType c nmap <Leader>] "zyiw:exe "cs f t struct <C-r>z {"<CR>
-" Bundle "rdnetto/YCM-Generator"
-" Bundle "joe-skb7/cscope-maps"
-" ******* END Keys Bindings for Finding C/C++ Items *********
+let lspStatus=-1
+function EnableCtags(serverName)
+    echo "things"
+    sleep 500m
+    " Match end will return -1 if no match is found.
+    " This function always returns "running" at the end if there is a LSP
+    " server running and "not running" if there isn't.
+    let lspStatus=matchend(lsp#get_server_status(),"&a:serverName not running")
+    if lspStatus > 0
+        autocmd FileType c,cpp nmap <Leader>] "zyiw:exe "cs f t struct <C-r>z {"<CR>
+        " Bundle "joe-skb7/cscope-maps"
+    end
+    echo lspStatus
+endfunction
+" autocmd FileType c,cpp :call EnableCtags('ccls')
 
 " Better highlighting for C++
 Bundle 'octol/vim-cpp-enhanced-highlight'
 
-" ****************** Color Config *****************************
-Bundle 'chriskempson/base16-vim'
-" colorscheme 256-jungle
-colorscheme  LightTan
-" ****************** END Color Config *************************
+" ******* END Keys Bindings for Finding C/C++ Items *********
 
 " ******************** Tab Config *****************************
 noremap <C-t> :tabedit<CR>
@@ -485,6 +412,12 @@ Bundle 'tpope/vim-commentary'
 xnoremap <leader>c Commentary
 " **************** END Commenting *****************************
 
+" ****************** Crystal Lang *****************************
+Bundle 'rhysd/vim-crystal'
+" Run crystal format when saving the file
+let g:crystal_auto_format = 1
+" ****************** END Crystal Lang *************************
+
  Plugin 'keith/xcconfig.vim'
 filetype plugin indent on     " required!
 
@@ -496,16 +429,12 @@ noremap <leader>s :sp<CR><C-W>j<CR>
 cnoremap <leader>s :sp<CR><C-W>j<CR>
 " **************** Keys for Splits *********************************
 
-" **************** Livepreview for Markdown *********************************
-" Plugin 'JamshedVesuna/vim-markdown-preview'
-
-
 " *************************** Snippets **************************************
 " Track the engine.
-" Bundle 'SirVer/ultisnips'
-" let g:UltiSnipsExpandTrigger="<tab>"
-" let g:UltiSnipsJumpForwardTrigger="<S-b>"
-" let g:UltiSnipsJumpBackwardTrigger="<S-z>"
+Bundle 'SirVer/ultisnips'
+let g:UltiSnipsExpandTrigger="<c-e>"
+let g:UltiSnipsJumpForwardTrigger="<S-b>"
+let g:UltiSnipsJumpBackwardTrigger="<S-z>"
 
 " ************************** End Snippets ***********************************
 
@@ -525,10 +454,56 @@ silent! helptags ALL
 " *************** Custom Colors *******************************
 " **** These must come after setting the theme above.
 " *************************************************************
-highlight ColorColumn ctermbg=LightYellow
-hi Search cterm=NONE ctermfg=Cyan ctermbg=LightRed
-highlight Visual ctermbg=LightMagenta
-:hi CursorLine ctermbg=13 cterm=NONE
+
+" Put a line under the active cursor line
+set cursorline
+" Enable real colors
+set termguicolors
+
+Bundle 'morhetz/gruvbox'
+function! Carousel()
+  for theme in split(globpath(&runtimepath, 'colors/*.vim'), '\n')
+    let t = fnamemodify(theme, ':t:r')
+    try
+      execute 'colorscheme '.t
+      redraw!
+      echo t
+    catch
+    finally
+    endtry
+    sleep 1
+    redraw!
+  endfor
+endfunction
+
+Bundle 'vim-airline/vim-airline-themes'
+
+" map <silent> <Leader>tc :call Carousel()<cr>
+
+let g:gruvbox_italic=1
+let g:gruvbox_undercurl=1
+let g:gruvbox_contrast_light='hard'
+let g:gruvbox_number_column='bg1'
+let g:gruvbox_color_column='bg1'
+let g:gruvbox_guisp_fallback='bg4'
+colorscheme gruvbox
+
+" highlight CursorLine guibg=223 gui=NONE
+" Change the default background, but keep airline the same.
+" TODO: Make airline text stay white when making the background lighter.
+set background=light
+" highlight Normal guibg=230
+let g:airline_theme='gruvbox'
+
+" Change tab bar colors
+"    TabLineFill is the middle (so the fg doesn't have anything to display)
+highlight TabLineFill guifg=#665c54 guibg=#bdae93
+highlight TabLineSel guifg=#282828 guibg=#d5c4a1
+" guibg=#b57614 "yellow"
+highlight TabLine guifg=#7c6f64 guibg=#d5c4a1
+" guibg=#b57614 "yellow"
+
+" ****************** END Color Config *************************
 
 if filereadable("/Users/read/.config/nvim/local.vim")
   source ~/.config/nvim/local.vim

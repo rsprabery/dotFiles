@@ -18,6 +18,7 @@ else
     config clone --bare https://github.com/rsprabery/dotFiles.git ${HOME}/workspace/dotFiles.git
     config config --local status.showUntrackedFiles no
     config checkout master
+    config config user.email "rsprabery@users.noreply.github.com"
 fi
 
 # install oh-my-zsh
@@ -50,16 +51,16 @@ fi
 if [ -f $HOME/.gitconfig ]; then
   echo 'git already configured!'
 else
+  echo "Consider using rsprabery@users.noreply.github.com"
   echo "Enter your email address for git"
   read email
   echo "Enter your full name for git"
   IFS="" read name
-  echo "Consider using rsprabery@users.noreply.github.com"
   git config --global --replace-all user.email "$email "
   git config --global --replace-all user.name "$name"
 fi
 
-git config --global core.editor vim
+git config --global core.editor nvim
 git config --global push.default simple
 git config --global alias.co checkout
 git config --global alias.br branch
@@ -70,68 +71,63 @@ git config --global alias.st status
 if [[ `uname` == 'Linux' ]]; then
     sudo add-apt-repository ppa:neovim-ppa/stable
     sudo apt-get update
-    sudo apt-get install neovim python-pip silversearcher-ag fzf wdiff htop
+    sudo apt-get install -y neovim python-pip silversearcher-ag wdiff htop \
+        xclip git
 elif [[ `uname` == 'Darwin' ]]; then
-    brew install ag fzf wdiff htop neovim gnu-tar Markdown ctags cscope
+    brew tap twlz0ne/homebrew-ccls
+    brew install ag fzf wdiff htop neovim gnu-tar Markdown \
+        ctags \
+        nvm \
+        direnv \
+        jemalloc \
+        gpg \
+        python3 \
+        ccls
     sudo easy_install pip
 fi
 
-#anaconda
-# if [ -d "$HOME/anaconda3" ]; then
-#  echo 'anaconda3 installation found!'
-# else
-#   echo 'installing anaconda3'
-#   if [[ `uname` == 'Linux' ]]; then
-#     wget https://repo.continuum.io/archive/Anaconda3-4.3.0-Linux-x86_64.sh
-#     bash Anaconda3-4.3.0-Linux-x86_64.sh
-#     rm Anaconda3-4.3.0-Linux-x86_64.sh
-#   elif [[ `uname` == 'Darwin' ]]; then
-#     wget https://repo.continuum.io/archive/Anaconda3-4.3.0-MacOSX-x86_64.sh
-#     bash Anaconda3-4.3.0-MacOSX-x86_64.sh
-#     rm Anaconda3-4.3.0-MacOSX-x86_64.sh
-#   fi
-# fi
+# Add RVM GPG key
+gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB || exit
+
+# Install RVM
+\curl -sSL https://get.rvm.io | bash -s stable --ruby
+
+mkdir -p ${HOME}/bin
+ln -s $(brew --prefix)/bin/ctags ${HOME}/bin/ctags
 
 # install deps for neovim
-# Right now, YCM only works with system python. So neovim needs to be able
-# to talk to /usr/bin/python
-# sudo pip install --upgrade pyOpenSSL cryptography idna certifi
 export WORKON_HOME=${HOME}/workspace/virtenvs
 if [[ `uname` == 'Linux' ]]; then
-  sudo pip install virtualenvwrapper
-  source /usr/local/bin/virtualenvwrapper.sh
+  pip install --user virtualenvwrapper
+  source ${HOME}/.local/bin/virtualenvwrapper.sh
+  PATH=${PATH}:${HOME}/.local/bin
+  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+  ~/.fzf/install
 elif [[ `uname` == 'Darwin' ]]; then
   pip install --user virtualenvwrapper
   source ${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh
   PATH=${PATH}:${HOME}/Library/Python/2.7/bin
 fi
+
 mkvirtualenv neovim
 pip install neovim
+deactivate
 
 # The pip cache may be owned by root, change owner
 sudo chown -R $(whoami):$(id -g -n) ${HOME}/.cache
 
+# Setup python3 with neovim
+python3 -m venv ~/workspace/virtenvs/p3neovim
+source ~/workspace/virtenvs/p3neovim/bin/activate
+pip install neovim python-language-server[all]
+
 nvim +BundleInstall +qall
 
-#if [ -f "${HOME}/.vim/bundle/YouCompleteMe/third_party/ycmd/ycm_core.so" ]; then
-#  echo "YCM is already installed!"
-#  echo "To reinstall, run: "
-#  echo "rm ${HOME}/.vim/bundle/YouCompleteMe/third_party/ycmd/ycm_core.so"
-#else
-#  # you complete me dependencies
-#  if [[ `uname` == 'Linux' ]]; then
-#    sudo apt-get install cmake build-essential python-dev \
-#      python3-dev exuberant-ctags cscope
-#  elif [[ `uname` == 'Darwin' ]]; then
-#    brew install ctags cscope
-#  fi
-#  export PATH=/usr/bin:$PATH
-#  cd ~/.vim/bundle/YouCompleteMe
-#  if [ -f "CMakeCache.txt" ]; then
-#    rm CMakeCache.txt
-#  fi
-#  #./install.py --clang-completer # --gocode-completer
-#fi
+mkdir ~/.nvm
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "/Users/read/brew/opt/nvm/nvm.sh" ] && . "/Users/read/brew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/Users/read/brew/opt/nvm/etc/bash_completion" ] && . "/Users/read/brew/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
 
 # Color scheme for terminal & vim
 if [ -d "${HOME}/.config/base16-shell" ]; then
@@ -142,3 +138,15 @@ fi
 
 echo "Remember to ssh-add (-K on mac) your ~/.ssh/id_rsa!"
 echo "Make sure your terminal is reported as xterm-256color"
+
+if [[ `uname` == 'Darwin' ]]; then
+    # Install fonts system wide on OS X
+    echo "Install fonts system wide by double clicking a font and selecting"
+    echo "'install'."
+    open /Applications/Utilities/Terminal.app/Contents/Resources/Fonts/
+
+    # Copy over iterm2 config
+    mkdir -p ~/Library/Application\ Support/iTerm2/DynamicProfiles
+    cp ${HOME}/dotSetup/iterm2.json \
+        ${HOME}/Library/Application\ Support/iTerm2/DynamicProfiles
+fi
