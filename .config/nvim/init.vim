@@ -120,6 +120,7 @@ set nu
 " Makes all yank and put operations default to clipboard register
 set clipboard+=unnamedplus
 
+
 " set paste
 " http://stackoverflow.com/questions/28304137/youcompleteme-works-but-can-not-complete-using-tab
 " This seems to be less necessary with nvim, which toggles paste for you
@@ -184,6 +185,15 @@ inoremap <leader>f :LspCodeAction<CR>
 vnoremap <leader>f :LspCodeAction<CR>
 nnoremap <leader>f :LspCodeAction<CR>
 
+
+let g:lsp_signs_enabled = 1         " enable signs
+let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
+let g:lsp_signs_error = {'text': '✗'}
+
+let g:asyncomplete_log_file="/tmp/async_vim.log"
+let g:lsp_log_verbose = 1
+let g:lsp_log_file = expand('/tmp/vim-lsp.log')
+
 if executable('cquery')
    au User lsp_setup call lsp#register_server({
       \ 'name': 'cquery',
@@ -202,6 +212,7 @@ if executable('solargraph')
           \ 'whitelist': ['ruby', 'eruby'],
           \ })
 endif
+
 
 if executable('/Users/read/workspace/virtenvs/p3neovim/bin/pyls')
     au User lsp_setup call lsp#register_server({
@@ -227,13 +238,6 @@ if executable('/Users/read/brew/bin/bash-language-server')
         \ })
 endif
 
-let g:lsp_signs_enabled = 1         " enable signs
-let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
-let g:lsp_signs_error = {'text': '✗'}
-
-let g:asyncomplete_log_file="/tmp/async_vim.log"
-let g:lsp_log_verbose = 1
-let g:lsp_log_file = expand('/tmp/vim-lsp.log')
 
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
@@ -350,6 +354,9 @@ vnoremap > >gv
 
 " Use the Silver Searcher (if installed)
 Plugin 'junegunn/fzf.vim'
+nmap <C-N> :Tags<CR>
+map <C-M> :BTags<CR>
+
 set rtp+=/Users/read/brew/opt/fzf
 if executable('ag')
   " Use ag over grep
@@ -500,3 +507,10 @@ highlight TabLine guifg=#7c6f64 guibg=#d5c4a1
 if filereadable("/Users/read/.config/nvim/local.vim")
   source ~/.config/nvim/local.vim
 endif
+
+
+xnoremap <leader>g :let @+=@%<CR>
+inoremap <leader>g :let @+=@%<CR>
+vnoremap <leader>g :let @+=@%<CR>
+cnoremap <leader>g :let @+=@%<CR>
+nnoremap <leader>g :let @+=@%<CR>

@@ -79,7 +79,9 @@ elif [[ `uname` == 'Darwin' ]]; then
         nvm \
         direnv \
         jemalloc \
-        gpg
+        gpg \
+        tree \
+        wget
     sudo easy_install pip
 fi
 
