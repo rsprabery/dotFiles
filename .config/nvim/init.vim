@@ -27,6 +27,8 @@ set shiftwidth=4
 
 " Spacing in python
 autocmd FileType python :set tabstop=8 expandtab shiftwidth=4 softtabstop=4
+Bundle 'vim-python/python-syntax'
+let g:python_highlight_all = 1
 
 " Spacing for makefiles
 autocmd FileType make :set tabstop=8 expandtab shiftwidth=4 softtabstop=4
@@ -185,22 +187,17 @@ inoremap <leader>f :LspCodeAction<CR>
 vnoremap <leader>f :LspCodeAction<CR>
 nnoremap <leader>f :LspCodeAction<CR>
 
-
-let g:lsp_signs_enabled = 1         " enable signs
-let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
-let g:lsp_signs_error = {'text': '✗'}
-
 let g:asyncomplete_log_file="/tmp/async_vim.log"
 let g:lsp_log_verbose = 1
 let g:lsp_log_file = expand('/tmp/vim-lsp.log')
 
-if executable('cquery')
+if executable('ccls')
    au User lsp_setup call lsp#register_server({
-      \ 'name': 'cquery',
-      \ 'cmd': {server_info->['cquery']},
+      \ 'name': 'ccls',
+      \ 'cmd': {server_info->['ccls']},
       \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-      \ 'initialization_options': { 'cacheDirectory': '/tmp/cquery/cache', 'filterAndSort': 'false', 'enableSnippets': 'false'},
-      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc', 'h' ],
+      \ 'initialization_options': { 'cacheDirectory': '/tmp/ccls/cache' },
+      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
       \ })
 endif
 
@@ -238,6 +235,13 @@ if executable('/Users/read/brew/bin/bash-language-server')
         \ })
 endif
 
+let g:lsp_diagnostics_enabled = 1
+let g:lsp_signs_enabled = 1         " enable signs
+let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
+let g:lsp_signs_error = {'text': '✗'}
+let g:lsp_signs_warning = {'text': '!!'}
+let g:lsp_signs_hint = {'text': 'H'}
+let g:lsp_virtual_text_enabled = 0
 
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
@@ -388,6 +392,10 @@ function EnableCtags(serverName)
     echo lspStatus
 endfunction
 " autocmd FileType c,cpp :call EnableCtags('ccls')
+
+" Better highlighting for C++
+Bundle 'octol/vim-cpp-enhanced-highlight'
+
 " ******* END Keys Bindings for Finding C/C++ Items *********
 
 " ******************** Tab Config *****************************

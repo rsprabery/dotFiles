@@ -18,6 +18,7 @@ else
     config clone --bare https://github.com/rsprabery/dotFiles.git ${HOME}/workspace/dotFiles.git
     config config --local status.showUntrackedFiles no
     config checkout master
+    config config user.email "rsprabery@users.noreply.github.com"
 fi
 
 # install oh-my-zsh
@@ -73,15 +74,17 @@ if [[ `uname` == 'Linux' ]]; then
     sudo apt-get install -y neovim python-pip silversearcher-ag wdiff htop \
         xclip git
 elif [[ `uname` == 'Darwin' ]]; then
+    brew tap twlz0ne/homebrew-ccls
     brew install ag fzf wdiff htop neovim gnu-tar Markdown \
         ctags \
-        cscope \
         nvm \
         direnv \
         jemalloc \
         gpg \
         tree \
-        wget
+        wget \
+        python3 \
+        ccls
     sudo easy_install pip
 fi
 
@@ -95,9 +98,6 @@ mkdir -p ${HOME}/bin
 ln -s $(brew --prefix)/bin/ctags ${HOME}/bin/ctags
 
 # install deps for neovim
-# Right now, YCM only works with system python. So neovim needs to be able
-# to talk to /usr/bin/python
-# sudo pip install --upgrade pyOpenSSL cryptography idna certifi
 export WORKON_HOME=${HOME}/workspace/virtenvs
 if [[ `uname` == 'Linux' ]]; then
   pip install --user virtualenvwrapper
@@ -111,20 +111,29 @@ elif [[ `uname` == 'Darwin' ]]; then
   PATH=${PATH}:${HOME}/Library/Python/2.7/bin
 fi
 
+mkvirtualenv neovim
+pip install neovim
+deactivate
+
+mkvirtualenv pylsp
+pip install 'python-language-server[all]'
+deactivate
+
+# The pip cache may be owned by root, change owner
+sudo chown -R $(whoami):$(id -g -n) ${HOME}/.cache
+
+# Setup python3 with neovim
+python3 -m venv ~/workspace/virtenvs/p3neovim
+source ~/workspace/virtenvs/p3neovim/bin/activate
+pip install neovim python-language-server[all]
+
+nvim +BundleInstall +qall
 
 mkdir ~/.nvm
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "/Users/read/brew/opt/nvm/nvm.sh" ] && . "/Users/read/brew/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/Users/read/brew/opt/nvm/etc/bash_completion" ] && . "/Users/read/brew/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
-
-mkvirtualenv neovim
-pip install neovim
-
-# The pip cache may be owned by root, change owner
-sudo chown -R $(whoami):$(id -g -n) ${HOME}/.cache
-
-nvim +BundleInstall +qall
 
 # Color scheme for terminal & vim
 if [ -d "${HOME}/.config/base16-shell" ]; then
@@ -135,3 +144,15 @@ fi
 
 echo "Remember to ssh-add (-K on mac) your ~/.ssh/id_rsa!"
 echo "Make sure your terminal is reported as xterm-256color"
+
+if [[ `uname` == 'Darwin' ]]; then
+    # Install fonts system wide on OS X
+    echo "Install fonts system wide by double clicking a font and selecting"
+    echo "'install'."
+    open /Applications/Utilities/Terminal.app/Contents/Resources/Fonts/
+
+    # Copy over iterm2 config
+    mkdir -p ~/Library/Application\ Support/iTerm2/DynamicProfiles
+    cp ${HOME}/dotSetup/iterm2.json \
+        ${HOME}/Library/Application\ Support/iTerm2/DynamicProfiles
+fi
