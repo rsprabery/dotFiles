@@ -81,6 +81,8 @@ elif [[ `uname` == 'Darwin' ]]; then
         direnv \
         jemalloc \
         gpg \
+        tree \
+        wget \
         python3 \
         ccls
     sudo easy_install pip
@@ -111,6 +113,10 @@ fi
 
 mkvirtualenv neovim
 pip install neovim
+deactivate
+
+mkvirtualenv pylsp
+pip install 'python-language-server[all]'
 deactivate
 
 # The pip cache may be owned by root, change owner
