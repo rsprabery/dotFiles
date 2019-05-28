@@ -184,7 +184,6 @@ inoremap <leader>f :LspCodeAction<CR>
 vnoremap <leader>f :LspCodeAction<CR>
 nnoremap <leader>f :LspCodeAction<CR>
 
-let g:lsp_diagnostics_echo_cursor = 1
 
 if executable('ccls')
    au User lsp_setup call lsp#register_server({
@@ -232,6 +231,7 @@ endif
 let g:lsp_signs_enabled = 1         " enable signs
 let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
 let g:lsp_signs_error = {'text': '✗'}
+let g:lsp_virtual_text_enabled =1
 
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
@@ -296,7 +296,7 @@ function FixWhitespace()
   call setpos('.', save_pos)
 endfunction
 
-autocmd FileType c,cpp,java,php,xcconfig,make,python,vim,tex,markdown,sh,zsh,bash,txt autocmd BufWritePre <buffer> :call FixWhitespace()
+autocmd FileType * autocmd BufWritePre <buffer> :call FixWhitespace()
 nmap <Leader>o :TagbarToggle<CR>
 set statusline+=%#warningmsg#
 " set statusline+=%{SyntasticStatuslineFlag()}
@@ -493,6 +493,7 @@ highlight TabLineSel guifg=#282828 guibg=#d5c4a1
 highlight TabLine guifg=#7c6f64 guibg=#d5c4a1
 " guibg=#b57614 "yellow"
 
+highlight link LspErrorText GruvboxRedSign " requires gruvbox
 " ****************** END Color Config *************************
 
 if filereadable("/Users/read/.config/nvim/local.vim")
