@@ -44,7 +44,7 @@ autocmd TermOpen * xnoremap <ESC> <C-\><C-N>
 
 function FirstPreProcLine()
   " let firstNonComment=index(getbufline(bufname("%"), 1, 250), 'v:val =~ "^\#"')
-  execute "normal! gg/^#\<cr>"
+  execute "normal! gg/^#\<CR>"
   let firstNonComment=line(".")
   execute "normal! gg"
   return firstNonComment
@@ -245,7 +245,7 @@ let g:lsp_virtual_text_enabled = 1
 
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
 imap <c-space> <Plug>(asyncomplete_force_refresh)
 
 " Plugin 'junegunn/vim-easy-align'
@@ -301,12 +301,15 @@ autocmd FileType python nmap <silent> <leader>c <Plug>(pydocstring)
 
 " Remove unwanted whitespace at the end of lines when saving a file
 function FixWhitespace()
-  let save_pos = getpos(".")
+  let save_pos = getcurpos()
+  " let save_pos[2] -= 1
   %s/\s\+$//e
   call setpos('.', save_pos)
 endfunction
 
-autocmd FileType * autocmd BufWritePre <buffer> :call FixWhitespace()
+autocmd FileType * autocmd BufWritePre  <buffer> :call FixWhitespace()
+autocmd FileType * autocmd FileWritePre <buffer> :call FixWhitespace()
+
 nmap <Leader>o :TagbarToggle<CR>
 set statusline+=%#warningmsg#
 " set statusline+=%{SyntasticStatuslineFlag()}
@@ -322,14 +325,14 @@ map <Leader>w :Windows<CR>
 " ************* START Hilight Management *********************
 " Toggle highlight state with F9
 let hlstate=1
-nnoremap <F9> :if (hlstate == 0) \| nohlsearch \| else \| set hlsearch \| endif \| let hlstate=1-hlstate<cr>
+nnoremap <F9> :if (hlstate == 0) \| nohlsearch \| else \| set hlsearch \| endif \| let hlstate=1-hlstate<CR>
 " ************* END Hilight Management ***********************
 
 
 " ************* START CTRL-XYZ Editor Behavior ***************
 " CTRL-S for saving
-map  <C-s>             <C-\><C-N>:update<CR>
-imap  <C-s>            <C-\><C-N>:update<CR>
+map  <C-s>             <C-\><C-N> :call FixWhitespace()<CR>:update<CR>
+imap  <C-s>            <C-\><C-N> :call FixWhitespace()<CR>:update<CR>
 " CTLR-q for quiting
 map <C-q> <C-C>:q<CR>
 imap <C-q> <C-\><C-N>:q<CR>
@@ -359,7 +362,7 @@ vnoremap > >gv
 " Use the Silver Searcher (if installed)
 Plugin 'junegunn/fzf.vim'
 nmap <C-N> :Tags<CR>
-map <C-M> :BTags<CR>
+" nmap <C-M> :BTags<CR>
 
 set rtp+=/Users/read/brew/opt/fzf
 if executable('ag')
@@ -485,7 +488,7 @@ endfunction
 
 Bundle 'vim-airline/vim-airline-themes'
 
-" map <silent> <Leader>tc :call Carousel()<cr>
+" map <silent> <Leader>tc :call Carousel()<CR>
 
 let g:gruvbox_italic=1
 let g:gruvbox_undercurl=1
