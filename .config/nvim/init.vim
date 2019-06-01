@@ -364,7 +364,14 @@ Plugin 'junegunn/fzf.vim'
 nmap <C-N> :Tags<CR>
 " nmap <C-M> :BTags<CR>
 
-set rtp+=/Users/read/brew/opt/fzf
+if executable('/Users/read/brew/bin/fzf')
+  set rtp+=/Users/read/brew/opt/fzf
+endif
+
+if executable('/home/read/.fzf/bin/fzf')
+  set rtp+=/home/read/.fzf
+endif
+
 if executable('ag')
   " Use ag over grep
   set grepprg=ag\ --nogroup\ --nocolor
