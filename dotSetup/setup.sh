@@ -125,9 +125,21 @@ sudo chown -R $(whoami):$(id -g -n) ${HOME}/.cache
 # Setup python3 with neovim
 python3 -m venv ~/workspace/virtenvs/p3neovim
 source ~/workspace/virtenvs/p3neovim/bin/activate
-pip install neovim python-language-server[all]
+pip install neovim python-language-server[all] black
 
 nvim +BundleInstall +qall
+
+python3 -m venv ~/workspace/virtenvs/pydev
+source ~/workspace/virtenvs/pydev/bin/activate
+pip install sphinx black sphinx_rtd_theme sphinx-autobuild
+mkdir -p ~/bin/
+ln -s ~/workspace/virtenvs/pydev/bin/sphinx-apidoc ~/bin/sphinx-apidoc
+ln -s ~/workspace/virtenvs/pydev/bin/sphinx ~/bin/sphinx
+ln -s ~/workspace/virtenvs/pydev/bin/sphinx-autogen  ~/bin/sphinx-autogen
+ln -s ~/workspace/virtenvs/pydev/bin/sphinx-build  ~/bin/sphinx-build
+ln -s ~/workspace/virtenvs/pydev/bin/sphinx-quickstart  ~/bin/sphinx-build
+ln -s ~/workspace/virtenvs/pydev/bin/sphinx-quickstart  ~/bin/sphinx-quickstart
+ln -s ~/workspace/virtenvs/pydev/bin/sphinx-autobuild  ~/bin/sphinx-autobuild
 
 mkdir ~/.nvm
 

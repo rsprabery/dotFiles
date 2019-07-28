@@ -6,6 +6,18 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 " let Vundle manage Vundle
 " required!
+
+" Selection of which python bin to use for plugins
+if filereadable("/Users/read/workspace/virtenvs/neovim/bin/python")
+  let g:python_host_prog='/Users/read/workspace/virtenvs/neovim/bin/python'
+endif
+
+" Prefer python 3 if available
+if filereadable("/Users/read/workspace/virtenvs/p3neovim/bin/python")
+  let g:python_host_prog='/Users/read/workspace/virtenvs/p3neovim/bin/python'
+  let g:python3_host_prog='/Users/read/workspace/virtenvs/p3neovim/bin/python'
+endif
+
 Plugin 'gmarik/vundle'
 
 " Inspect white space
@@ -29,6 +41,10 @@ set shiftwidth=4
 autocmd FileType python :set tabstop=8 expandtab shiftwidth=4 softtabstop=4
 Bundle 'vim-python/python-syntax'
 let g:python_highlight_all = 1
+
+Bundle 'python/black'
+let g:black_virtualenv = '/Users/read/workspace/virtenvs/black-vim/'
+autocmd BufWritePre *.py execute ':Black'
 
 " Spacing for makefiles
 autocmd FileType make :set tabstop=8 expandtab shiftwidth=4 softtabstop=4
@@ -156,16 +172,6 @@ Bundle 'indentpython.vim'
 
 Bundle 'VisIncr'
 Plugin 'vim-ruby/vim-ruby'
-
-" Selection of which python bin to use for plugins
-if filereadable("/Users/read/workspace/virtenvs/neovim/bin/python")
-  let g:python_host_prog='/Users/read/workspace/virtenvs/neovim/bin/python'
-endif
-
-" Prefer python 3 if available
-if filereadable("/Users/read/workspace/virtenvs/p3neovim/bin/python")
-  let g:python_host_prog='/Users/read/workspace/virtenvs/p3neovim/bin/python'
-endif
 
 set signcolumn=yes
 set omnifunc=
@@ -331,8 +337,8 @@ nnoremap <F9> :if (hlstate == 0) \| nohlsearch \| else \| set hlsearch \| endif 
 
 " ************* START CTRL-XYZ Editor Behavior ***************
 " CTRL-S for saving
-map  <C-s>             <C-\><C-N> :call FixWhitespace()<CR>:update<CR>
-imap  <C-s>            <C-\><C-N> :call FixWhitespace()<CR>:update<CR>
+map  <C-s> <C-\><C-N>:update<CR>
+imap  <C-s> <C-\><C-N>:update<CR>
 " CTLR-q for quiting
 map <C-q> <C-C>:q<CR>
 imap <C-q> <C-\><C-N>:q<CR>
