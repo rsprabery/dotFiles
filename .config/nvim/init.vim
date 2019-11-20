@@ -168,13 +168,18 @@ Bundle 'Lokaltog/vim-easymotion'
 " :A(alternate) and :R(related) for jumping between files
 Bundle 'tpope/vim-rails.git'
 
+Bundle 'rizzatti/dash.vim'
+" Use dash's HUD mode.
+let g:dash_activate=0
+:nmap <silent> <leader>d <Plug>DashSearch
+
 Bundle 'indentpython.vim'
 
 Bundle 'VisIncr'
 Plugin 'vim-ruby/vim-ruby'
 
 set signcolumn=yes
-set omnifunc=
+"set omnifunc=
 set hidden
 Plugin 'prabirshrestha/asyncomplete.vim'
 Plugin 'prabirshrestha/async.vim'
@@ -193,19 +198,26 @@ inoremap <leader>f :LspCodeAction<CR>
 vnoremap <leader>f :LspCodeAction<CR>
 nnoremap <leader>f :LspCodeAction<CR>
 
-let g:asyncomplete_log_file="/tmp/async_vim.log"
-let g:lsp_log_verbose = 1
-let g:lsp_log_file = expand('/tmp/vim-lsp.log')
+" let g:asyncomplete_log_file="/tmp/async_vim.log"
+" let g:lsp_log_verbose = 1
+" let g:lsp_log_file = expand('/tmp/vim-lsp.log')
 
-if executable('ccls')
+if executable('clangd')
    au User lsp_setup call lsp#register_server({
-      \ 'name': 'ccls',
-      \ 'cmd': {server_info->['ccls']},
-      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-      \ 'initialization_options': { 'cacheDirectory': '/tmp/ccls/cache' },
+      \ 'name': 'clangd',
+      \ 'cmd': {server_info->['clangd']},
       \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
       \ })
 endif
+" if executable('ccls')
+"    au User lsp_setup call lsp#register_server({
+"       \ 'name': 'ccls',
+"       \ 'cmd': {server_info->['ccls']},
+"       \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
+"       \ 'initialization_options': { 'cacheDirectory': '/tmp/ccls/cache' },
+"       \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
+"       \ })
+" endif
 
 if executable('solargraph')
     au User lsp_setup call lsp#register_server({
@@ -247,11 +259,13 @@ let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal 
 let g:lsp_signs_warning = {'text': '!!'}
 let g:lsp_signs_error = {'text': '✗'}
 let g:lsp_signs_hint = {'text': 'H'}
-let g:lsp_virtual_text_enabled = 1
+let g:lsp_virtual_text_enabled = 0
+set completeopt-=preview
+autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"
+inoremap <expr> <Tab> pumvisible()? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible()? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <CR> pumvisible()? "\<C-y>" : "\<CR>"
 imap <c-space> <Plug>(asyncomplete_force_refresh)
 
 " Plugin 'junegunn/vim-easy-align'
@@ -343,7 +357,7 @@ imap  <C-s> <C-\><C-N>:update<CR>
 map <C-q> <C-C>:q<CR>
 imap <C-q> <C-\><C-N>:q<CR>
 " CTRL-x for force quit (without saving)
-map <C-x> <C-C>:q!<CR>
+map <C-x><C-x> <C-C>:q!<CR>
 " ************* END CTRL-XYZ Editor Behavior *****************
 
 " ************ START - Window-Management *********************
@@ -454,10 +468,10 @@ cnoremap <leader>s :sp<CR><C-W>j<CR>
 
 " *************************** Snippets **************************************
 " Track the engine.
-Bundle 'SirVer/ultisnips'
-let g:UltiSnipsExpandTrigger="<c-e>"
-let g:UltiSnipsJumpForwardTrigger="<S-b>"
-let g:UltiSnipsJumpBackwardTrigger="<S-z>"
+" Bundle 'SirVer/ultisnips'
+" let g:UltiSnipsExpandTrigger="<c-e>"
+" let g:UltiSnipsJumpForwardTrigger="<S-b>"
+" let g:UltiSnipsJumpBackwardTrigger="<S-z>"
 
 " ************************** End Snippets ***********************************
 

@@ -6,6 +6,7 @@ ZSH=$HOME/.oh-my-zsh
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
 ZSH_THEME="robbyrussell"
+# ZSH_THEME="avit"
 
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
@@ -15,7 +16,7 @@ ZSH_THEME="robbyrussell"
 # CASE_SENSITIVE="true"
 
 # Comment this out to disable bi-weekly auto-update checks
-# DISABLE_AUTO_UPDATE="true"
+DISABLE_AUTO_UPDATE="true"
 
 # Uncomment to change how many often would you like to wait before auto-updates occur? (in days)
 # export UPDATE_ZSH_DAYS=13
@@ -38,7 +39,8 @@ HOMEBREW_NO_ANALYTICS=1
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git ruby git-extras pip python svn vundle rvm)
+# plugins=(git ruby git-extras pip python vundle rvm osx bundler dotenv ansible brew colored-man-pages dash django gem iterm2 man npm node tmux)
+plugins=(git pip python django)
 
 # enable control-s and control-q
 stty start undef
@@ -78,18 +80,20 @@ elif [[ `uname` == 'Darwin' ]]; then
   [[ -d "${HOME}/brew" ]] && export PATH=$PATH:${HOME}/brew/bin
 
   # Ensure trim is enabled
-  export TRIM=`system_profiler SPSerialATADataType | grep 'TRIM' | awk '{print $3}'`
+  # export TRIM=`system_profiler SPSerialATADataType | grep 'TRIM' | awk '{print $3}'`
 
   # if [[ $TRIM != 'Yes' ]]; then
   #   echo "Trim isn't enabled!"
   #   echo "Run 'sudo trimforce enable' to fix!"
   # fi
 
-  plugins=($plugins osx)
+  # plugins=($plugins osx)
   alias ctags="`brew --prefix`/bin/ctags"
 
   # zsh completions for brew
-  fpath=($(brew --prefix)/share/zsh/site-functions ${fpath})
+  function setup-brew() {
+    fpath=($(brew --prefix)/share/zsh/site-functions ${fpath})
+  }
 
   # path for programs installed with pip install --user
   PATH=${PATH}:${HOME}/Library/Python/2.7/bin
@@ -101,12 +105,14 @@ if [ $? -eq 0 ]; then
   eval "$(direnv hook zsh)"
 fi
 
-# Python Setup
-export WORKON_HOME=${HOME}/workspace/virtenvs
-[[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && \
-    source /usr/local/bin/virtualenvwrapper.sh
-[[ -s "${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh" ]] &&  \
-    source ${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh
+function setup-python() {
+    # Python Setup
+    export WORKON_HOME=${HOME}/workspace/virtenvs
+    [[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && \
+        source /usr/local/bin/virtualenvwrapper.sh
+    [[ -s "${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh" ]] &&  \
+        source ${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh
+}
 
 # Ruby Lang setup
 # which rbenv >> /dev/null
@@ -123,25 +129,31 @@ function ctags-ruby() {
   ctags -R --languages=ruby --exclude=.git --exclude=log . $(bundle list --paths)
 }
 
-# Load RVM into a shell session *as a function*
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
-export PATH="$PATH:$HOME/.rvm/bin"
+function setup-rvm() {
+    # Load RVM into a shell session *as a function*
+    [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
+    export PATH="$PATH:$HOME/.rvm/bin"
+}
 
-# Crystal Lang Env Vars
-which crystal >> /dev/null
-if [ $? -eq 0 ]; then
-  export CRYSTAL_CACHE_DIR="/tmp/crystal/.cache/"
-  mkdir -p ${CRYSTAL_CACHE_DIR}
-  export CRYSTAL_PATH="/Users/read/brew/Cellar/crystal/0.27.0/src:lib"
-fi
+function setup-crystal() {
+    # Crystal Lang Env Vars
+    which crystal >> /dev/null
+    if [ $? -eq 0 ]; then
+      export CRYSTAL_CACHE_DIR="/tmp/crystal/.cache/"
+      mkdir -p ${CRYSTAL_CACHE_DIR}
+      export CRYSTAL_PATH="/Users/read/brew/Cellar/crystal/0.27.0/src:lib"
+    fi
+}
 
-# NodeJS Setup
-export NVM_DIR="$HOME/.nvm"
-# Support installs of NVM directly
-[[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh" # This loads nvm
-# Support brew install nvm
-[ -s "${HOME}/brew/opt/nvm/nvm.sh" ] && . "${HOME}/brew/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "${HOME}/brew/opt/nvm/etc/bash_completion" ] && . "${HOME}/brew/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
+function setup-nvm() {
+    # NodeJS Setup
+    export NVM_DIR="$HOME/.nvm"
+    # Support installs of NVM directly
+    [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh" # This loads nvm
+    # Support brew install nvm
+    [ -s "${HOME}/brew/opt/nvm/nvm.sh" ] && . "${HOME}/brew/opt/nvm/nvm.sh"  # This loads nvm
+    [ -s "${HOME}/brew/opt/nvm/etc/bash_completion" ] && . "${HOME}/brew/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
+}
 
 # Add custom bin's
 [[ -d "$HOME/bin" ]] && PATH=$HOME/bin:${PATH}
@@ -219,7 +231,7 @@ function make_role {
 alias gl='git log --oneline --all -10 --decorate'
 
 export PROMPT='%{$fg[yellow]%}%m%{$reset_color%}:%{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)
-%{$reset_color%} ${ret_status} %{$reset_color%}'
+%(?:%{$fg[green]%}➜ :%{$fg[red]%}➜ )%{$reset_color%}${ret_status}%{$reset_color%} '
 
 # vi mode for zsh
 bindkey -v
@@ -233,6 +245,7 @@ function zle-line-init zle-keymap-select {
 
 zle -N zle-line-init
 zle -N zle-keymap-select
+
 bindkey '^r' history-incremental-search-backward
 alias beep=''
 [[ -s "/usr/share/sounds/purple/alert.wav" ]]  && export BEEP=/usr/share/sounds/purple/alert.wav && alias beep='paplay $BEEP'
@@ -295,3 +308,26 @@ export FZF_DEFAULT_COMMAND='ag -g ""'
 # To apply the command to CTRL-T as well
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+
+function silent_background() {
+  # if [[ -n $ZSH_VERSION ]]; then  # zsh:  https://superuser.com/a/1285272/365890
+    setopt local_options no_notify no_monitor
+    # We'd use &| to background and disown, but incompatible with bash, so:
+    "$@" &
+  # elif [[ -n $BASH_VERSION ]]; then  # bash: https://stackoverflow.com/a/27340076/5353461
+  #   { 2>&3 "$@"& } 3>&2 2>/dev/null
+  # else  # Unknownness - just background it
+  #   "$@" &
+  # fi
+  # disown &>/dev/null  # Close STD{OUT,ERR} to prevent whine if job has already completed
+}
+
+function setup-all() {
+    setup-python
+    setup-nvm
+    # setup-rvm
+    # setup-brew
+}
+
+# silent_background setup-all
