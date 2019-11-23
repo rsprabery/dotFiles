@@ -29,7 +29,9 @@ else
 fi
 
 # Change default shell
-chsh -s /bin/zsh
+if [ "$(getent passwd $LOGNAME | cut -d: -f7)" -ne "/bin/zsh" ]; then
+  chsh -s /bin/zsh
+fi
 
 # setup homebrew on mac
 HOMEBREW_NO_ANALYTICS=1
@@ -72,7 +74,15 @@ if [[ `uname` == 'Linux' ]]; then
     sudo add-apt-repository ppa:neovim-ppa/stable
     sudo apt-get update
     sudo apt-get install -y neovim python-pip silversearcher-ag wdiff htop \
-        xclip git
+        xclip git python3-venv build-essential python3-dev libpython3-dev \
+        ctags ruby clang-tools openssh-server tmux clang build-essential
+
+    sudo update-alternatives --install /usr/bin/clangd \
+        clangd /usr/bin/clangd-6.0 100
+
+    sudo update-alternatives --install /usr/bin/llvm-symbolizer \
+        llvm-symbolizer /usr/bin/llvm-symbolizer-6.0 100
+
 elif [[ `uname` == 'Darwin' ]]; then
     brew tap twlz0ne/homebrew-ccls
     brew install ag fzf wdiff htop neovim gnu-tar Markdown \
@@ -89,22 +99,29 @@ elif [[ `uname` == 'Darwin' ]]; then
 fi
 
 # Add RVM GPG key
-gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB || exit
+# gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB || exit
 
 # Install RVM
-\curl -sSL https://get.rvm.io | bash -s stable --ruby
+# \curl -sSL https://get.rvm.io | bash -s stable --ruby
 
-mkdir -p ${HOME}/bin
-ln -s $(brew --prefix)/bin/ctags ${HOME}/bin/ctags
+
+if [[ `uname` == 'Darwin' ]]; then
+    mkdir -p ${HOME}/bin
+    ln -s $(brew --prefix)/bin/ctags ${HOME}/bin/ctags
+fi
 
 # install deps for neovim
 export WORKON_HOME=${HOME}/workspace/virtenvs
 if [[ `uname` == 'Linux' ]]; then
+
   pip install --user virtualenvwrapper
   source ${HOME}/.local/bin/virtualenvwrapper.sh
   PATH=${PATH}:${HOME}/.local/bin
-  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-  ~/.fzf/install
+  which fzf
+  if [[ "$?" -ne "0" ]]; then
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+    ~/.fzf/install
+  fi
 elif [[ `uname` == 'Darwin' ]]; then
   pip install --user virtualenvwrapper
   source ${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh
@@ -126,12 +143,20 @@ sudo chown -R $(whoami):$(id -g -n) ${HOME}/.cache
 python3 -m venv ~/workspace/virtenvs/p3neovim
 source ~/workspace/virtenvs/p3neovim/bin/activate
 pip install neovim python-language-server[all] black
+deactivate
+
+
+python3 -m venv ~/workspace/virtenvs/black-vim
+source ~/workspace/virtenvs/black-vim/bin/activate
+pip install neovim black
+deactivate
 
 nvim +BundleInstall +qall
 
 python3 -m venv ~/workspace/virtenvs/pydev
 source ~/workspace/virtenvs/pydev/bin/activate
 pip install sphinx black sphinx_rtd_theme sphinx-autobuild
+deactivate
 mkdir -p ~/bin/
 ln -s ~/workspace/virtenvs/pydev/bin/sphinx-apidoc ~/bin/sphinx-apidoc
 ln -s ~/workspace/virtenvs/pydev/bin/sphinx ~/bin/sphinx
