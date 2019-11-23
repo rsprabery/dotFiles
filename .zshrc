@@ -40,7 +40,7 @@ HOMEBREW_NO_ANALYTICS=1
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # plugins=(git ruby git-extras pip python vundle rvm osx bundler dotenv ansible brew colored-man-pages dash django gem iterm2 man npm node tmux)
-plugins=(git pip python django)
+plugins=(git pip python django colored-man-pages)
 
 # enable control-s and control-q
 stty start undef
