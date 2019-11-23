@@ -74,6 +74,7 @@ if [[ `uname` == 'Linux' ]]; then
   }
   alias pbpaste='xclip -selection clipboard -o'
 
+  export ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer
 
 # OSX SPECIFIC CONFIG
 elif [[ `uname` == 'Darwin' ]]; then
