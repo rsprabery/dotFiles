@@ -43,7 +43,14 @@ Bundle 'vim-python/python-syntax'
 let g:python_highlight_all = 1
 
 Bundle 'python/black'
-let g:black_virtualenv = '/Users/read/workspace/virtenvs/black-vim/'
+
+if filereadable("/Users/read/workspace/virtenvs/black-vim/bin/activate")
+    let g:black_virtualenv = '/Users/read/workspace/virtenvs/black-vim/'
+endif
+
+if filereadable("/home/read/workspace/virtenvs/black-vim/bin/activate")
+    let g:black_virtualenv = '/home/read/workspace/virtenvs/black-vim/'
+endif
 autocmd BufWritePre *.py execute ':Black'
 
 " Spacing for makefiles
@@ -260,6 +267,16 @@ let g:lsp_signs_warning = {'text': '!!'}
 let g:lsp_signs_error = {'text': '✗'}
 let g:lsp_signs_hint = {'text': 'H'}
 let g:lsp_virtual_text_enabled = 0
+" Keep focus on current window, not the preview window / pane
+let g:lsp_preview_keep_focus=1
+" Put preview information in a float / hover over / pop-up (neovim 4+)
+let g:lsp_preview_float = 1
+let g:lsp_preview_autoclose = 0
+let g:lsp_preview_max_height = -1
+let g:lsp_signature_help_enabled = 0
+" Don't edit text
+let g:lsp_text_edit_enabled = 0
+
 set completeopt-=preview
 autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
