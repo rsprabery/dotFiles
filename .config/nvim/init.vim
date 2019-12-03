@@ -144,7 +144,7 @@ set nu
 " Copy/Paste from system clipboard
 " Makes all yank and put operations default to clipboard register
 set clipboard+=unnamedplus
-
+Bundle 'rsprabery/vim-tmux-clipboard'
 
 " set paste
 " http://stackoverflow.com/questions/28304137/youcompleteme-works-but-can-not-complete-using-tab

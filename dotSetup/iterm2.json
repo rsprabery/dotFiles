@@ -124,7 +124,7 @@
             "Non Ascii Font" : "Monaco 12",
             "Vertical Spacing" : 1,
             "Use Bold Font" : true,
-            "Option Key Sends" : 0,
+            "Option Key Sends" : 2,
             "Selected Text Color" : {
                 "Red Component" : 0.34509803921568627,
                 "Color Space" : "sRGB",
@@ -219,6 +219,10 @@
                     "Text" : "[1;5H",
                         "Action" : 10
                 },
+                "0x7d-0x120000" : {
+                    "Action" : 11,
+                    "Text" : "0x16 0x6E"
+                },
                 "0xf706-0x20000" : {
                     "Text" : "[1;2R",
                         "Action" : 10
@@ -242,6 +246,10 @@
                 "0xf702-0x220000" : {
                     "Text" : "[1;2D",
                         "Action" : 10
+                },
+                "0x7b-0x120000" : {
+                    "Action" : 11,
+                    "Text" : "0x16 0x70"
                 },
                 "0xf703-0x280000" : {
                     "Text" : "0x1b 0x1b 0x5b 0x43",
@@ -290,6 +298,10 @@
                 "0xf708-0x20000" : {
                     "Text" : "[15;2~",
                         "Action" : 10
+                },
+                "0x74-0x100000" : {
+                    "Action" : 11,
+                    "Text" : "0x16 0x63"
                 },
                 "0xf701-0x220000" : {
                     "Text" : "[1;2B",
