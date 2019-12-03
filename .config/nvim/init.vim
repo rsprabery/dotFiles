@@ -146,6 +146,11 @@ set nu
 set clipboard+=unnamedplus
 Bundle 'rsprabery/vim-tmux-clipboard'
 
+" Same key stroke for navigation between vim splits and tmux panes.
+" This relies on a change in tmux.conf as well.
+" See: https://thoughtbot.com/blog/seamlessly-navigate-vim-and-tmux-splits
+Bundle 'christoomey/vim-tmux-navigator'
+
 " set paste
 " http://stackoverflow.com/questions/28304137/youcompleteme-works-but-can-not-complete-using-tab
 " This seems to be less necessary with nvim, which toggles paste for you
