@@ -1,0 +1,46 @@
+// Place your key bindings in this file to override the defaults
+[
+    {
+        "key": "ctrl+s",
+        "command": "macros.saveAndExitInsertMode",
+    },
+    {
+        "key": "ctrl+j",
+        "command": "list.focusDown",
+        "when": "listFocus"
+    },
+    {
+        "key": "ctrl+k",
+        "command": "list.focusUp",
+        "when": "listFocus"
+    },
+    {
+        "key": "ctrl+q",
+        "command": "workbench.action.closeActiveEditor",
+    },
+    {
+        "key": "ctrl+k",
+        "command": "workbench.action.focusAboveGroup",
+        "when": "editorFocus && vim.active"
+    },
+    {
+        "key": "ctrl+j",
+        "command": "workbench.action.focusBelowGroup",
+        "when": "editorFocus && vim.active"
+    },
+    {
+        "key": "ctrl+h",
+        "command": "workbench.action.focusLeftGroup",
+        "when": "editorFocus && vim.active"
+    },
+    {
+        "key": "ctrl+l",
+        "command": "workbench.action.focusRightGroup",
+        "when": "editorFocus && vim.active"
+    },
+    {
+        "key": "ctrl+]",
+        "command": "goToNextReference",
+        "when": "(inReferenceSearchEditor || referenceSearchVisible) && vim.active"
+    },
+]

@@ -1,0 +1,3 @@
+" Keep visual selection selected when tabbing and un-tabbing
+vnoremap < <gv
+vnoremap > >gv

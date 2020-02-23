@@ -187,17 +187,17 @@ fi
 
 function ansible {
   if [[ -a `pwd`/inventory ]]; then
-    $ANSIBLE_BIN -i inventory $@ -f 50  --sudo
+    $ANSIBLE_BIN -i inventory $@ -f 50
   else
-    $ANSIBLE_BIN $* -f 50 --sudo
+    $ANSIBLE_BIN $* -f 50
   fi
 }
 
 function playbook {
   if [[ -a `pwd`/inventory ]]; then
-    $ANSIBLE_PLAYBOOK_BIN -i inventory $@ -f 50 --sudo
+    $ANSIBLE_PLAYBOOK_BIN -i inventory $@ -f 50
   else
-    $ANSIBLE_PLAYBOOK_BIN $* -f 50 --sudo
+    $ANSIBLE_PLAYBOOK_BIN $* -f 50
   fi
 }
 
@@ -295,7 +295,8 @@ fi
 
 BASE16_SHELL=$HOME/.config/base16-shell/
 [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
-base16_solarized-light
+# base16_solarized-light
+base16_brewer
 
 # Git repo for config files
 [[ -d ${HOME}/dotFiles ]] && export DOTFILES_DIR="${HOME}/dotFiles"
@@ -330,5 +331,7 @@ function setup-all() {
     # setup-rvm
     # setup-brew
 }
+
+setup-python
 
 # silent_background setup-all
