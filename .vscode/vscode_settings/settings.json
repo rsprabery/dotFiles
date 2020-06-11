@@ -186,5 +186,7 @@
     "vim.useSystemClipboard": true,
     "window.zoomLevel": 0,
     "files.trimTrailingWhitespace": true,
-    "git.autofetch": true
+    "git.autofetch": false,
+    "terminal.integrated.fontFamily": "\"Roboto Mono Medium for Powerline\",SFMono-semibold,Menlo, Monaco, 'Courier New', monospace",
+    "terminal.integrated.macOptionIsMeta": true
 }

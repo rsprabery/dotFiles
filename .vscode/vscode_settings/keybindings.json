@@ -43,4 +43,46 @@
         "command": "goToNextReference",
         "when": "(inReferenceSearchEditor || referenceSearchVisible) && vim.active"
     },
+    {
+        "key": "cmd+shift+[",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": {
+            "text": "\u0016\u0070"
+        },
+        "when": "terminalFocus"
+    },
+    {
+        "key": "cmd+shift+]",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": {
+            "text": "\u0016\u006E"
+        },
+        "when": "terminalFocus"
+    },
+    {
+        "key": "cmd+t",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": {
+            "text": "\u0016\u0063"
+        },
+        "when": "terminalFocus"
+    },
+    {
+        "key": "cmd+k",
+        "command": "workbench.action.terminal.sendSequence",
+        "args": {
+            "text": "\u0016\u006b"
+        },
+        "when": "terminalFocus"
+    },
+    {
+        "key": "cmd+j",
+        "command": "workbench.action.toggleMaximizedPanel",
+        "when": "!terminalFocus"
+    },
+    {
+        "key": "cmd+j",
+        "command": "workbench.action.togglePanel",
+        "when": "terminalFocus"
+    },
 ]
