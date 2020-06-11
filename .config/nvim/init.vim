@@ -545,14 +545,18 @@ let g:gruvbox_contrast_light='hard'
 let g:gruvbox_number_column='bg1'
 let g:gruvbox_color_column='bg1'
 let g:gruvbox_guisp_fallback='bg4'
-colorscheme gruvbox
+" colorscheme gruvbox
+
+Plugin 'tomasiser/vim-code-dark'
+colorscheme codedark
+let g:airline_theme = 'codedark'
 
 " highlight CursorLine guibg=223 gui=NONE
 " Change the default background, but keep airline the same.
 " TODO: Make airline text stay white when making the background lighter.
-set background=light
+" set background=light
 " highlight Normal guibg=230
-let g:airline_theme='gruvbox'
+" let g:airline_theme='gruvbox'
 
 " Change tab bar colors
 "    TabLineFill is the middle (so the fg doesn't have anything to display)
