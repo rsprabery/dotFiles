@@ -145,7 +145,7 @@ source ~/workspace/virtenvs/p3neovim/bin/activate
 pip install neovim python-language-server[all] black
 deactivate
 
-
+# Setup black python formatter
 python3 -m venv ~/workspace/virtenvs/black-vim
 source ~/workspace/virtenvs/black-vim/bin/activate
 pip install neovim black
@@ -153,6 +153,7 @@ deactivate
 
 nvim +BundleInstall +qall
 
+# Setup global sphinx documentation
 python3 -m venv ~/workspace/virtenvs/pydev
 source ~/workspace/virtenvs/pydev/bin/activate
 pip install sphinx black sphinx_rtd_theme sphinx-autobuild
@@ -166,6 +167,13 @@ ln -s ~/workspace/virtenvs/pydev/bin/sphinx-quickstart  ~/bin/sphinx-build
 ln -s ~/workspace/virtenvs/pydev/bin/sphinx-quickstart  ~/bin/sphinx-quickstart
 ln -s ~/workspace/virtenvs/pydev/bin/sphinx-autobuild  ~/bin/sphinx-autobuild
 
+# Setup powerline for tmux.
+python3 -m venv ~/workspace/virtenvs/powerline
+source ~/workspace/virtenvs/powerline/bin/activate
+pip install powerline-status
+deactivate
+
+# Setup NVM for Node
 mkdir ~/.nvm
 
 export NVM_DIR="$HOME/.nvm"
@@ -183,6 +191,9 @@ echo "Remember to ssh-add (-K on mac) your ~/.ssh/id_rsa!"
 echo "Make sure your terminal is reported as xterm-256color"
 
 if [[ `uname` == 'Darwin' ]]; then
+    # Fix copy from tmux in vscode
+    brew install reattach-to-user-namespace
+
     # Install fonts system wide on OS X
     echo "Install fonts system wide by double clicking a font and selecting"
     echo "'install'."
@@ -193,3 +204,10 @@ if [[ `uname` == 'Darwin' ]]; then
     cp ${HOME}/dotSetup/iterm2.json \
         ${HOME}/Library/Application\ Support/iTerm2/DynamicProfiles
 fi
+
+# Setup powerline font
+echo "Install alt font to be used for non-ascii characters in terminal."
+echo "Double click and select 'install'."
+curl "https://github.com/powerline/fonts/blob/master/RobotoMono/Roboto%20Mono%20Medium%20for%20Powerline.ttf?raw=true" \
+    -o ~/Downloads/RobotoMonoMediumForPowerline.ttf
+
