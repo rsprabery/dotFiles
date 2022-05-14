@@ -1,5 +1,4 @@
 {
-    "editor.formatOnSave": true,
     "peacock.favoriteColors": [
         {
             "name": "Angular Red",
@@ -56,7 +55,6 @@
     ],
     "editor.suggestSelection": "first",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-    "workbench.colorTheme": "Visual Studio Dark",
     "python.jediEnabled": false,
     "editor.fontFamily": "SFMono-semibold,Menlo, Monaco, 'Courier New', monospace",
     "python.analysis.diagnosticPublishDelay": 3000,
@@ -184,9 +182,23 @@
     "editor.minimap.enabled": false,
     "workbench.sideBar.location": "left",
     "vim.useSystemClipboard": true,
-    "window.zoomLevel": 0,
     "files.trimTrailingWhitespace": true,
     "git.autofetch": false,
     "terminal.integrated.fontFamily": "\"Roboto Mono Medium for Powerline\",SFMono-semibold,Menlo, Monaco, 'Courier New', monospace",
-    "terminal.integrated.macOptionIsMeta": true
+    "terminal.integrated.macOptionIsMeta": true,
+    "go.useLanguageServer": true,
+    "python.languageServer": "Microsoft",
+    "search.useGlobalIgnoreFiles": true,
+    "go.toolsManagement.autoUpdate": true,
+    "C_Cpp.intelliSenseEngine": "Disabled",
+    "javascript.format.enable": false,
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter-notebook"
+    },
+    "window.zoomLevel": 1,
+    "docker.contexts.label": "DockerEndpoint",
+    "notebook.cellToolbarLocation": {
+        "default": "right",
+        "jupyter-notebook": "left"
+    },
 }
