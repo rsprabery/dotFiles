@@ -43,7 +43,7 @@ export PATH=${PATH}:~/workspace/virtenvs/powerline/bin
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # plugins=(git ruby git-extras pip python vundle rvm osx bundler dotenv ansible brew colored-man-pages dash django gem iterm2 man npm node tmux)
-plugins=(git pip python django colored-man-pages)
+plugins=(git pip python ruby gem bundler colored-man-pages rvm bundler brew osx)
 
 # enable control-s and control-q
 stty start undef
@@ -81,7 +81,7 @@ if [[ `uname` == 'Linux' ]]; then
 
 # OSX SPECIFIC CONFIG
 elif [[ `uname` == 'Darwin' ]]; then
-  [[ -d "${HOME}/brew" ]] && export PATH=$PATH:${HOME}/brew/bin
+  [[ -d "${HOME}/brew" ]] && export PATH=${HOME}/brew/bin:$PATH
 
   # Ensure trim is enabled
   # export TRIM=`system_profiler SPSerialATADataType | grep 'TRIM' | awk '{print $3}'`
@@ -110,13 +110,14 @@ if [ $? -eq 0 ]; then
 fi
 
 function setup-python() {
-    # Python Setup
-    export WORKON_HOME=${HOME}/workspace/virtenvs
-    [[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && \
-        source /usr/local/bin/virtualenvwrapper.sh
-    [[ -s "${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh" ]] &&  \
-        source ${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh
+
 }
+# Python Setup
+export WORKON_HOME=${HOME}/workspace/virtenvs
+[[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && \
+    source /usr/local/bin/virtualenvwrapper.sh
+[[ -s "${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh" ]] &&  \
+    source ${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh
 
 # Ruby Lang setup
 # which rbenv >> /dev/null
@@ -149,6 +150,9 @@ function setup-crystal() {
     fi
 }
 
+
+[[ -d "${HOME}/go/bin" ]] && export PATH=${PATH}:${HOME}/go/bin/
+
 function setup-nvm() {
     # NodeJS Setup
     export NVM_DIR="$HOME/.nvm"
@@ -168,7 +172,7 @@ source $ZSH/oh-my-zsh.sh
 alias gls="git status"
 export SVN_EDITOR=vim
 export HOMEBREW_EDITOR=vim
-export EDITOR=vim
+export EDITOR=code
 
 GRADLE_BIN=$(which gradle)
 function gradle {
@@ -306,10 +310,19 @@ base16_brewer
 [[ -d ${HOME}/workspace/dotFiles.git ]] && export DOTFILES_DIR="${HOME}/workspace/dotFiles.git"
 alias config='/usr/bin/git --git-dir=$DOTFILES_DIR --work-tree=$HOME'
 
+# GOlang setup
+[[ -d "${HOME}/go" ]] && export GOPATH="${HOME}/go"
+
+ag() {
+  command ag \
+    -p "$(git rev-parse --is-inside-work-tree &>/dev/null && echo "$(git rev-parse --show-toplevel)/.gitignore")" \
+    "$@"
+}
+
 # Silver searcher with no highlights
 alias agc='ag --color-match=#0'
 
-export FZF_DEFAULT_COMMAND='ag -g ""'
+export FZF_DEFAULT_COMMAND="rg --files"
 # To apply the command to CTRL-T as well
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -337,4 +350,10 @@ function setup-all() {
 
 setup-python
 
+
+
 # silent_background setup-all
+export PATH="/Users/read/brew/sbin:$PATH"
+
+# heroku autocomplete setup
+HEROKU_AC_ZSH_SETUP_PATH=/Users/read/Library/Caches/heroku/autocomplete/zsh_setup && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
