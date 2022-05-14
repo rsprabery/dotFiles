@@ -265,6 +265,25 @@ if executable('/Users/read/brew/bin/bash-language-server')
         \ })
 endif
 
+au BufRead,BufNewFile *.go set filetype=go
+set rtp+=$GOROOT/misc/vim
+if executable('gopls')
+
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'gopls',
+        \ 'cmd': {server_info->['gopls']},
+        \ 'whitelist': ['go'],
+        \ })
+
+    " autocmd FileType go autocmd BufWritePost :LspDocumentFormat<CR>
+    " autocmd FileType go autocmd FileWritePost :LspDocumentFormat<CR>
+    " autocmd FileType go autocmd FileAppendPost :LspDocumentFormat<CR>
+
+    autocmd BufWritePre *.go execute "LspDocumentFormat"
+
+endif
+
+
 let g:lsp_diagnostics_enabled = 1
 let g:lsp_signs_enabled = 1         " enable signs
 let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
@@ -373,8 +392,10 @@ nnoremap <F9> :if (hlstate == 0) \| nohlsearch \| else \| set hlsearch \| endif 
 
 " ************* START CTRL-XYZ Editor Behavior ***************
 " CTRL-S for saving
-map  <C-s> <C-\><C-N>:update<CR>
-imap  <C-s> <C-\><C-N>:update<CR>
+" map  <C-s> <C-\><C-N>:update<CR>
+" imap  <C-s> <C-\><C-N>:update<CR>
+map  <C-s> :update<CR>
+imap  <C-s> <ESC>:update<CR>
 " CTLR-q for quiting
 map <C-q> <C-C>:q<CR>
 imap <C-q> <C-\><C-N>:q<CR>
