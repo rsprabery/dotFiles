@@ -5,6 +5,7 @@
             "Right Option Key Sends": 2,
             "Left Option Key Sends": 2,
             "Guid": "1A3D5127-5C1A-4605-900B-A6041745F90F",
+            "Draw Powerline Glyphs" : true,
             "Tags": [
                 "Dynamic"
             ],
@@ -63,6 +64,7 @@
                 "Green Component": 0.9268307089805603
             },
             "Non-ASCII Anti Aliased": true,
+            "Non-ASCII Ligatures" : true,
             "Use Bright Bold": true,
             "Ansi 10 Color": {
                 "Red Component": 0.34509803921568627,
@@ -120,7 +122,7 @@
             },
             "Custom Command": "No",
             "ASCII Anti Aliased": true,
-            "Non Ascii Font": "RobotoMonoForPowerline-Medium",
+            "Non Ascii Font" : "RobotoMono-Regular 12",
             "Vertical Spacing": 1,
             "Use Bold Font": true,
             "Option Key Sends": 2,
@@ -382,7 +384,7 @@
                 "Blue Component": 0.50980392156862742,
                 "Green Component": 0.21176470588235294
             },
-            "Use Non-ASCII Font": true,
+            "Use Non-ASCII Font": false,
             "AWDS Tab Directory": "",
             "Normal Font": "SFMono-Semibold 12",
             "Ansi 6 Color": {
