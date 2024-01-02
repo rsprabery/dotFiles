@@ -187,7 +187,7 @@
     "terminal.integrated.fontFamily": "\"Roboto Mono Medium for Powerline\",SFMono-semibold,Menlo, Monaco, 'Courier New', monospace",
     "terminal.integrated.macOptionIsMeta": true,
     "go.useLanguageServer": true,
-    "python.languageServer": "Microsoft",
+    "python.languageServer": "Default",
     "search.useGlobalIgnoreFiles": true,
     "go.toolsManagement.autoUpdate": true,
     "C_Cpp.intelliSenseEngine": "Disabled",

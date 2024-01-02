@@ -37,13 +37,13 @@ HOMEBREW_NO_ANALYTICS=1
 [[ -s "$HOME/.local_box_profile" ]] && . $HOME/.local_box_profile
 
 # Add powerline to path (used in tmux config)
-export PATH=${PATH}:~/workspace/virtenvs/powerline/bin
+# export PATH=${PATH}:~/workspace/virtenvs/powerline/bin
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # plugins=(git ruby git-extras pip python vundle rvm osx bundler dotenv ansible brew colored-man-pages dash django gem iterm2 man npm node tmux)
-plugins=(git pip python ruby gem bundler colored-man-pages rvm bundler brew osx)
+plugins=(git pip python ruby gem bundler colored-man-pages rvm bundler brew)
 
 # enable control-s and control-q
 stty start undef
@@ -109,15 +109,10 @@ if [ $? -eq 0 ]; then
   eval "$(direnv hook zsh)"
 fi
 
-function setup-python() {
-
-}
 # Python Setup
 export WORKON_HOME=${HOME}/workspace/virtenvs
-[[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && \
-    source /usr/local/bin/virtualenvwrapper.sh
-[[ -s "${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh" ]] &&  \
-    source ${HOME}/Library/Python/2.7/bin/virtualenvwrapper.sh
+[[ -s "${HOME}/Library/Python/3.9/bin/virtualenvwrapper.sh" ]] && \
+    source ~/Library/Python/3.9/bin/virtualenvwrapper.sh
 
 # Ruby Lang setup
 # which rbenv >> /dev/null
@@ -301,7 +296,7 @@ if [ $? -eq 0 ]; then
 fi
 
 BASE16_SHELL=$HOME/.config/base16-shell/
-[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+[ -n "$PS1" ] && [ -s ${BASE16_SHELL}/profile_helper.sh ] && eval "$( cat ${BASE16_SHELL}/profile_helper.sh)"
 # base16_solarized-light
 base16_brewer
 
@@ -342,18 +337,15 @@ function silent_background() {
 }
 
 function setup-all() {
-    setup-python
     setup-nvm
     # setup-rvm
     # setup-brew
 }
-
-setup-python
-
-
 
 # silent_background setup-all
 export PATH="/Users/read/brew/sbin:$PATH"
 
 # heroku autocomplete setup
 HEROKU_AC_ZSH_SETUP_PATH=/Users/read/Library/Caches/heroku/autocomplete/zsh_setup && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
+
+export LC_ALL="en_US.UTF-8"

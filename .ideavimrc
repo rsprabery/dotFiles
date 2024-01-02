@@ -1,0 +1,42 @@
+let mapleader=","
+set easymotion
+
+map <leader>t <Action>(GotoFile)
+map <leader>r <Action>(GotoClass)
+
+" ************* START CTRL-XYZ Editor Behavior *****************
+map  <C-s> :w<CR>
+imap  <C-s> <ESC>:w<CR>
+" CTLR-q for quiting
+map <C-q> :q<CR>
+imap <C-q> <C-\><C-N>:q<CR>
+" CTRL-x for force quit (without saving)
+map <C-x><C-x> <C-C>:q!<CR>
+" ************* END CTRL-XYZ Editor Behavior *****************
+
+" ************ START - Window-Management *********************
+" Changing Windows with jkhl (Ctrl-(J/K/H/L)
+map <C-H> <C-W>h
+imap <C-H> <C-\><C-N><C-W>h<CR>
+
+map <C-L> <C-W>l
+imap <C-L> <C-\><C-N><C-W>l<CR>
+
+map <C-J> <C-W>j
+imap <C-J> <C-\><C-N><C-W>j<CR>
+
+map <C-K> <C-W>k
+imap <C-K> <C-\><C-N><C-W>k<CR>
+" ************ END - Window-Management ***********************
+
+" **************** Keys for Splits *********************************
+noremap <leader>v :vsp<CR><C-W>l<CR>
+cnoremap <leader>v :vsp<CR><C-W>l<CR>
+
+noremap <leader>s :sp<CR><C-W>j<CR>
+cnoremap <leader>s :sp<CR><C-W>j<CR>
+" **************** Keys for Splits *********************************
+
+" Copy/Paste from system clipboard
+" Makes all yank and put operations default to clipboard register
+set clipboard+=unnamedplus

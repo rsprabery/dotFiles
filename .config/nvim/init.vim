@@ -427,6 +427,10 @@ Plugin 'junegunn/fzf.vim'
 nmap <C-N> :Tags<CR>
 " nmap <C-M> :BTags<CR>
 
+if executable('/opt/homebrew/bin/fzf')
+  set rtp+=/opt/homebrew/opt/fzf
+endif
+
 if executable('/Users/read/brew/bin/fzf')
   set rtp+=/Users/read/brew/opt/fzf
 endif
