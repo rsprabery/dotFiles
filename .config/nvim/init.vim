@@ -423,6 +423,7 @@ vnoremap < <gv
 vnoremap > >gv
 
 " Use the Silver Searcher (if installed)
+Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 nmap <C-N> :Tags<CR>
 " nmap <C-M> :BTags<CR>
@@ -431,12 +432,8 @@ if executable('/opt/homebrew/bin/fzf')
   set rtp+=/opt/homebrew/opt/fzf
 endif
 
-if executable('/Users/read/brew/bin/fzf')
-  set rtp+=/Users/read/brew/opt/fzf
-endif
-
-if executable('/home/read/.fzf/bin/fzf')
-  set rtp+=/home/read/.fzf
+if executable('/usr/bin/fzf')
+  set rtp+=/usr/bin/fzf
 endif
 
 if executable('ag')
