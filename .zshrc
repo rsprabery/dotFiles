@@ -34,7 +34,7 @@ DISABLE_AUTO_UPDATE="true"
 HOMEBREW_NO_ANALYTICS=1
 
 # Load any machine specific configs
-[[ -s "$HOME/.local_box_profile" ]] && . $HOME/.local_box_profile
+[[ -s "$HOME/.local_box_profile.zsh" ]] && . $HOME/.local_box_profile.zsh
 
 # Add powerline to path (used in tmux config)
 # export PATH=${PATH}:~/workspace/virtenvs/powerline/bin
@@ -145,18 +145,22 @@ function setup-crystal() {
     fi
 }
 
+found_brew=$(which brew)
+if [[ -z ${found_brew} ]]; then
+    export PATH="$(brew --prefix)/bin:${PATH}"
+    export PATH="$(brew --prefix)/opt/gnu-sed/libexec/gnubin:$PATH"
+fi
+
 
 [[ -d "${HOME}/go/bin" ]] && export PATH=${PATH}:${HOME}/go/bin/
 
-function setup-nvm() {
-    # NodeJS Setup
-    export NVM_DIR="$HOME/.nvm"
-    # Support installs of NVM directly
-    [[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh" # This loads nvm
-    # Support brew install nvm
-    [ -s "${HOME}/brew/opt/nvm/nvm.sh" ] && . "${HOME}/brew/opt/nvm/nvm.sh"  # This loads nvm
-    [ -s "${HOME}/brew/opt/nvm/etc/bash_completion" ] && . "${HOME}/brew/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
-}
+# NodeJS Setup
+export NVM_DIR="$HOME/.nvm"
+# Support installs of NVM directly
+[[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh" # This loads nvm
+# Support brew install nvm
+[ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "$(brew --prefix)/opt/nvm/etc/bash_completion" ] && . "$(brew --prefix)/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
 
 # Add custom bin's
 [[ -d "$HOME/bin" ]] && PATH=$HOME/bin:${PATH}
@@ -321,7 +325,11 @@ export FZF_DEFAULT_COMMAND="rg --files"
 # To apply the command to CTRL-T as well
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+eval "$(fzf --zsh)"
 
+if command -v ngrok &>/dev/null; then
+    eval "$(ngrok completion)"
+fi
 
 function silent_background() {
   # if [[ -n $ZSH_VERSION ]]; then  # zsh:  https://superuser.com/a/1285272/365890
@@ -344,8 +352,47 @@ function setup-all() {
 
 # silent_background setup-all
 export PATH="/Users/read/brew/sbin:$PATH"
+export PATH="$(brew --prefix python@3.11)/libexec/bin:$PATH"
 
 # heroku autocomplete setup
 HEROKU_AC_ZSH_SETUP_PATH=/Users/read/Library/Caches/heroku/autocomplete/zsh_setup && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
 
 export LC_ALL="en_US.UTF-8"
+
+fshow () {
+        git log --graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" | fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort --bind "ctrl-m:execute:
+                (grep -o '[a-f0-9]\{7\}' | head -1 |
+                xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+                {}
+FZF-EOF"
+}
+
+fd() {
+  preview="git diff $@ --color=always -- {-1}"
+  git diff $@ --name-only | fzf -m --ansi --preview $preview
+}
+
+gs () {
+    # -S only shows commits where the number of occurrences changed, so if
+    # the word was added in one place and removed in another, the commit
+    # won't show up.
+    #
+    # -G shows all commits where the word occurs at all.
+    fshow -S${@}
+}
+
+recent-branches () {
+    git reflog | egrep -io "moving from ([^[:space:]]+)" | awk '{ print $3 }' | awk ' !x[$0]++' | egrep -v '^[a-f0-9]{40}$'
+}
+
+
+PATH=~/.console-ninja/.bin:$PATH
+
+# heroku autocomplete setup
+HEROKU_AC_ZSH_SETUP_PATH=/Users/sprabery/Library/Caches/heroku/autocomplete/zsh_setup && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
+# heroku autocomplete setup
+HEROKU_AC_ZSH_SETUP_PATH=/Users/sprabery/Library/Caches/heroku/autocomplete/zsh_setup && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
+
+if command -v ngrok &>/dev/null; then
+    eval "$(ngrok completion)"
+  fi

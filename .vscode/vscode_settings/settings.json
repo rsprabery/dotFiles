@@ -1,204 +1,171 @@
 {
-    "peacock.favoriteColors": [
-        {
-            "name": "Angular Red",
-            "value": "#b52e31"
-        },
-        {
-            "name": "Auth0 Orange",
-            "value": "#eb5424"
-        },
-        {
-            "name": "Azure Blue",
-            "value": "#007fff"
-        },
-        {
-            "name": "C# Purple",
-            "value": "#68217A"
-        },
-        {
-            "name": "Gatsby Purple",
-            "value": "#639"
-        },
-        {
-            "name": "Go Cyan",
-            "value": "#5dc9e2"
-        },
-        {
-            "name": "Java Blue-Gray",
-            "value": "#557c9b"
-        },
-        {
-            "name": "JavaScript Yellow",
-            "value": "#f9e64f"
-        },
-        {
-            "name": "Mandalorian Blue",
-            "value": "#1857a4"
-        },
-        {
-            "name": "Node Green",
-            "value": "#215732"
-        },
-        {
-            "name": "React Blue",
-            "value": "#00b3e6"
-        },
-        {
-            "name": "Something Different",
-            "value": "#832561"
-        },
-        {
-            "name": "Vue Green",
-            "value": "#42b883"
-        }
-    ],
-    "editor.suggestSelection": "first",
-    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-    "python.jediEnabled": false,
-    "editor.fontFamily": "SFMono-semibold,Menlo, Monaco, 'Courier New', monospace",
-    "python.analysis.diagnosticPublishDelay": 3000,
-    "python.analysis.logLevel": "Trace",
-    "python.analysis.memory.keepLibraryAst": true,
-    "python.analysis.memory.keepLibraryLocalVariables": true,
-    "python.formatting.provider": "black",
-    "python.formatting.blackArgs": [
-        "-l 79"
-    ],
-    "python.venvFolders": [
-        "~/workspace/virtenvs"
-    ],
-    "editor.rulers": [
-        80,
-        120
-    ],
-    "vim.easymotion": true,
-    "vim.leader": ",",
-    "vim.easymotionMarkerFontSize": "16",
-    "vim.easymotionMarkerFontWeight": "semi-bold",
-    "vim.easymotionMarkerHeight": 18,
-    "vim.easymotionMarkerWidthPerChar": 10,
-    "vim.vimrc.enable": true,
-    "vim.vimrc.path": "~/.vscode/vimrc",
-    "vim.normalModeKeyBindingsNonRecursive": [
-        {
-            "before": [
-                "<leader>",
-                "t"
-            ],
-            "commands": [
-                "workbench.action.quickOpen"
-            ]
-        },
-        {
-            "before": [
-                "<leader>",
-                "h"
-            ],
-            "commands": [
-                "workbench.action.quickOpenLeastRecentlyUsedEditor"
-            ]
-        },
-        {
-            "before": [
-                "<leader>",
-                "g"
-            ],
-            "commands": [
-                "workbench.action.files.copyPathOfActiveFile"
-            ]
-        },
-        {
-            "before": [
-                "<leader>",
-                "v"
-            ],
-            "commands": [
-                "workbench.action.splitEditorRight"
-            ]
-        },
-        {
-            "before": [
-                "<leader>",
-                "s"
-            ],
-            "commands": [
-                "workbench.action.splitEditorDown"
-            ]
-        },
-        {
-            "before": [
-                "<leader>",
-                "w"
-            ],
-            "commands": [
-                "workbench.action.quickOpenView"
-            ]
-        },
-        {
-            "before": [
-                "<leader>",
-                "o"
-            ],
-            "commands": [
-                "outline.focus"
-            ]
-        },
-        {
-            "before": [
-                "<leader>",
-                "n"
-            ],
-            "commands": [
-                "workbench.action.toggleSidebarVisibility"
-            ]
-        },
-        {
-            "before": [
-                "<leader>",
-                "f"
-            ],
-            "commands": [
-                "editor.action.goToReferences"
-            ]
-        },
-        {
-            "before": [
-                "<leader>",
-                "<leader>",
-                "c"
-            ],
-            "commands": [
-                "vscode-coverage-highlighter.toggle"
-            ]
-        },
-    ],
-    "macros": {
-        "saveAndExitInsertMode": [
-            "extension.vim_escape",
-            "workbench.action.files.save"
-        ]
+  "peacock.favoriteColors": [
+    {
+      "name": "Angular Red",
+      "value": "#b52e31"
     },
-    "editor.minimap.enabled": false,
-    "workbench.sideBar.location": "left",
-    "vim.useSystemClipboard": true,
+    {
+      "name": "Auth0 Orange",
+      "value": "#eb5424"
+    },
+    {
+      "name": "Azure Blue",
+      "value": "#007fff"
+    },
+    {
+      "name": "C# Purple",
+      "value": "#68217A"
+    },
+    {
+      "name": "Gatsby Purple",
+      "value": "#639"
+    },
+    {
+      "name": "Go Cyan",
+      "value": "#5dc9e2"
+    },
+    {
+      "name": "Java Blue-Gray",
+      "value": "#557c9b"
+    },
+    {
+      "name": "JavaScript Yellow",
+      "value": "#f9e64f"
+    },
+    {
+      "name": "Mandalorian Blue",
+      "value": "#1857a4"
+    },
+    {
+      "name": "Node Green",
+      "value": "#215732"
+    },
+    {
+      "name": "React Blue",
+      "value": "#00b3e6"
+    },
+    {
+      "name": "Something Different",
+      "value": "#832561"
+    },
+    {
+      "name": "Vue Green",
+      "value": "#42b883"
+    }
+  ],
+  "editor.suggestSelection": "first",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "python.jediEnabled": false,
+  "editor.fontFamily": "SFMono-semibold,Menlo, Monaco, 'Courier New', monospace",
+  "python.analysis.diagnosticPublishDelay": 3000,
+  "python.analysis.logLevel": "Trace",
+  "python.analysis.memory.keepLibraryAst": true,
+  "python.analysis.memory.keepLibraryLocalVariables": true,
+  "python.formatting.provider": "black",
+  "python.formatting.blackArgs": ["-l 79"],
+  "python.venvFolders": ["~/workspace/virtenvs"],
+  "editor.rulers": [80, 120],
+  "vim.easymotion": true,
+  "vim.leader": ",",
+  "vim.easymotionMarkerFontSize": "16",
+  "vim.easymotionMarkerFontWeight": "semi-bold",
+  "vim.easymotionMarkerHeight": 18,
+  "vim.easymotionMarkerWidthPerChar": 10,
+  "vim.vimrc.enable": true,
+  "vim.vimrc.path": "~/.vscode/vimrc",
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<leader>", "t"],
+      "commands": ["workbench.action.quickOpen"]
+    },
+    {
+      "before": ["<leader>", "h"],
+      "commands": ["workbench.action.quickOpenLeastRecentlyUsedEditor"]
+    },
+    {
+      "before": ["<leader>", "g"],
+      "commands": ["workbench.action.files.copyPathOfActiveFile"]
+    },
+    {
+      "before": ["<leader>", "v"],
+      "commands": ["workbench.action.splitEditorRight"]
+    },
+    {
+      "before": ["<leader>", "s"],
+      "commands": ["workbench.action.splitEditorDown"]
+    },
+    {
+      "before": ["<leader>", "w"],
+      "commands": ["workbench.action.quickOpenView"]
+    },
+    {
+      "before": ["<leader>", "o"],
+      "commands": ["outline.focus"]
+    },
+    {
+      "before": ["<leader>", "n"],
+      "commands": ["workbench.action.toggleSidebarVisibility"]
+    },
+    {
+      "before": ["<leader>", "f"],
+      "commands": ["editor.action.goToReferences"]
+    },
+    {
+      "before": ["<leader>", "<leader>", "c"],
+      "commands": ["vscode-coverage-highlighter.toggle"]
+    }
+  ],
+  "macros": {
+    "saveAndExitInsertMode": [
+      "extension.vim_escape",
+      "workbench.action.files.save"
+    ]
+  },
+  "editor.minimap.enabled": false,
+  "workbench.sideBar.location": "left",
+  "vim.useSystemClipboard": true,
+  "files.trimTrailingWhitespace": true,
+  "git.autofetch": true,
+  "terminal.integrated.fontFamily": "\"Roboto Mono Medium for Powerline\",SFMono-semibold,Menlo, Monaco, 'Courier New', monospace",
+  "terminal.integrated.macOptionIsMeta": true,
+  "go.useLanguageServer": true,
+  "python.languageServer": "Default",
+  "search.useGlobalIgnoreFiles": true,
+  "go.toolsManagement.autoUpdate": true,
+  "C_Cpp.intelliSenseEngine": "Disabled",
+  "javascript.format.enable": false,
+  "workbench.editorAssociations": {
+    "*.ipynb": "jupyter-notebook"
+  },
+  "window.zoomLevel": 1,
+  "docker.contexts.label": "DockerEndpoint",
+  "notebook.cellToolbarLocation": {
+    "default": "right",
+    "jupyter-notebook": "left"
+  },
+  "terminal.integrated.env.osx": {},
+  "console-ninja.featureSet": "Community",
+  "editor.formatOnSave": true,
+  "[ruby]": {
+    "editor.defaultFormatter": "Shopify.ruby-lsp",
+    "editor.formatOnType": true,
+    "editor.insertSpaces": true,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "editor.semanticHighlighting.enabled": true,
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
     "files.trimTrailingWhitespace": true,
-    "git.autofetch": false,
-    "terminal.integrated.fontFamily": "\"Roboto Mono Medium for Powerline\",SFMono-semibold,Menlo, Monaco, 'Courier New', monospace",
-    "terminal.integrated.macOptionIsMeta": true,
-    "go.useLanguageServer": true,
-    "python.languageServer": "Default",
-    "search.useGlobalIgnoreFiles": true,
-    "go.toolsManagement.autoUpdate": true,
-    "C_Cpp.intelliSenseEngine": "Disabled",
-    "javascript.format.enable": false,
-    "workbench.editorAssociations": {
-        "*.ipynb": "jupyter-notebook"
-    },
-    "window.zoomLevel": 1,
-    "docker.contexts.label": "DockerEndpoint",
-    "notebook.cellToolbarLocation": {
-        "default": "right",
-        "jupyter-notebook": "left"
-    },
+    "editor.rulers": [
+      120
+    ]
+  },
+  "redhat.telemetry.enabled": false,
+  "editor.inlineSuggest.enabled": true,
+  "terminal.integrated.env.linux": {},
+  "typescript.format.enable": false,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.linkedEditing": true
 }

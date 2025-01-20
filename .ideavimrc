@@ -2,7 +2,9 @@ let mapleader=","
 set easymotion
 
 map <leader>t <Action>(GotoFile)
-map <leader>r <Action>(GotoClass)
+map <leader><leader>t <Action>(FileStructurePopup)
+map <leader>c <Action>(GotoClass)
+map <leader>w <Action>(GotoSymbol)
 
 " ************* START CTRL-XYZ Editor Behavior *****************
 map  <C-s> :w<CR>
@@ -35,8 +37,105 @@ cnoremap <leader>v :vsp<CR><C-W>l<CR>
 
 noremap <leader>s :sp<CR><C-W>j<CR>
 cnoremap <leader>s :sp<CR><C-W>j<CR>
+map <c-b>z <Action>(MaximizeEditorInSplit)
 " **************** Keys for Splits *********************************
 
 " Copy/Paste from system clipboard
 " Makes all yank and put operations default to clipboard register
 set clipboard+=unnamedplus
+
+map <leader><leader>w <Action>(AceWordForwardAction)
+map <leader><leader>b <Action>(AceWordBackwardsAction)
+map <leader>n <Action>(ActivateProjectToolWindow)
+map <leader>d <Action>(ActivateStructureToolWindow)
+map K <Action>(FindUsages)
+
+
+map <leader>r <Action>(CopyReference)
+map <leader><leader>r <Action>(Coverage)
+
+
+map <leader>g <Action>(CopyPathFromRepositoryRootProvider)
+map <leader><leader>g <Action>(GitHub.Copy.Link)
+
+
+map <leader>a <Action>(Annotate)
+
+" ***************** Bookmarks **************************************
+map ma <Action>(ToggleBookmarkA)
+map 'a <Action>(GotoBookmarkA)
+
+map mb <Action>(ToggleBookmarkB)
+map 'b <Action>(GotoBookmarkB)
+
+map mc <Action>(ToggleBookmarkC)
+map 'c <Action>(GotoBookmarkC)
+
+map md <Action>(ToggleBookmarkD)
+map 'd <Action>(GotoBookmarkD)
+
+map me <Action>(ToggleBookmarkE)
+map 'e <Action>(GotoBookmarkE)
+
+map mf <Action>(ToggleBookmarkF)
+map 'f <Action>(GotoBookmarkF)
+
+map mg <Action>(ToggleBookmarkG)
+map 'g <Action>(GotoBookmarkG)
+
+map mh <Action>(ToggleBookmarkH)
+map 'h <Action>(GotoBookmarkH)
+
+map mi <Action>(ToggleBookmarkI)
+map 'i <Action>(GotoBookmarkI)
+
+map mj <Action>(ToggleBookmarkJ)
+map 'j <Action>(GotoBookmarkJ)
+
+map mk <Action>(ToggleBookmarkK)
+map 'k <Action>(GotoBookmarkK)
+
+map ml <Action>(ToggleBookmarkL)
+map 'l <Action>(GotoBookmarkL)
+
+map mm <Action>(ToggleBookmarkM)
+map 'm <Action>(GotoBookmarkM)
+
+map mn <Action>(ToggleBookmarkN)
+map 'n <Action>(GotoBookmarkN)
+
+map mo <Action>(ToggleBookmarkO)
+map 'o <Action>(GotoBookmarkO)
+
+map mp <Action>(ToggleBookmarkP)
+map 'p <Action>(GotoBookmarkP)
+
+map mq <Action>(ToggleBookmarkQ)
+map 'q <Action>(GotoBookmarkQ)
+
+map mr <Action>(ToggleBookmarkR)
+map 'r <Action>(GotoBookmarkR)
+
+map ms <Action>(ToggleBookmarkS)
+map 's <Action>(GotoBookmarkS)
+
+map mt <Action>(ToggleBookmarkT)
+map 't <Action>(GotoBookmarkT)
+
+map mu <Action>(ToggleBookmarkU)
+map 'u <Action>(GotoBookmarkU)
+
+map mv <Action>(ToggleBookmarkV)
+map 'v <Action>(GotoBookmarkV)
+
+map mw <Action>(ToggleBookmarkW)
+map 'w <Action>(GotoBookmarkW)
+
+map mx <Action>(ToggleBookmarkX)
+map 'x <Action>(GotoBookmarkX)
+
+map my <Action>(ToggleBookmarkY)
+map 'y <Action>(GotoBookmarkY)
+
+map mz <Action>(ToggleBookmarkZ)
+map 'z <Action>(GotoBookmarkZ)
