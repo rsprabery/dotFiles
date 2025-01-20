@@ -7,11 +7,6 @@ call vundle#rc()
 " let Vundle manage Vundle
 " required!
 
-" Selection of which python bin to use for plugins
-if filereadable("/Users/read/workspace/virtenvs/neovim/bin/python")
-  let g:python_host_prog='/Users/read/workspace/virtenvs/neovim/bin/python'
-endif
-
 " Prefer python 3 if available
 if filereadable("/Users/read/workspace/virtenvs/p3neovim/bin/python")
   let g:python_host_prog='/Users/read/workspace/virtenvs/p3neovim/bin/python'
@@ -221,15 +216,6 @@ if executable('clangd')
       \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
       \ })
 endif
-" if executable('ccls')
-"    au User lsp_setup call lsp#register_server({
-"       \ 'name': 'ccls',
-"       \ 'cmd': {server_info->['ccls']},
-"       \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-"       \ 'initialization_options': { 'cacheDirectory': '/tmp/ccls/cache' },
-"       \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
-"       \ })
-" endif
 
 if executable('solargraph')
     au User lsp_setup call lsp#register_server({
@@ -379,6 +365,27 @@ set statusline+=%*
 Plugin 'scrooloose/nerdtree'
 map <Leader>n :NERDTreeToggle<CR><C-W>w
 
+" Use the Silver Searcher (if installed)
+Plugin 'junegunn/fzf'
+Plugin 'junegunn/fzf.vim'
+
+if executable('/Users/read/brew/bin/fzf')
+  set rtp+=/Users/read/brew/opt/fzf
+endif
+
+nmap <C-N> :Tags<CR>
+" nmap <C-M> :BTags<CR>
+
+if executable('/opt/homebrew/bin/fzf')
+  set rtp+=/opt/homebrew/opt/fzf
+endif
+
+if executable('/usr/bin/fzf')
+  set rtp+=/usr/bin/fzf
+endif
+
+
+
 map <Leader>t :Files<CR>
 map <Leader>h :History<CR>
 map <Leader>w :Windows<CR>
@@ -421,20 +428,6 @@ imap <C-K> <C-\><C-N><C-C><C-W>k<CR>
 " Keep visual selection selected when tabbing and un-tabbing
 vnoremap < <gv
 vnoremap > >gv
-
-" Use the Silver Searcher (if installed)
-Plugin 'junegunn/fzf'
-Plugin 'junegunn/fzf.vim'
-nmap <C-N> :Tags<CR>
-" nmap <C-M> :BTags<CR>
-
-if executable('/opt/homebrew/bin/fzf')
-  set rtp+=/opt/homebrew/opt/fzf
-endif
-
-if executable('/usr/bin/fzf')
-  set rtp+=/usr/bin/fzf
-endif
 
 if executable('ag')
   " Use ag over grep
