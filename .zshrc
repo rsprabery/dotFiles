@@ -114,6 +114,9 @@ export WORKON_HOME=${HOME}/workspace/virtenvs
 [[ -s "${HOME}/Library/Python/3.9/bin/virtualenvwrapper.sh" ]] && \
     source ~/Library/Python/3.9/bin/virtualenvwrapper.sh
 
+[[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && \
+    source /usr/local/bin/virtualenvwrapper.sh
+
 # Ruby Lang setup
 # which rbenv >> /dev/null
 # if [ $? -eq 0 ]; then
@@ -324,6 +327,7 @@ alias agc='ag --color-match=#0'
 export FZF_DEFAULT_COMMAND="rg --files"
 # To apply the command to CTRL-T as well
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_DEFAULT_OPTS='--bind=ctrl-k:up,ctrl-j:down,alt-up:first,alt-down:last'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 eval "$(fzf --zsh)"
 
