@@ -194,10 +194,12 @@ export NVM_DIR="$HOME/.nvm"
 
 # Support brew install nvm
 #
-# This loads nvm
-[ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh"
-# This loads nvm bash_completion
-[ -s "$(brew --prefix)/opt/nvm/etc/bash_completion" ] && . "$(brew --prefix)/opt/nvm/etc/bash_completion"
+if [[ `uname` == 'Darwin' ]]; then
+  # This loads nvm
+  [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh"
+  # This loads nvm bash_completion
+  [ -s "$(brew --prefix)/opt/nvm/etc/bash_completion" ] && . "$(brew --prefix)/opt/nvm/etc/bash_completion"
+fi
 
 ######### End node/js Lang setup #######
 
@@ -390,11 +392,12 @@ complete -o nospace -C /opt/homebrew/bin/terraform terraform
 
 eval "$(fzf --zsh)"
 
-
 eval "$(zoxide init zsh)"
 
-export PATH="/Users/read/brew/sbin:$PATH"
-export PATH="$(brew --prefix python@3.11)/libexec/bin:$PATH"
+if [[ `uname` == 'Darwin' ]]; then
+  export PATH="/Users/read/brew/sbin:$PATH"
+  export PATH="$(brew --prefix python@3.11)/libexec/bin:$PATH"
+fi
 
 export LC_ALL="en_US.UTF-8"
 
@@ -434,7 +437,14 @@ if command -v ngrok &>/dev/null; then
     eval "$(ngrok completion)"
   fi
 
-export real_cd=$(which cd)
-alias cd='z'
-export real_ls=$(which ls)
-alias ls='eza'
+which zoxide >> /dev/null
+if [ $? -eq 0 ]; then
+  alias real_cd=$(which cd)
+  alias cd='z'
+fi
+
+which eza >> /dev/null
+if [ $? -eq 0 ]; then
+  alias real_ls=$(which ls)
+  alias ls='eza'
+fi
