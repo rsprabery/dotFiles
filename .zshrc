@@ -126,6 +126,9 @@ elif [[ `uname` == 'Darwin' ]]; then
   [[ -s "/opt/homebrew/opt/python@3/libexec/bin/python" ]] && \
     PATH="/opt/homebrew/opt/python@3/libexec/bin:$PATH"
 
+  [[ -s "$(brew --prefix)/opt/python@3.11/libexec/bin/python" ]] && \
+    export VIRTUALENVWRAPPER_PYTHON=$(brew --prefix)/opt/python@3.11/libexec/bin/python
+
   # path for programs installed with pip install --user
   [[ -d "${HOME}/Library/Python/3.9/bin" ]] && \
     PATH="${PATH}:${HOME}/Library/Python/3.9/bin"
@@ -144,9 +147,6 @@ fi # END MAC SPECIFIC
 
 ######### Begin generic python setup #############
 export WORKON_HOME=${HOME}/workspace/virtenvs
-
-[[ -s "${HOME}/Library/Python/3.9/bin/virtualenvwrapper.sh" ]] && \
-    source ~/Library/Python/3.9/bin/virtualenvwrapper.sh
 
 [[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && \
     source /usr/local/bin/virtualenvwrapper.sh
