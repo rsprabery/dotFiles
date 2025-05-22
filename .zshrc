@@ -151,6 +151,12 @@ export WORKON_HOME=${HOME}/workspace/virtenvs
 [[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && \
     source /usr/local/bin/virtualenvwrapper.sh
 
+which pyenv >> /dev/null
+if [ $? -eq 0 ]; then
+ eval "$(pyenv init -)"
+ eval "$(pyenv virtualenv-init -)"
+fi
+
 ######### End generic python setup #############
 
 
@@ -428,7 +434,7 @@ recent-branches () {
 }
 
 
-PATH=~/.console-ninja/.bin:$PATH
+
 
 # heroku autocomplete setup
 HEROKU_AC_ZSH_SETUP_PATH=/Users/sprabery/Library/Caches/heroku/autocomplete/zsh_setup && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
@@ -445,6 +451,7 @@ fi
 
 which eza >> /dev/null
 if [ $? -eq 0 ]; then
-  alias real_ls=$(which ls)
   alias ls='eza'
 fi
+
+PATH=~/.console-ninja/.bin:$PATH

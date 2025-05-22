@@ -100,4 +100,8 @@
         "command": "-references-view.findReferences",
         "when": "editorHasReferenceProvider"
     },
+    {
+        "key": "cmd+i",
+        "command": "composerMode.agent"
+    },
 ]
