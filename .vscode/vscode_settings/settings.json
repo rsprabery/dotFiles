@@ -1,4 +1,5 @@
 {
+  "editor.formatOnSave": true,
   "peacock.favoriteColors": [
     {
       "name": "Angular Red",
@@ -55,6 +56,7 @@
   ],
   "editor.suggestSelection": "first",
   "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "workbench.colorTheme": "Visual Studio Dark",
   "python.jediEnabled": false,
   "editor.fontFamily": "SFMono-semibold,Menlo, Monaco, 'Courier New', monospace",
   "python.analysis.diagnosticPublishDelay": 3000,
@@ -125,47 +127,17 @@
   "workbench.sideBar.location": "left",
   "vim.useSystemClipboard": true,
   "files.trimTrailingWhitespace": true,
-  "git.autofetch": true,
+  "git.autofetch": false,
   "terminal.integrated.fontFamily": "\"Roboto Mono Medium for Powerline\",SFMono-semibold,Menlo, Monaco, 'Courier New', monospace",
   "terminal.integrated.macOptionIsMeta": true,
-  "go.useLanguageServer": true,
-  "python.languageServer": "Default",
-  "search.useGlobalIgnoreFiles": true,
-  "go.toolsManagement.autoUpdate": true,
-  "C_Cpp.intelliSenseEngine": "Disabled",
-  "javascript.format.enable": false,
-  "workbench.editorAssociations": {
-    "*.ipynb": "jupyter-notebook"
-  },
   "window.zoomLevel": 1,
-  "docker.contexts.label": "DockerEndpoint",
-  "notebook.cellToolbarLocation": {
-    "default": "right",
-    "jupyter-notebook": "left"
-  },
   "terminal.integrated.env.osx": {},
-  "console-ninja.featureSet": "Community",
-  "editor.formatOnSave": true,
-  "[ruby]": {
-    "editor.defaultFormatter": "Shopify.ruby-lsp",
-    "editor.formatOnType": true,
-    "editor.insertSpaces": true,
-    "files.insertFinalNewline": true,
-    "files.trimFinalNewlines": true,
-    "editor.semanticHighlighting.enabled": true,
-    "editor.formatOnSave": true,
-    "editor.tabSize": 2,
-    "files.trimTrailingWhitespace": true,
-    "editor.rulers": [
-      120
-    ]
-  },
   "redhat.telemetry.enabled": false,
-  "editor.inlineSuggest.enabled": true,
-  "terminal.integrated.env.linux": {},
-  "typescript.format.enable": false,
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "console-ninja.featureSet": "Community",
+  "[scss]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
   },
-  "editor.linkedEditing": true
+  "[css]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
+  }
 }
