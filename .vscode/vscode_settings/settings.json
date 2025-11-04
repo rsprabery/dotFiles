@@ -132,6 +132,18 @@
   "terminal.integrated.macOptionIsMeta": true,
   "window.zoomLevel": 1,
   "terminal.integrated.env.osx": {},
+  "[ruby]": {
+    "editor.defaultFormatter": "Shopify.ruby-lsp",
+    "editor.formatOnType": true,
+    "editor.insertSpaces": true,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "editor.semanticHighlighting.enabled": true,
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+    "files.trimTrailingWhitespace": true,
+    "editor.rulers": [120]
+  },
   "redhat.telemetry.enabled": false,
   "console-ninja.featureSet": "Community",
   "[scss]": {
@@ -139,5 +151,9 @@
   },
   "[css]": {
     "editor.defaultFormatter": "vscode.css-language-features"
-  }
+  },
+  "editor.linkedEditing": true,
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "gitlens.ai.model": "vscode",
+  "gitlens.ai.vscode.model": "copilot:gpt-4.1"
 }
