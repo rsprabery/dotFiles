@@ -87,6 +87,8 @@ if [[ `uname` == 'Linux' ]]; then
     alias clang=clang-3.8
   fi
 
+
+
   fucntion  pbcopy() {
     #sed 's/\n//g' | xclip -selection clipboard
     awk '{printf "%s",$0} END {print ""}' | xclip -selection clipboard
@@ -123,19 +125,19 @@ elif [[ `uname` == 'Darwin' ]]; then
   ############ Begin Mac Specific Python Setup #################
 
   # Make python 3 be "python" everywhere
-  [[ -s "/opt/homebrew/opt/python@3/libexec/bin/python" ]] && \
-    PATH="/opt/homebrew/opt/python@3/libexec/bin:$PATH"
+  #[[ -s "/opt/homebrew/opt/python@3/libexec/bin/python" ]] && \
+  #  PATH="/opt/homebrew/opt/python@3/libexec/bin:$PATH"
 
-  [[ -s "$(brew --prefix)/opt/python@3.11/libexec/bin/python" ]] && \
-    export VIRTUALENVWRAPPER_PYTHON=$(brew --prefix)/opt/python@3.11/libexec/bin/python
+  #[[ -s "$(brew --prefix)/opt/python@3.11/libexec/bin/python" ]] && \
+    # export VIRTUALENVWRAPPER_PYTHON=$(brew --prefix)/opt/python@3.11/libexec/bin/python
 
   # path for programs installed with pip install --user
-  [[ -d "${HOME}/Library/Python/3.9/bin" ]] && \
-    PATH="${PATH}:${HOME}/Library/Python/3.9/bin"
+  # [[ -d "${HOME}/Library/Python/3.9/bin" ]] && \
+  #  PATH="${PATH}:${HOME}/Library/Python/3.9/bin"
 
-  export WORKON_HOME=${HOME}/workspace/virtenvs
-  [[ -s "${HOME}/Library/Python/3.9/bin/virtualenvwrapper.sh" ]] && \
-    source ${HOME}/Library/Python/3.9/bin/virtualenvwrapper.sh
+  #export WORKON_HOME=${HOME}/workspace/virtenvs
+  #[[ -s "${HOME}/Library/Python/3.9/bin/virtualenvwrapper.sh" ]] && \
+  #  source ${HOME}/Library/Python/3.9/bin/virtualenvwrapper.sh
 
   ############ End Mac Specific Python Setup #################
 
@@ -146,15 +148,20 @@ fi # END MAC SPECIFIC
 # ---------------------------- Begin LANGUAGE SETUP --------------------------------
 
 ######### Begin generic python setup #############
-export WORKON_HOME=${HOME}/workspace/virtenvs
+# export WORKON_HOME=${HOME}/workspace/virtenvs
+#
+# [[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && \
+#     source /usr/local/bin/virtualenvwrapper.sh
 
-[[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && \
-    source /usr/local/bin/virtualenvwrapper.sh
+# which pyenv >> /dev/null
+# if [ $? -eq 0 ]; then
+#  eval "$(pyenv init -)"
+#  eval "$(pyenv virtualenv-init -)"
+# fi
 
-which pyenv >> /dev/null
+which mise >> /dev/null
 if [ $? -eq 0 ]; then
- eval "$(pyenv init -)"
- eval "$(pyenv virtualenv-init -)"
+  eval "$(mise activate zsh)"
 fi
 
 ######### End generic python setup #############
@@ -402,8 +409,8 @@ eval "$(fzf --zsh)"
 eval "$(zoxide init zsh)"
 
 if [[ `uname` == 'Darwin' ]]; then
-  export PATH="/Users/read/brew/sbin:$PATH"
-  export PATH="$(brew --prefix python@3.11)/libexec/bin:$PATH"
+  # export PATH="/Users/read/brew/sbin:$PATH"
+  # export PATH="$(brew --prefix python@3.11)/libexec/bin:$PATH"
 fi
 
 export LC_ALL="en_US.UTF-8"
@@ -457,3 +464,5 @@ fi
 
 PATH=~/.console-ninja/.bin:$PATH
 eval "$(mise activate zsh)"
+export PKG_CONFIG_PATH="$HOMEBREW_PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
+export DYLD_FALLBACK_LIBRARY_PATH="$HOMEBREW_PREFIX/lib:$DYLD_FALLBACK_LIBRARY_PATH"
