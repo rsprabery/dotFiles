@@ -566,21 +566,31 @@ keybinds {
     // tmux: Alt + d  -> split down
     bind "Alt d" { NewPane "Down"; }      // action exists
 
+    // Tabs
+    bind "Alt n" { GoToNextTab; }
+    bind "Alt p" { GoToPreviousTab; }
+    bind "Alt t" { NewTab; }
+
     // Vim-like pane navigation
-    bind "Ctrl h" { MoveFocus "Left"; }
-    bind "Ctrl j" { MoveFocus "Down"; }
-    bind "Ctrl k" { MoveFocus "Up"; }
-    bind "Ctrl l" { MoveFocus "Right"; }
+    // bind "Ctrl h" { MoveFocus "Left"; }
+    // bind "Ctrl j" { MoveFocus "Down"; }
+    // bind "Ctrl k" { MoveFocus "Up"; }
+    // bind "Ctrl l" { MoveFocus "Right"; }
+
+    bind "Alt h" { MoveFocus "Left"; }
+    bind "Alt j" { MoveFocus "Down"; }
+    bind "Alt k" { MoveFocus "Up"; }
+    bind "Alt l" { MoveFocus "Right"; }
 
     // Next/prev tab like your iTerm window cycling
     bind "Alt Shift [" { GoToNextTab; }
     bind "Alt Shift ]" { GoToPreviousTab; }
 
     // Clear scrollback (≈ tmux clear-history)
-    bind "Ctrl k" { Clear; }
+    // bind "Ctrl k" { Clear; }
 
     // Reload config at runtime
-    bind "Ctrl r" { TogglePaneFrames; TogglePaneFrames; } // harmless no-op to “poke” config; remove if undesired
+    // bind "Ctrl r" { TogglePaneFrames; TogglePaneFrames; } // harmless no-op to “poke” config; remove if undesired
   }
 
   // Do NOT try to bind selection/copy here — they aren’t actions.
