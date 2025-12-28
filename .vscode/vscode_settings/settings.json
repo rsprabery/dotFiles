@@ -64,9 +64,16 @@
   "python.analysis.memory.keepLibraryAst": true,
   "python.analysis.memory.keepLibraryLocalVariables": true,
   "python.formatting.provider": "black",
-  "python.formatting.blackArgs": ["-l 79"],
-  "python.venvFolders": ["~/workspace/virtenvs"],
-  "editor.rulers": [80, 120],
+  "python.formatting.blackArgs": [
+    "-l 79"
+  ],
+  "python.venvFolders": [
+    "~/workspace/virtenvs"
+  ],
+  "editor.rulers": [
+    80,
+    120
+  ],
   "vim.easymotion": true,
   "vim.leader": ",",
   "vim.easymotionMarkerFontSize": "16",
@@ -77,44 +84,105 @@
   "vim.vimrc.path": "~/.vscode/vimrc",
   "vim.normalModeKeyBindingsNonRecursive": [
     {
-      "before": ["<leader>", "t"],
-      "commands": ["workbench.action.quickOpen"]
+      "before": [
+        "<leader>",
+        "t"
+      ],
+      "commands": [
+        "workbench.action.quickOpen"
+      ]
     },
     {
-      "before": ["<leader>", "h"],
-      "commands": ["workbench.action.quickOpenLeastRecentlyUsedEditor"]
+      "before": [
+        "<leader>",
+        "h"
+      ],
+      "commands": [
+        "workbench.action.quickOpenLeastRecentlyUsedEditor"
+      ]
     },
     {
-      "before": ["<leader>", "g"],
-      "commands": ["workbench.action.files.copyPathOfActiveFile"]
+      "before": [
+        "<leader>",
+        "g"
+      ],
+      "commands": [
+        "workbench.action.files.copyPathOfActiveFile"
+      ]
     },
     {
-      "before": ["<leader>", "v"],
-      "commands": ["workbench.action.splitEditorRight"]
+      "before": [
+        "<leader>",
+        "v"
+      ],
+      "commands": [
+        "workbench.action.splitEditorRight"
+      ]
     },
     {
-      "before": ["<leader>", "s"],
-      "commands": ["workbench.action.splitEditorDown"]
+      "before": [
+        "<leader>",
+        "s"
+      ],
+      "commands": [
+        "workbench.action.splitEditorDown"
+      ]
     },
     {
-      "before": ["<leader>", "w"],
-      "commands": ["workbench.action.quickOpenView"]
+      "before": [
+        "<leader>",
+        "w"
+      ],
+      "commands": [
+        "workbench.action.showAllSymbols"
+      ]
     },
     {
-      "before": ["<leader>", "o"],
-      "commands": ["outline.focus"]
+      "before": [
+        "<leader>",
+        "<leader>",
+        "t"
+      ],
+      "commands": [
+        "workbench.action.gotoSymbol"
+      ]
     },
     {
-      "before": ["<leader>", "n"],
-      "commands": ["workbench.action.toggleSidebarVisibility"]
+      "before": [
+        "<leader>",
+        "o"
+      ],
+      "commands": [
+        "outline.focus"
+      ]
     },
     {
-      "before": ["<leader>", "f"],
-      "commands": ["editor.action.goToReferences"]
+      "before": [
+        "<leader>",
+        "n"
+      ],
+      "commands": [
+        "workbench.action.toggleSidebarVisibility"
+      ]
     },
     {
-      "before": ["<leader>", "<leader>", "c"],
-      "commands": ["vscode-coverage-highlighter.toggle"]
+      "before": [
+        "<leader>",
+        "f"
+      ],
+      "commands": [
+        "editor.action.goToReferences"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "<leader>",
+        "c"
+      ],
+      "commands": [
+        "vscode-coverage-highlighter.toggle"
+      ]
     }
   ],
   "macros": {
@@ -142,7 +210,9 @@
     "editor.formatOnSave": true,
     "editor.tabSize": 2,
     "files.trimTrailingWhitespace": true,
-    "editor.rulers": [120]
+    "editor.rulers": [
+      120
+    ]
   },
   "redhat.telemetry.enabled": false,
   "console-ninja.featureSet": "Community",
@@ -155,5 +225,8 @@
   "editor.linkedEditing": true,
   "github.copilot.nextEditSuggestions.enabled": true,
   "gitlens.ai.model": "vscode",
-  "gitlens.ai.vscode.model": "copilot:gpt-4.1"
+  "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+  "rubyLsp.rubyVersionManager": {
+    "identifier": "mise"
+  }
 }

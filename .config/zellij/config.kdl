@@ -537,9 +537,9 @@ web_client {
 
 // --- options (rough tmux parity) ---
 scrollback_lines 50000
-copy_on_select false             // don't copy on mouse select
+// copy_on_select false             // don't copy on mouse select
 // macOS; change to "wl-copy" or "xclip -selection clipboard" on Linux
-copy_command "pbcopy"            // optional: force clipboard command
+// copy_command "pbcopy"            // optional: force clipboard command
 
 // Put status bar on top to mimic tmux `status-position top`
 ui {
