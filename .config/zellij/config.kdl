@@ -320,7 +320,7 @@ web_client {
 //   - true (default)
 //   - false
 //
-// mouse_mode false
+mouse_mode true
 
 // Toggle having pane frames around the panes
 // Options:
@@ -512,7 +512,7 @@ web_client {
 
 // Whether to enable mouse hover effects and pane grouping functionality
 // default is true
-// advanced_mouse_actions false
+advanced_mouse_actions true
 
 // The ip address the web server should listen on when it starts
 // Default: "127.0.0.1"
@@ -536,7 +536,7 @@ web_client {
 // ~/.config/zellij/config.kdl
 
 // --- options (rough tmux parity) ---
-scrollback_lines 50000
+scrollback_lines 100000
 // copy_on_select false             // don't copy on mouse select
 // macOS; change to "wl-copy" or "xclip -selection clipboard" on Linux
 // copy_command "pbcopy"            // optional: force clipboard command
@@ -548,6 +548,7 @@ ui {
     position "top"
   }
   pane_frames true
+  resize_increment 3
 }
 
 
@@ -614,4 +615,5 @@ keybinds {
     bind "N" { Search "up"; }
     bind "Esc" { SwitchToMode "scroll"; }
   }
+
 }

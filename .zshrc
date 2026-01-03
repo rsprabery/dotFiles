@@ -405,6 +405,9 @@ autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /opt/homebrew/bin/terraform terraform
 
 eval "$(fzf --zsh)"
+# Bind Ctrl-f in BOTH vi insert and vi command mode:
+bindkey -M viins '^F' fzf-file-widget
+bindkey -M vicmd '^F' fzf-file-widget
 
 eval "$(zoxide init zsh)"
 
