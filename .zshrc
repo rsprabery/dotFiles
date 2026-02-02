@@ -1,44 +1,70 @@
+# ==============================================================================
+# 00) Boot / completion performance
+# ==============================================================================
+
+# Keep OMZ, but don't let it run compinit
+skip_global_compinit=true
+ZSH_DISABLE_COMPFIX=true
+
+# Your custom completions
+fpath=($HOME/.zsh/completions $fpath)
+
+# Put compdump somewhere stable
+export ZSH_COMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
+mkdir -p -- "${ZSH_COMPDUMP:h}"
+
+# Run fast compinit (audit daily)
+autoload -Uz compinit
+zmodload zsh/datetime
+
+typeset -i now=$EPOCHSECONDS
+typeset -i last=0
+ts="${ZSH_COMPDUMP}.audit_ts"
+[[ -f "$ts" ]] && last=$(< "$ts")
+
+if (( now - last > 86400 )); then
+  compinit -d "$ZSH_COMPDUMP"
+  print -r -- "$now" > "$ts"
+else
+  compinit -C -d "$ZSH_COMPDUMP"
+fi
+
+# ==============================================================================
+# 01) Oh-My-Zsh (configuration only — load happens later)
+# ==============================================================================
+
 # Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="robbyrussell"
-
-# Set to this to use case-sensitive completion
-# CASE_SENSITIVE="true"
-
-# Comment this out to disable bi-weekly auto-update checks
 DISABLE_AUTO_UPDATE="true"
 
-# Uncomment to change how many often would you like to wait before auto-updates occur? (in days)
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment following line if you want to disable colors in ls
-# DISABLE_LS_COLORS="true"
-
-# Uncomment following line if you want to disable autosetting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment following line if you want red dots to be displayed while waiting for completion
-# COMPLETION_WAITING_DOTS="true"
+# plugins=(git ruby git-extras pip python vundle osx bundler dotenv ansible brew colored-man-pages dash django gem iterm2 man npm node tmux)
+plugins=(git pip python ruby gem bundler colored-man-pages bundler brew tmux docker)
 
 # Disable google analytic reporting in homebrew
 HOMEBREW_NO_ANALYTICS=1
 
-# Load any machine specific configs
+
+# ==============================================================================
+# 02) Machine-specific / local overrides (early)
+# ==============================================================================
+
 [[ -s "$HOME/.local_box_profile.zsh" ]] && . $HOME/.local_box_profile.zsh
 
-# Add powerline to path (used in tmux config)
-# export PATH=${PATH}:~/workspace/virtenvs/powerline/bin
+
+# ==============================================================================
+# 03) PATH & core environment (cross-platform)
+# ==============================================================================
+
 # Add custom bin's
-[[ -d "$HOME/bin" ]] && PATH=$HOME/bin:${PATH}
+[[ -d "$HOME/bin" ]] && PATH="$HOME/bin:$PATH"
 
-# Add golang bin's
-[[ -d "$HOME/go/bin" ]] && PATH=$HOME/go/bin:${PATH}
+[[ -d "/Applications/RubyMine.app/Contents/MacOS" ]] && export PATH="$PATH:/Applications/RubyMine.app/Contents/MacOS"
 
 
-# -------------------------- BEGIN ZSH BEHAVIOR -----------------------------------
-
-# plugins=(git ruby git-extras pip python vundle rvm osx bundler dotenv ansible brew colored-man-pages dash django gem iterm2 man npm node tmux)
-plugins=(git pip python ruby gem bundler colored-man-pages rvm bundler brew tmux docker)
+# ==============================================================================
+# 04) Shell behavior, prompt, keybindings
+# ==============================================================================
 
 # enable control-s and control-q
 stty start undef
@@ -59,413 +85,332 @@ function zle-line-init zle-keymap-select {
   RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/} $EPS1"
   zle reset-prompt
 }
-
 zle -N zle-line-init
 zle -N zle-keymap-select
 
-bindkey '^r' history-incremental-search-backward
+# ==============================================================================
+# 05) OS-specific configuration
+# ==============================================================================
 
-# -------------------------- END ZSH BEHAVIOR -----------------------------------
-
-# LINUX SPECIFIC CONFIG
-if [[ `uname` == 'Linux' ]]; then
-
-  [[ -d "/home/read/.linuxbrew" ]] && export PATH=$PATH:/home/read/.linuxbrew/bin
+if [[ "$(uname)" == "Linux" ]]; then
+  [[ -d "/home/read/.linuxbrew" ]] && export PATH="$PATH:/home/read/.linuxbrew/bin"
 
   function open {
     if [[ -d "${1}" ]]; then
-      thunar ${1} &> /dev/null &
+      thunar "${1}" &> /dev/null &
       disown %$(jobs | sed 's/\[//g' | sed 's/\]//g'| grep thunar |  awk '{print $1}')
     else
       echo "${1} is not a directory!"
     fi
   }
-  # export TERM=xterm-256color
 
-  which clang-3.8 >> /dev/null
-  if [ $? -eq 0 ]; then
-    alias clang=clang-3.8
-  fi
-
-
-
-  fucntion  pbcopy() {
-    #sed 's/\n//g' | xclip -selection clipboard
+  function pbcopy() {
+    # sed 's/\n//g' | xclip -selection clipboard
     awk '{printf "%s",$0} END {print ""}' | xclip -selection clipboard
   }
   alias pbpaste='xclip -selection clipboard -o'
-
-  export ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer
-
-# OSX SPECIFIC CONFIG
-elif [[ `uname` == 'Darwin' ]]; then
-
+elif [[ "$(uname)" == "Darwin" ]]; then
   ########### Begin homebrew setup #############################
-  # If brew is installed in the home dir, add it to the path.
-  [[ -d "${HOME}/brew" ]] && export PATH=${HOME}/brew/bin:$PATH
 
-  # Homebrew
-  [[ -d "/opt/homebrew/bin" ]] && PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+  if [[ "$(uname)" == "Darwin" ]] && command -v brew >/dev/null 2>&1; then
+    # Darwin brew completions (only if brew exists)
+    fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
+    export PATH="$(brew --prefix)/bin:${PATH}"
 
-  # zsh completions for brew
-  fpath=($(brew --prefix)/share/zsh/site-functions ${fpath})
+    # ctags override
+    [[ -s "$(brew --prefix)/bin/ctags" ]] && alias ctags="$(brew --prefix)/bin/ctags"
 
-  ###### Program specific setup
-
-  # ctags override
-  [[ -s $(brew --prefix)/bin/ctags ]] && alias ctags="`brew --prefix`/bin/ctags"
-
-  # gnu utils override BSD versions.
-  [[ -d "$(brew --prefix)/opt/gnu-tar/libexec/gnubin" ]] && \
-    PATH="$(brew --prefix)/opt/gnu-tar/libexec/gnubin:$PATH"
+    # gnu utils override BSD versions.
+    [[ -d "$(brew --prefix)/opt/gnu-tar/libexec/gnubin" ]] && \
+      PATH="$(brew --prefix)/opt/gnu-tar/libexec/gnubin:$PATH"
+  fi
 
   ########### End homebrew setup #############################
 
-
-  ############ Begin Mac Specific Python Setup #################
-
-  # Make python 3 be "python" everywhere
-  #[[ -s "/opt/homebrew/opt/python@3/libexec/bin/python" ]] && \
-  #  PATH="/opt/homebrew/opt/python@3/libexec/bin:$PATH"
-
-  #[[ -s "$(brew --prefix)/opt/python@3.11/libexec/bin/python" ]] && \
-    # export VIRTUALENVWRAPPER_PYTHON=$(brew --prefix)/opt/python@3.11/libexec/bin/python
-
-  # path for programs installed with pip install --user
-  # [[ -d "${HOME}/Library/Python/3.9/bin" ]] && \
-  #  PATH="${PATH}:${HOME}/Library/Python/3.9/bin"
-
-  #export WORKON_HOME=${HOME}/workspace/virtenvs
-  #[[ -s "${HOME}/Library/Python/3.9/bin/virtualenvwrapper.sh" ]] && \
-  #  source ${HOME}/Library/Python/3.9/bin/virtualenvwrapper.sh
-
-  ############ End Mac Specific Python Setup #################
-
-fi # END MAC SPECIFIC
-
-
-
-# ---------------------------- Begin LANGUAGE SETUP --------------------------------
-
-######### Begin generic python setup #############
-# export WORKON_HOME=${HOME}/workspace/virtenvs
-#
-# [[ -s "/usr/local/bin/virtualenvwrapper.sh" ]] && \
-#     source /usr/local/bin/virtualenvwrapper.sh
-
-# which pyenv >> /dev/null
-# if [ $? -eq 0 ]; then
-#  eval "$(pyenv init -)"
-#  eval "$(pyenv virtualenv-init -)"
-# fi
-
-which mise >> /dev/null
-if [ $? -eq 0 ]; then
-  eval "$(mise activate zsh)"
 fi
 
-######### End generic python setup #############
 
+# ==============================================================================
+# 06) Language managers & toolchains
+# ==============================================================================
 
-######### Begin Ruby Lang setup #######
+# --- mise (toolchain manager) ---
+if [[ -o interactive ]]; then
+  which mise >> /dev/null
+  if [ $? -eq 0 ]; then
+    eval "$(mise activate zsh)"
+  fi
+fi
 
-# Install ruby gem in HOME directory instead of system wide
-export GEM_HOME=$HOME/.gems
-export PATH=$HOME/.gems/bin:$PATH
+# --- Ruby / Gems ---
+export GEM_HOME="$HOME/.gems"
+export PATH="$HOME/.gems/bin:$PATH"
 
 function ctags-ruby() {
   ctags -R --languages=ruby --exclude=.git --exclude=log .
   ctags -R --languages=ruby --exclude=.git --exclude=log . $(bundle list --paths)
 }
 
-# Load RVM into a shell session *as a function*
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && \
-  source "$HOME/.rvm/scripts/rvm" && \
-  export PATH="$PATH:$HOME/.rvm/bin"
 
-######### End Ruby Lang setup #######
+# --- Go ---
+[[ -d "${HOME}/go" ]] && export GOPATH="${HOME}/go"
+[[ -d "${HOME}/go/bin" ]] && export PATH="${PATH}:${HOME}/go/bin/"
 
-found_brew=$(which brew)
-if [[ -z ${found_brew} ]]; then
-    export PATH="$(brew --prefix)/bin:${PATH}"
-    export PATH="$(brew --prefix)/opt/gnu-sed/libexec/gnubin:$PATH"
-fi
-
-
-[[ -d "${HOME}/go/bin" ]] && export PATH=${PATH}:${HOME}/go/bin/
-
-# Support brew install nvm
-
-######### Begin node/js Lang setup #######
-
-# NodeJS Setup
-export NVM_DIR="$HOME/.nvm"
-
-# Support installs of NVM directly
-[[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh" # This loads nvm
-
-
-# Support brew install nvm
-#
-if [[ `uname` == 'Darwin' ]]; then
-  # This loads nvm
-  [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh"
-  # This loads nvm bash_completion
-  [ -s "$(brew --prefix)/opt/nvm/etc/bash_completion" ] && . "$(brew --prefix)/opt/nvm/etc/bash_completion"
-fi
-
-######### End node/js Lang setup #######
-
-######################## begin java config #########################
+# --- Java / Gradle wrapper ---
 GRADLE_BIN=$(which gradle)
 function gradle {
-  if [[ -a `pwd`/gradlew ]]; then
-    ./gradlew $@
+  if [[ -a "$(pwd)/gradlew" ]]; then
+    ./gradlew "$@"
   else
-    if [[ -z ${GRADLE_BIN} ]]; then
-      $HOME/bin/gradle $*
+    if [[ -z "${GRADLE_BIN}" ]]; then
+      "$HOME/bin/gradle" "$*"
     else
-      ${GRADLE_BIN} $*
+      "${GRADLE_BIN}" "$*"
     fi
   fi
 }
-######################## end java config #########################
 
 
-# ---------------------------- END LANGUAGE SETUP ----------------------------------
+# ==============================================================================
+# 07) Tmux / terminal extras
+# ==============================================================================
 
-################################## begin tmux config ###########################
-# Add powerline to path (used in tmux config)
-export PATH=${PATH}:~/workspace/virtenvs/powerline/bin
-################################## end tmux config ##############################
+[[ -d "${HOME}/workspace/virtenvs/powerline/bin" ]] && export PATH="${PATH}:~/workspace/virtenvs/powerline/bin"
 
-################################## begin git/editor config ######################
+
+# ==============================================================================
+# 08) Git, editor, dotfiles
+# ==============================================================================
+
 alias gls="git status"
+alias gl='git log --oneline --all -10 --decorate'
+
 export SVN_EDITOR=vim
 export HOMEBREW_EDITOR=vim
-export EDITOR="code --wait"
-alias gl='git log --oneline --all -10 --decorate'
+export EDITOR="vim"
+# export EDITOR="code --wait"
 
 # Git repo for config files
 [[ -d ${HOME}/dotFiles ]] && export DOTFILES_DIR="${HOME}/dotFiles"
-[[ -d ${HOME}/workspace/dotFiles.git ]] && \
-  export DOTFILES_DIR="${HOME}/workspace/dotFiles.git"
+[[ -d ${HOME}/workspace/dotFiles.git ]] && export DOTFILES_DIR="${HOME}/workspace/dotFiles.git"
 alias config='/usr/bin/git --git-dir=$DOTFILES_DIR --work-tree=$HOME'
-################################## end git/editor config ###########################
 
 
-# --------------------------- begin helper functions ---------------------------------
-
-######################### begin ansible helpers ################
-if [[ -z "$ANSIBLE_BIN" ]]; then
-  export ANSIBLE_BIN=`which ansible`
-  export ANSIBLE_PLAYBOOK_BIN=`which ansible-playbook`
-fi
-
-function ansible {
-  if [[ -a `pwd`/inventory ]]; then
-    $ANSIBLE_BIN -i inventory $@ -f 50
-  else
-    $ANSIBLE_BIN $* -f 50
-  fi
-}
-
-function playbook {
-  if [[ -a `pwd`/inventory ]]; then
-    $ANSIBLE_PLAYBOOK_BIN -i inventory $@ -f 50
-  else
-    $ANSIBLE_PLAYBOOK_BIN $* -f 50
-  fi
-}
-
-function ap {
-  if [[ -d `pwd`/../../roles ]]; then
-    export ANSIBLE_ROLES_PATH=`pwd`/../roles
-  fi
-  playbook $*
-  unset ANSIBLE_ROLES_PATH
-}
-
-function make_role {
- mkdir $1
- mkdir $1/tasks
- mkdir $1/handlers
- mkdir $1/vars
- mkdir $1/defaults
- mkdir $1/meta
- echo "---\n" >> $1/tasks/main.yml
- echo "---\n" >> $1/handlers/main.yml
- echo "---\n" >> $1/vars/main.yml
- echo "---\n" >> $1/defaults/main.yml
- echo "---\n" >> $1/meta/main.yml
- mkdir $1/templates
- mkdir $1/files
- touch $1/templates/.keep
- touch $1/files/.keep
-}
-######################### end ansible helpers #################
-
-
-############## begin timer helpers ############################
-alias beep=''
-[[ -s "/usr/share/sounds/purple/alert.wav" ]]  && \
-  export BEEP=/usr/share/sounds/purple/alert.wav && \
-  alias beep='paplay $BEEP'
-
-function countdown() {
-   date1=$((`date +%s` + $1));
-   while [ "$date1" -ge `date +%s` ]; do
-     echo -ne "$(date -u --date @$(($date1 - `date +%s`)) +%H:%M:%S)\r";
-     sleep 0.1
-   done
-   beep
-}
-
-function stopwatch() {
-  date1=`date +%s`;
-   while true; do
-    echo -ne "$(date -u --date @$((`date +%s` - $date1)) +%H:%M:%S)\r";
-    sleep 0.1
-   done
-}
-############## end timer helpers #####################
-
-
-# --------------------------- end helper functions -----------------------------------
-
-
-# ------------------- BEGIN External Integrations ------------------------------------
+# ==============================================================================
+# 09) External integrations / tool hooks
+# ==============================================================================
 
 # aws config
 [[ -s "$HOME/.aws_creds" ]] && . "$HOME/.aws_creds"
 
-# ------------------- END External Integrations --------------------------------------
+eval "$(zoxide init zsh)"
+
+# heroku autocomplete setup
+HEROKU_AC_ZSH_SETUP_PATH=/Users/sprabery/Library/Caches/heroku/autocomplete/zsh_setup \
+  && test -f "$HEROKU_AC_ZSH_SETUP_PATH" \
+  && source "$HEROKU_AC_ZSH_SETUP_PATH"
+
+if command -v ngrok &>/dev/null; then
+  eval "$(ngrok completion)"
+fi
 
 
+# ==============================================================================
+# 10) Custom functions (helpers)
+# ==============================================================================
 
-# ------------------------- begin alias/ path masking --------------------------------
+# --- Ansible helpers ---
+if [[ -z "$ANSIBLE_BIN" ]]; then
+  export ANSIBLE_BIN="$(which ansible)"
+  export ANSIBLE_PLAYBOOK_BIN="$(which ansible-playbook)"
+fi
 
-# make vim -> nvim if neovim is installed
+function ansible {
+  if [[ -a "$(pwd)/inventory" ]]; then
+    "$ANSIBLE_BIN" -i inventory "$@" -f 50
+  else
+    "$ANSIBLE_BIN" "$*" -f 50
+  fi
+}
+
+function playbook {
+  if [[ -a "$(pwd)/inventory" ]]; then
+    "$ANSIBLE_PLAYBOOK_BIN" -i inventory "$@" -f 50
+  else
+    "$ANSIBLE_PLAYBOOK_BIN" "$*" -f 50
+  fi
+}
+
+function ap {
+  if [[ -d "$(pwd)/../../roles" ]]; then
+    export ANSIBLE_ROLES_PATH="$(pwd)/../roles"
+  fi
+  playbook "$*"
+  unset ANSIBLE_ROLES_PATH
+}
+
+function make_role {
+  mkdir -p "$1"/{tasks,handlers,vars,defaults,meta,templates,files}
+  echo "---\n" >> "$1/tasks/main.yml"
+  echo "---\n" >> "$1/handlers/main.yml"
+  echo "---\n" >> "$1/vars/main.yml"
+  echo "---\n" >> "$1/defaults/main.yml"
+  echo "---\n" >> "$1/meta/main.yml"
+  touch "$1/templates/.keep" "$1/files/.keep"
+}
+
+# --- Timer helpers ---
+alias beep=''
+[[ -s "/usr/share/sounds/purple/alert.wav" ]] && \
+  export BEEP=/usr/share/sounds/purple/alert.wav && \
+  alias beep='paplay $BEEP'
+
+function countdown() {
+  date1=$(( $(date +%s) + $1 ))
+  while [ "$date1" -ge "$(date +%s)" ]; do
+    echo -ne "$(date -u --date @$((date1 - $(date +%s))) +%H:%M:%S)\r"
+    sleep 0.1
+  done
+  beep
+}
+
+function stopwatch() {
+  date1="$(date +%s)"
+  while true; do
+    echo -ne "$(date -u --date @$(( $(date +%s) - date1 )) +%H:%M:%S)\r"
+    sleep 0.1
+  done
+}
+
+# --- Git + fzf helpers ---
+fshow () {
+  git log --graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" | \
+    fzf --ansi --no-sort --reverse --tiebreak=index \
+        --bind=ctrl-s:toggle-sort \
+        --bind "ctrl-m:execute:
+          (grep -o '[a-f0-9]\{7\}' | head -1 |
+          xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+          {}
+FZF-EOF"
+}
+
+fd() {
+  preview="git diff $@ --color=always -- {-1}"
+  git diff $@ --name-only | fzf -m --ansi --preview "$preview"
+}
+
+gs () {
+  # -S only shows commits where the number of occurrences changed
+  # -G shows all commits where the word occurs at all.
+  fshow -S${@}
+}
+
+recent-branches () {
+  git reflog | egrep -io "moving from ([^[:space:]]+)" | awk '{ print $3 }' | \
+    awk ' !x[$0]++' | egrep -v '^[a-f0-9]{40}$'
+}
+
+
+# ==============================================================================
+# 11) Wrappers / aliases around common utils
+# ==============================================================================
+
+# Make vim -> nvim if neovim is installed
 which nvim >> /dev/null
 if [ $? -eq 0 ]; then
   alias vim=nvim
   alias view='nvim -R'
 fi
 
-# color output for wdiff
-# https://www.gnu.org/software/wdiff/manual/html_node/wdiff-Examples.html
+# wdiff with color output piped into less -R
 real_wdiff=$(which wdiff)
 if [ $? -eq 0 ]; then
   function wdiff {
     ${real_wdiff} -n \
       -w $'\033[30;41m' -x $'\033[0m' \
       -y $'\033[30;42m' -z $'\033[0m' \
-      $@ | less -R
+      "$@" | less -R
   }
 fi
 
+# Base16 theme
 BASE16_SHELL=$HOME/.config/base16-shell/
-# [ -n "$PS1" ] && [ -s ${BASE16_SHELL}/profile_helper.sh ] && eval "$( cat ${BASE16_SHELL}/profile_helper.sh)"
-# base16_solarized-light
-# base16_brewer
-[[ -s "${HOME}/.base16_theme" ]] && source ~/.base16_theme;
+[[ -s "${HOME}/.base16_theme" ]] && source ~/.base16_theme
 
-# GOlang setup
-[[ -d "${HOME}/go" ]] && export GOPATH="${HOME}/go"
-
+# ag wrapper (uses repo .gitignore when inside a git repo)
 ag() {
   command ag \
     -p "$(git rev-parse --is-inside-work-tree &>/dev/null && echo "$(git rev-parse --show-toplevel)/.gitignore")" \
     "$@"
 }
-
-# Silver searcher with no highlights
 alias agc='ag --color-match=#0'
 
-export FZF_DEFAULT_COMMAND="rg --files"
-# To apply the command to CTRL-T as well
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_DEFAULT_OPTS='--bind=ctrl-k:up,ctrl-j:down,alt-up:first,alt-down:last'
-
-# ------------------------- end alias/ path masking ----------------------------------
-
-
-
-# Per project env vars
-which direnv >> /dev/null
-if [ $? -eq 0 ]; then
-  eval "$(direnv hook zsh)"
-fi
-
-[ -f "${HOME}/.fzf.zsh" ] && source ${HOME}/.fzf.zsh
-
-# Load oh-my-zsh
-source $ZSH/oh-my-zsh.sh
-autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /opt/homebrew/bin/terraform terraform
-
-eval "$(fzf --zsh)"
-# Bind Ctrl-f in BOTH vi insert and vi command mode:
-bindkey -M viins '^F' fzf-file-widget
-bindkey -M vicmd '^F' fzf-file-widget
-
-eval "$(zoxide init zsh)"
-
-if [[ `uname` == 'Darwin' ]]; then
-  # export PATH="/Users/read/brew/sbin:$PATH"
-  # export PATH="$(brew --prefix python@3.11)/libexec/bin:$PATH"
-fi
-
-export LC_ALL="en_US.UTF-8"
-
-fshow () {
-        git log --graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" | fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort --bind "ctrl-m:execute:
-                (grep -o '[a-f0-9]\{7\}' | head -1 |
-                xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
-                {}
-FZF-EOF"
-}
-
-fd() {
-  preview="git diff $@ --color=always -- {-1}"
-  git diff $@ --name-only | fzf -m --ansi --preview $preview
-}
-
-gs () {
-    # -S only shows commits where the number of occurrences changed, so if
-    # the word was added in one place and removed in another, the commit
-    # won't show up.
-    #
-    # -G shows all commits where the word occurs at all.
-    fshow -S${@}
-}
-
-recent-branches () {
-    git reflog | egrep -io "moving from ([^[:space:]]+)" | awk '{ print $3 }' | awk ' !x[$0]++' | egrep -v '^[a-f0-9]{40}$'
-}
-
-
-
-
-# heroku autocomplete setup
-HEROKU_AC_ZSH_SETUP_PATH=/Users/sprabery/Library/Caches/heroku/autocomplete/zsh_setup && test -f $HEROKU_AC_ZSH_SETUP_PATH && source $HEROKU_AC_ZSH_SETUP_PATH;
-
-if command -v ngrok &>/dev/null; then
-    eval "$(ngrok completion)"
-  fi
-
+# cd wrapper via zoxide
 which zoxide >> /dev/null
 if [ $? -eq 0 ]; then
-  alias real_cd=$(which cd)
+  # NOTE: `cd` is a shell builtin; `which cd`/aliasing "real_cd" is not meaningful.
+  # Keeping your intent, but you can always use: `builtin cd`.
   alias cd='z'
 fi
 
+# ls wrapper via eza
 which eza >> /dev/null
 if [ $? -eq 0 ]; then
   alias ls='eza'
 fi
 
+
+# ==============================================================================
+# 12) Misc env vars / paths
+# ==============================================================================
+
 PATH=~/.console-ninja/.bin:$PATH
-eval "$(mise activate zsh)"
 export PKG_CONFIG_PATH="$HOMEBREW_PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH"
 export DYLD_FALLBACK_LIBRARY_PATH="$HOMEBREW_PREFIX/lib:$DYLD_FALLBACK_LIBRARY_PATH"
+
+export LC_ALL="en_US.UTF-8"
+
+
+# ==============================================================================
+# 13) OMZ load (late) + compile hack
+# ==============================================================================
+
+# Prevent OMZ from running zrecompile at every startup
+autoload -Uz zrecompile 2>/dev/null || true
+typeset -f zrecompile >/dev/null && __REAL_ZRECOMPILE=$(functions zrecompile)
+zrecompile() { :; }  # no-op during init
+
+# Load oh-my-zsh
+source "$ZSH/oh-my-zsh.sh"
+
+# Restore real zrecompile after OMZ loads (optional)
+if [[ -n "${__REAL_ZRECOMPILE:-}" ]]; then
+  eval "$__REAL_ZRECOMPILE"
+else
+  unfunction zrecompile 2>/dev/null || true
+  autoload -Uz zrecompile 2>/dev/null || true
+fi
+unset __REAL_ZRECOMPILE
+
+omz_compile() {
+  command zrecompile -p ~/.oh-my-zsh/**/*.zsh(N) ~/.oh-my-zsh/**/*.zsh-theme(N) 2>/dev/null
+}
+
+# ==============================================================================
+# 14) fzf (load LAST so nothing overwrites keybindings)
+# ==============================================================================
+
+if [[ -o interactive ]] && command -v fzf >/dev/null 2>&1; then
+  export FZF_DEFAULT_COMMAND="rg --files"
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_DEFAULT_OPTS='--bind=ctrl-k:up,ctrl-j:down,alt-up:first,alt-down:last'
+
+  # Defines fzf-* widgets and default bindings (Ctrl-T/Ctrl-R/Alt-C)
+  eval "$(fzf --zsh)"
+
+  # overrides
+  bindkey -M viins '^F' fzf-file-widget
+  bindkey -M vicmd '^F' fzf-file-widget
+  bindkey -M viins '^R' fzf-history-widget
+  bindkey -M vicmd '^R' fzf-history-widget
+fi

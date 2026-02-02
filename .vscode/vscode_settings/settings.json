@@ -228,5 +228,6 @@
   "gitlens.ai.vscode.model": "copilot:gpt-4.1",
   "rubyLsp.rubyVersionManager": {
     "identifier": "mise"
-  }
+  },
+  "javascript.updateImportsOnFileMove.enabled": "always"
 }
