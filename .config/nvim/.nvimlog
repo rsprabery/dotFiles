@@ -1,0 +1,2 @@
+WRN 2026-04-12T13:03:19.906 ?.85144    server_start:199: Failed to start server: operation not permitted: /var/folders/kh/33zt432s1m50886s9hx7rdlr0000gn/T/nvim.read/9hFyh3/nvim.85144.0
+WRN 2026-04-12T13:10:56.802 ?.85295    server_start:199: Failed to start server: operation not permitted: /var/folders/kh/33zt432s1m50886s9hx7rdlr0000gn/T/nvim.read/frqO1a/nvim.85295.0
