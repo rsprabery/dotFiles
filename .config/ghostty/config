@@ -1,0 +1,68 @@
+# Ghostty config derived from iterm2.json and .tmux.conf.
+# Install at:
+#   ~/.config/ghostty/config
+# or:
+#   ~/Library/Application Support/com.mitchellh.ghostty/config
+
+# Match the active iTerm2 profile's primary and fallback fonts.
+font-family = Menlo
+font-family = Roboto Mono
+font-size = 15
+font-feature = -calt
+
+background = #fdf6e3
+foreground = #657b83
+cursor-color = #657b83
+cursor-text = #fdf6e3
+cursor-style = block
+cursor-style-blink = false
+selection-background = #eee8d5
+selection-foreground = #586e75
+
+palette = 0=#073642
+palette = 1=#dc322f
+palette = 2=#859900
+palette = 3=#b58900
+palette = 4=#268bd2
+palette = 5=#d33682
+palette = 6=#2aa198
+palette = 7=#eee8d5
+palette = 8=#002b36
+palette = 9=#cb4b16
+palette = 10=#586e75
+palette = 11=#657b83
+palette = 12=#839496
+palette = 13=#6c71c4
+palette = 14=#93a1a1
+palette = 15=#fdf6e3
+
+# Keep tmux and remote sessions on the most conservative TERM setting.
+term = xterm-256color
+shell-integration = detect
+shell-integration-features = no-cursor,ssh-env
+clipboard-read = allow
+clipboard-write = allow
+mouse-reporting = true
+window-width = 180
+window-height = 50
+window-inherit-working-directory = true
+tab-inherit-working-directory = true
+split-inherit-working-directory = true
+
+# Match iTerm's Option-as-Meta behavior for shells, tmux, and editors.
+macos-option-as-alt = true
+
+# Primary macOS shortcuts should hit tmux instead of Ghostty tabs.
+# Use explicit shifted bracket keys for reliability on macOS keyboards.
+# Your tmux prefix is C-v, so these send prefix+c / prefix+n / prefix+p.
+keybind = cmd+t=text:\x16c
+keybind = cmd+shift+]=text:\x16n
+keybind = cmd+shift+[=text:\x16p
+
+# Keep Ghostty-native tab management on secondary shortcuts.
+keybind = cmd+ctrl+t=new_tab
+keybind = cmd+ctrl+shift+]=next_tab
+keybind = cmd+ctrl+shift+[=previous_tab
+
+# Make config reload explicit on a non-conflicting shortcut.
+keybind = cmd+alt+shift+=reload_config
