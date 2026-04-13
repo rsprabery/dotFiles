@@ -315,6 +315,8 @@ recent-branches () {
 # 11) Wrappers / aliases around common utils
 # ==============================================================================
 
+alias cc=claude
+
 # Make vim -> nvim if neovim is installed
 which nvim >> /dev/null
 if [ $? -eq 0 ]; then
