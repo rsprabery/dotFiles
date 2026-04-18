@@ -296,6 +296,14 @@ function! s:clear_terminal_scrollback() abort
   endif
 endfunction
 
+function! s:close_fzf_window() abort
+  if winnr('$') > 1
+    silent! close
+  else
+    silent! bdelete!
+  endif
+endfunction
+
 function! s:is_fzf_terminal() abort
   return &filetype ==# 'fzf' || bufname('%') =~# 'FZF'
 endfunction
@@ -305,7 +313,7 @@ function! s:setup_terminal_mappings() abort
 
   if s:is_fzf_terminal()
     tnoremap <buffer> <Esc> <C-c>
-    nnoremap <buffer> <Esc> :close<CR>
+    nnoremap <buffer> <silent> <Esc> :<C-U>call <SID>close_fzf_window()<CR>
   else
     tnoremap <buffer> <Esc> <C-\><C-n>
   endif
@@ -517,6 +525,7 @@ nnoremap <C-]> :call <SID>lsp_or_fallback('definition', 'lnext')<CR>
 nnoremap <Leader>r :make run<CR>
 
 " Core editor behavior
+nnoremap <silent> <Esc> :<C-U>nohlsearch<Bar>echo<CR>
 nnoremap <C-s> :update<CR>
 inoremap <C-s> <Esc>:update<CR>
 nnoremap <C-q> <C-c>:q<CR>
@@ -524,14 +533,14 @@ inoremap <C-q> <C-\><C-n>:q<CR>
 nnoremap <C-x><C-x> <C-c>:q!<CR>
 
 " Window movement
-nnoremap <C-H> <C-w>h
-inoremap <C-H> <C-\><C-n><C-w>h
-nnoremap <C-J> <C-w>j
-inoremap <C-J> <C-\><C-n><C-w>j
-nnoremap <C-K> <C-w>k
-inoremap <C-K> <C-\><C-n><C-w>k
-nnoremap <C-L> <C-w>l
-inoremap <C-L> <C-\><C-n><C-w>l
+nnoremap <silent> <C-h> :<C-U>TmuxNavigateLeft<CR>
+inoremap <silent> <C-h> <C-\><C-n>:<C-U>TmuxNavigateLeft<CR>
+nnoremap <silent> <C-j> :<C-U>TmuxNavigateDown<CR>
+inoremap <silent> <C-j> <C-\><C-n>:<C-U>TmuxNavigateDown<CR>
+nnoremap <silent> <C-k> :<C-U>TmuxNavigateUp<CR>
+inoremap <silent> <C-k> <C-\><C-n>:<C-U>TmuxNavigateUp<CR>
+nnoremap <silent> <C-l> :<C-U>TmuxNavigateRight<CR>
+inoremap <silent> <C-l> <C-\><C-n>:<C-U>TmuxNavigateRight<CR>
 
 " Split and tab management
 nnoremap <leader>v :vsplit<CR><C-w>l
