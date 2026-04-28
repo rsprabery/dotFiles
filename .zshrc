@@ -416,3 +416,7 @@ if [[ -o interactive ]] && command -v fzf >/dev/null 2>&1; then
   bindkey -M viins '^R' fzf-history-widget
   bindkey -M vicmd '^R' fzf-history-widget
 fi
+
+# Treat tmux CSI-u Shift-Enter encodings as accept-line in the shell.
+bindkey '\e[13;2u' accept-line
+bindkey '\e[27;2;13~' accept-line

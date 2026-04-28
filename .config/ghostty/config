@@ -59,6 +59,9 @@ keybind = cmd+t=text:\x16c
 keybind = cmd+shift+]=text:\x16n
 keybind = cmd+shift+[=text:\x16p
 
+# Send Shift-Enter as a bracketed-paste newline so Codex inserts it without using Ctrl-J.
+keybind = shift+enter=text:\x1b[200~\x0a\x1b[201~
+
 # Keep Ghostty-native tab management on secondary shortcuts.
 keybind = cmd+ctrl+t=new_tab
 keybind = cmd+ctrl+shift+]=next_tab
